@@ -51,7 +51,7 @@ const World={bodies:[],run:false,last:0,forces:null,
    const sp=Math.abs(b.vx)+Math.abs(b.vy)+Math.abs(b.vr)*3+Math.abs(b.vz)+Math.abs(b.vf)*40+Math.abs(b.z-b.tz)+(b.mode==='spring'?Math.abs(b.x-b.tx)+Math.abs(b.y-b.ty):0);
    if(sp>.05||b.mode==='drag')moving=true;else{b.vx=b.vy=b.vr=0;if(b.mode==='spring'){b.x=b.tx;b.y=b.ty;b.r=b.tr}}
    this.render(b,t)}
-  if(moving||this.forces)requestAnimationFrame(t=>this.tick(t));else this.run=false},
+  if(moving)requestAnimationFrame(t=>this.tick(t));else this.run=false},
  render(b,t){const W=b.stage.clientWidth||1,H=b.stage.clientHeight||900;
   const fz=Math.sin(b.flip*Math.PI)*28;const z=b.z+fz;
   const sq=b.land&&t-b.land<90?1-.015*Math.sin((t-b.land)/90*Math.PI):1;
@@ -225,7 +225,7 @@ function vSpread(){if(!S.q.trim())return go2('#/');const rec=recommend();S.sprea
 function slotRects(N,m){if(m){if(N===3)return[[68,545],[158,545],[250,545]].map(([x,y])=>[x,y,72,92]);
   if(N===5)return[0,1,2,3,4].map(i=>[33+i*66,550,58,80]);return[0,1,2,3,4,5,6,7,8].map(i=>[127+(i%3)*48,540+(i/3|0)*62,42,56])}
  if(N===3)return[[819,355],[965,355],[1108,355]].map(([x,y])=>[x,y,126,183]);
- if(N===5)return[0,1,2,3,4].map(i=>[800+i*92,370,84,122]);return[0,1,2,3,4,5,6,7,8].map(i=>[912+(i%3)*80,240+(i/3|0)*106,70,98])}
+ if(N===5)return[0,1,2,3,4].map(i=>[813+i*88,372,78,116]);return[0,1,2,3,4,5,6,7,8].map(i=>[912+(i%3)*80,240+(i/3|0)*106,70,98])}
 function vDraw(){if(!S.spread)return go2('#/spread');const sp=SPREADS[S.spread],N=sp.count,m=M();const SR=slotRects(N,m);
  const cw=m?56:100,ch=cw*1.5;
  const slotsH=SR.map(([x,y,w,h],i)=>`<div class="slot" data-i="${i}" aria-label="${sp.pos[i]}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px"></div>`).join('');
@@ -239,31 +239,31 @@ function vDraw(){if(!S.spread)return go2('#/spread');const sp=SPREADS[S.spread],
    A(979,212,'有些答案，<br>并不在远方，而在你愿意停下来的此刻。',{cls:'t',st:'font-size:12.5px;line-height:1.95'})+A(1207,262,'—— &nbsp;寂境 &nbsp;Stillrealm',{cls:'t',st:'transform:translateX(-100%);font-size:12px'})+
    chalkSVG('M110 6 Q20 10 8 90 Q10 160 70 182 M2 76 L8 92 L18 80',330,690,240,120,190,200)+T_(706,300,chalkText('画圈洗牌'),18,{cls:'chalk',st:'transform:rotate(-22deg)'})+
    T_(cx,top-36,`<span style="opacity:.6">———</span>&nbsp; <span id="cnt">画圈洗牌</span> &nbsp;<span style="opacity:.6">———</span>`,15,{cls:'c',st:'letter-spacing:.18em'})+
-   A(cx,bot+16,'替我洗牌',{tag:'button',cls:'btn t',st:'transform:translateX(-50%);font-size:15px;letter-spacing:.24em;border-bottom:1px solid rgba(233,207,152,.6);padding:4px 6px;z-index:900',at:'id="act"'})+`<p class="A t backs" style="left:1236px;top:${top-40}px;font-size:12.5px;z-index:900;flex-direction:column;align-items:flex-start;gap:6px"><a href="#/spread">‹ 更换牌阵</a><a href="#/">‹ 修改问题</a></p>`,{ch:{bl:['36 张卡牌','无预设的未来','只有更清晰的你']}});
+   A(cx,bot+16,'替我洗牌',{tag:'button',cls:'btn t',st:'transform:translateX(-50%);font-size:15px;letter-spacing:.24em;border-bottom:1px solid rgba(233,207,152,.6);padding:4px 6px;z-index:900',at:'id="act"'})+`<p class="A t backs" style="left:${cx}px;top:${bot+66}px;transform:translateX(-50%);font-size:12.5px;z-index:900;gap:18px"><a href="#/spread">‹ 更换牌阵</a><a href="#/">‹ 修改问题</a></p>`,{ch:{bl:['36 张卡牌','无预设的未来','只有更清晰的你']}});
  markDrawn(v);
  const st=$('#stage');World.clear();
  const deck=shuffle(C.map(c=>c.id)),bodies=[];
  const P=m?{x:190,y:268,rx:100,ry:85}:{x:448,y:266,rx:172,ry:172};
  deck.forEach((id,i)=>{const b=makeBody(st,backHTML2(cw),false);b.id=id;b.el.style.width=cw+'px';b.el.style.height=ch+'px';
-  const a=i/36*Math.PI*2*(m?2.3:1)+Math.random()*.2,rr=m?.35+Math.random()*.65:1;
-  b.x=P.x+Math.cos(a)*P.rx*rr-cw/2;b.y=P.y+Math.sin(a)*P.ry*rr-ch/2;b.r=m?Math.random()*70-35:a*180/Math.PI+90;b.zi=i*.01;b.el.setAttribute('aria-hidden','true');bodies.push(b);World.add(b)});
+  const a=i*.56+Math.random()*.3,rr=.24+.8*(i/36)+Math.random()*.07;
+  b.x=P.x+Math.cos(a)*P.rx*rr-cw/2;b.y=P.y+Math.sin(a)*P.ry*rr-ch/2;b.r=a*180/Math.PI+90+Math.random()*16-8;b.el.style.filter=`brightness(${(1.06-(b.y+ch/2)/(m?844:900)*.32-Math.random()*.06).toFixed(3)})`;b.zi=i*.01;b.el.setAttribute('aria-hidden','true');bodies.push(b);World.add(b)});
  let phase='shuffle',swirl=0,lastAng=null,amt=0;const act=$('#act'),cnt=$('#cnt');
  const setCnt=t=>{cnt.textContent=t};
  World.forces=dt=>{if(phase!=='shuffle')return;for(const b of bodies){const px=b.x+cw/2-P.x,py=b.y+ch/2-P.y,d=Math.hypot(px,py)+1;
    if(Math.abs(swirl)>.01){const f=swirl*700/(1+d/200);b.vx+=-py/d*f*dt;b.vy+=px/d*f*dt;b.vr+=swirl*40*dt*(Math.random()-.3)}
-   const R=m?P.rx*1.05:P.rx*1.1;if(d>R){b.vx-=px/d*(d-R)*8*dt;b.vy-=py/d*(d-R)*8*dt}if(!m&&d<P.rx*.7){b.vx+=px/d*(P.rx*.7-d)*6*dt;b.vy+=py/d*(P.rx*.7-d)*6*dt}}
+   const R=m?P.rx*1.05:P.rx*1.1;if(d>R){b.vx-=px/d*(d-R)*8*dt;b.vy-=py/d*(d-R)*8*dt}if(!m&&d<P.rx*.22){b.vx+=px/d*(P.rx*.7-d)*6*dt;b.vy+=py/d*(P.rx*.7-d)*6*dt}}
   for(let k=0;k<60;k++){const a=bodies[Math.random()*36|0],b=bodies[Math.random()*36|0];if(a===b)continue;const dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy)+.1,mm=cw*.45;if(d<mm){const p=(mm-d)*3;a.vx+=dx/d*p;a.vy+=dy/d*p;b.vx-=dx/d*p;b.vy-=dy/d*p}}
   swirl*=Math.exp(-2.5*dt);if(Math.abs(swirl)<.01)swirl=0};
  let gid=null;const loc=e=>{const r=st.getBoundingClientRect();return[(e.clientX-r.left)/SC,(e.clientY-r.top)/SC]};
  st.addEventListener('pointerdown',e=>{if(phase!=='shuffle')return;gid=e.pointerId;st.setPointerCapture(gid);lastAng=null});
  st.addEventListener('pointermove',e=>{if(e.pointerId!==gid||phase!=='shuffle')return;const[x,y]=loc(e);const a=Math.atan2(y-P.y,x-P.x);
-  if(lastAng!==null){let d=a-lastAng;if(d>Math.PI)d-=2*Math.PI;if(d<-Math.PI)d+=2*Math.PI;swirl=Math.max(-2.5,Math.min(2.5,swirl+d*1.6));amt+=Math.abs(d);setCnt(amt>=Math.PI*3?'洗好了':`洗牌 ${Math.min(100,Math.round(amt/(Math.PI*3)*100))}%`);World.start();if(amt>=Math.PI*3)setTimeout(toFan,500)}lastAng=a});
+  if(lastAng!==null){let d=a-lastAng;if(d>Math.PI)d-=2*Math.PI;if(d<-Math.PI)d+=2*Math.PI;swirl=Math.max(-2.5,Math.min(2.5,swirl+d*1.6));World.start();amt+=Math.abs(d);setCnt(amt>=Math.PI*3?'洗好了':`洗牌 ${Math.min(100,Math.round(amt/(Math.PI*3)*100))}%`);World.start();if(amt>=Math.PI*3)setTimeout(toFan,500)}lastAng=a});
  const up=e=>{if(e.pointerId===gid)gid=null};st.addEventListener('pointerup',up);st.addEventListener('pointercancel',up);
  const slots=()=>$$('.slot',st);
  const slotXY=i=>{const[x,y,w,h]=SR[i];return{x,y,w,h}};
  function toFan(){if(phase!=='shuffle')return;phase='fan';World.forces=null;act.textContent='替我抽牌';setCnt(`已抽 0 / ${N}`);
   const ring=bodies.slice(0,m?18:16),fan=bodies.slice(m?18:16);
-  ring.forEach((b,i)=>{if(m){const a=Math.random()*Math.PI*2,rr=Math.sqrt(Math.random());b.spring(P.x+Math.cos(a)*84*rr-cw/2,P.y+Math.sin(a)*82*rr-ch/2,Math.random()*80-40,140,.8);return}const a=i/ring.length*Math.PI*2;b.spring(P.x+Math.cos(a)*172-cw/2,P.y+Math.sin(a)*172-ch/2,a*180/Math.PI+90,140,.8);b.zi=i});
+  ring.forEach((b,i)=>{if(m){const a=Math.random()*Math.PI*2,rr=Math.sqrt(Math.random());b.spring(P.x+Math.cos(a)*84*rr-cw/2,P.y+Math.sin(a)*82*rr-ch/2,Math.random()*80-40,140,.8);return}const a=i*.62+Math.random()*.25,rr=.35+.75*i/ring.length;b.spring(P.x+Math.cos(a)*172*rr-cw/2,P.y+Math.sin(a)*172*rr-ch/2,a*180/Math.PI+90+Math.random()*16-8,140,.8);b.zi=i});
   const n=fan.length;fan.forEach((b,i)=>{const t=i/(n-1);let x,y,r;
    if(m){const dx=-160+t*320,R=524;x=195+dx;y=961-Math.sqrt(R*R-dx*dx);r=Math.asin(dx/R)*180/Math.PI}
    else{x=404+671*t;y=628+107*t-18*Math.sin(Math.PI*t);r=-5+15*t}
@@ -299,6 +299,7 @@ const well=(x,y,w,h,p=10)=>A(x-p,y-p,'',{cls:'well',w:w+2*p,h:h+2*p});
 function openSheet(R,rec){const sc=$('#sheet .sc');sc.innerHTML=`<p style="font-size:13px;color:#6b5a44;letter-spacing:.12em">此刻 · 你的问题</p><p style="font-size:18px;margin:4px 0 10px">${esc(rec.q)}</p><p>${esc(R.summary)}</p>${R.cards.map((c,i)=>`<h3>${R.sp.pos[i]} · ${esc(zh(c))} ${esc(c.name)}</h3><p>${esc(clean(c.summary))}。${esc(domText(c,rec.topic))}</p>`).join('')}<h3>可以做的一步</h3><p>${esc(R.advice)}</p>${R.caution?`<h3>留意</h3><p>${esc(R.caution)}</p>`:''}${R.timing?`<h3>时间感</h3><p>${esc(R.timing)}</p>`:''}${rec.facts?`<h3>你补充的事实</h3><p>${esc(rec.facts)}</p>`:''}`;
  const sh=$('#sheet');sh.hidden=false;$('.x',sh).focus();const close=()=>{sh.hidden=true};$('.x',sh).onclick=close;sh.onclick=e=>{if(e.target===sh)close()};sh.onkeydown=e=>{if(e.key==='Escape')close()}}
 const bar3=(cx,y,dx,fs,saved,two)=>`<div class="bar3">${[['keep','save',saved?'已收藏':'收藏'],['tts','play','朗读'],['again','again','再问']].filter(x=>!two||x[0]!=='tts').map(([id,ic,l],i)=>`<button id="${id}" style="left:${cx+(two?(i-.5)*2:(i-1))*dx}px;top:${y}px;font-size:${fs}px" ${id==='keep'&&saved?'disabled':''} ${id==='tts'?'aria-pressed="false"':''}><img src="assets/ic/${ic}.webp" alt=""><span>${l}</span></button>`).join('')}</div>`;
+function brief(t,n){t=clean(t||'').replace(/,/g,'，').replace(/;/g,'；').replace(/\s+/g,'');const ps=t.split(/(?<=[，。；])/);let o='';for(const p of ps){if((o+p).length>n&&o)break;o+=p}o=o.replace(/[，；、]$/,'');if(o.length>n+4)o=o.slice(0,n);return o.replace(/[。]?$/,'。')}
 function vReading(id){
  let rec=LS.get('history',[]).find(r=>r.id===id);const saved=!!rec;if(!rec){try{const c=JSON.parse(sessionStorage.getItem('sr.current'));if(c?.id===id)rec=c}catch{}}
  if(!rec)return go2('#/history');const R=interpret(rec),m=M(),cs=R.cards;const narration=[rec.q,R.summary,'建议：'+R.advice].join('。');let h='',key='05-reading3';
@@ -316,18 +317,18 @@ function vReading(id){
   else{const X=[433,647,860],Y=[179,393,611],w=140,hh=192;const ctr=i=>[X[i%3]+w/2,Y[i/3|0]+hh/2];
    const L=[[0,1],[1,2],[3,4],[4,5],[6,7],[7,8],[4,0],[4,2],[4,6],[4,8]];
    const lab=(a,b)=>{const A1=clean((cs[a].actions||[])[0]||'').slice(0,2),B1=noun(cs[b]).slice(0,2);return`${A1}<br>${B1}`};
-   h=T_(528,56,'此刻 · 你的问题',11,{cls:'ink2',st:'text-shadow:none;transform:rotate(-3deg);color:#6b5a44'})+A(500,82,`<div class="q" style="text-align:center;font-size:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(rec.q)}</div>`,{w:320,st:'transform:rotate(-3deg)'})+
+   h=T_(528,56,'此刻 · 你的问题',11,{cls:'ink2',st:'text-shadow:none;transform:rotate(-3deg);color:#6b5a44'})+A(470,72,`<div class="q" style="text-align:center;font-size:${rec.q.length>13?15:20}px;line-height:1.4;text-wrap:balance;max-height:44px;overflow:hidden">${esc(rec.q)}</div>`,{w:230,st:'transform:rotate(-3deg)'})+
     A(910,96,'答案不在远方，<br>而在你愿意倾听的此刻。',{cls:'t',st:'font-size:12.5px;line-height:1.95'})+A(1167,150,'—— &nbsp;寂境 &nbsp;Stillrealm',{cls:'t',st:'transform:translateX(-100%);font-size:12px'})+
     `<svg class="A lines" style="left:0;top:0;width:1440px;height:900px;pointer-events:none">${L.map(([a,b],k)=>{const[x1,y1]=ctr(a),[x2,y2]=ctr(b);const dx=x2-x1,dy=y2-y1,d=Math.hypot(dx,dy),ux=dx/d,uy=dy/d;
      const s=a===4?(Math.abs(dx)>0&&Math.abs(dy)>0?110:0):76;const sx=x1+ux*(dy===0?w/2+8:s),sy=y1+uy*(dy===0?0:s),ex=x2-ux*(dy===0?w/2+8:s),ey=y2-uy*(dy===0?0:s);
      return`<path class="chalkline" style="--len:200;transition-delay:${1800+k*80}ms" d="M${sx} ${sy} L${ex} ${ey} M${ex-ux*7-uy*4} ${ey-uy*7+ux*4} L${ex} ${ey} L${ex-ux*7+uy*4} ${ey-uy*7-ux*4}"/>`}).join('')}</svg>`+
-    L.map(([a,b])=>{const[x1,y1]=ctr(a),[x2,y2]=ctr(b);const mx=(x1+x2)/2,my=(y1+y2)/2;return T_(mx+(y1===y2?0:(x2>x1?-34:34)),my-(y1===y2?32:22),lab(a,b),12,{cls:'c',st:'line-height:1.7;text-align:center;letter-spacing:.2em'})}).join('')+
+    L.map(([a,b])=>{const[x1,y1]=ctr(a),[x2,y2]=ctr(b);const mx=(x1+x2)/2,my=(y1+y2)/2;if(y1!==y2)return'';return T_(mx,my-50,lab(a,b),12,{cls:'c',st:'line-height:1.7;text-align:center;letter-spacing:.2em'})}).join('')+
     well(X[1],Y[1],w,hh,9)+cs.map((c,i)=>fc(c,'d',X[i%3],Y[i/3|0],w,hh,i)).join('')+
-    A(1084,322,`<p style="font-size:13px;letter-spacing:.14em;border-bottom:1px solid rgba(70,50,25,.3);padding-bottom:8px;color:#3a2c1e">三行 · 九宫的指引</p>${[['过去',0],['此刻',3],['未来',6]].map(([t,s])=>`<h4 style="font-size:17px;font-weight:500;margin:16px 0 4px;letter-spacing:.2em">${t}</h4><p style="font-size:12px;line-height:1.7;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${cs.slice(s,s+3).map(zh).join(' · ')}：${esc(clean(cs[s+1].summary))}</p>`).join('')}
-     <p style="margin-top:12px;display:flex;gap:14px;font-size:12.5px;letter-spacing:.12em" class="lk"><button id="more" style="border-bottom:1px dashed">展开</button><button id="keep" ${saved?'disabled':''}><span>${saved?'已收藏':'收藏'}</span></button><button id="tts" aria-pressed="false"><span>朗读</span></button><button id="again">再问</button></p>`,{cls:'ink',w:214,st:'transform:rotate(-1.6deg);transform-origin:0 0'})}}
+    A(1084,338,`<p style="font-size:13px;letter-spacing:.14em;border-bottom:1px solid rgba(70,50,25,.3);padding-bottom:8px;color:#3a2c1e">三行 · 九宫的指引</p>${[['过去',0],['此刻',3],['未来',6]].map(([t,s])=>{const sm=clean(cs[s+1].summary||'');let c1=sm.split(/[，。；、,;]/)[0];if(c1.length>15)c1=c1.slice(0,15);return`<h4 style="font-size:15px;font-weight:500;margin:13px 0 3px;letter-spacing:.24em">${t}</h4><p style="font-size:12.5px;line-height:1.65;font-weight:600;color:#3a2c1e;white-space:nowrap">${cs.slice(s,s+3).map(zh).join(' · ')}</p><p style="font-size:12px;line-height:1.65;color:#5b4732;white-space:nowrap">${esc(c1)}</p>`}).join('')}
+     <p style="margin-top:16px;display:flex;gap:16px;font-size:12.5px;letter-spacing:.12em" class="lk n9a"><button id="more">展开</button><button id="keep" ${saved?'disabled':''}><span>${saved?'已收藏':'收藏'}</span></button><button id="tts" aria-pressed="false"><span>朗读</span></button><button id="again">再问</button></p>`,{cls:'ink',w:214,st:'transform:rotate(-1.6deg);transform-origin:0 0'})}}
  else if(rec.spread==='five'){
   if(m){const Y=[188,284,380,476,572];h=T_(195,123,'五牌解读',16,{cls:'c',st:'letter-spacing:.3em'})+cs.map((c,i)=>fc(c,'m',70,Y[i],58,88,i)+T_(146,Y[i]+8,R.sp.pos[i],15,{st:'letter-spacing:.2em'})+A(146,Y[i]+34,esc(clean(c.summary))+'。',{cls:'t',w:200,h:48,st:'white-space:normal;font-size:11.5px;line-height:1.6;letter-spacing:.06em;overflow:hidden;color:var(--muted)'})).join('')+
-    A(103,150,`<span style="flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(rec.q)}</span>`,{cls:'t',w:185,h:28,st:'display:flex;align-items:center;padding:0 22px 0 10px;font-size:11.5px;letter-spacing:.04em'})+A(48,672,sum+`<button class="morel" id="more">展开逐张解读 <span aria-hidden="true">›</span></button>`,{cls:'ink paperT msum',w:294,h:56})+bar3(195,762,100,13.5,saved)}
+    A(62,150,`<span style="flex:1;text-align:center;text-wrap:balance;line-height:1.3">${esc(rec.q)}</span>`,{cls:'t',w:266,st:'display:flex;align-items:center;min-height:28px;padding:3px 16px;font-size:${Math.max(10,Math.min(11.5,232/rec.q.length)).toFixed(1)}px;letter-spacing:.04em'})+A(48,672,sum+`<button class="morel" id="more">展开逐张解读 <span aria-hidden="true">›</span></button>`,{cls:'ink paperT msum',w:294,h:56})+bar3(195,762,100,13.5,saved)}
   else{const X=[0,1,2,3,4].map(i=>418+i*170),y=318,w=118,hh=180;
    h=T_(528,56,'此刻 · 你的问题',11,{cls:'ink2',st:'text-shadow:none;transform:rotate(-3deg);color:#6b5a44'})+A(505,92,`<div class="q" style="text-align:center">${esc(rec.q)}</div>`,{w:330,h:70,st:'transform:rotate(-3deg);overflow:hidden'})+
     cs.map((c,i)=>T_(X[i]+w/2,y-46,R.sp.pos[i],15,{cls:'c',st:'letter-spacing:.24em'})+well(X[i],y,w,hh,9)+fc(c,'d',X[i],y,w,hh,i)).join('')+
@@ -335,9 +336,9 @@ function vReading(id){
     A(424,594,sumD(5),{cls:'ink paperT',w:760,h:96})+bar3(799,736,188,15,saved)}}
  else{
   if(m){const Y=[189,351,510];
-   h=T_(195,123,'三牌解读',17,{cls:'c',st:'letter-spacing:.3em'})+A(103,150,`<span style="flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(rec.q)}</span>`,{cls:'t',w:185,h:28,st:'display:flex;align-items:center;padding:0 22px 0 10px;font-size:11.5px;border-radius:14px;box-shadow:inset 0 0 0 1px rgba(226,196,138,.45);background:rgba(0,0,0,.3);letter-spacing:.04em'})+
-    cs.map((c,i)=>fc(c,'m',88,Y[i],88,143,i)+T_(195,Y[i]+20,R.sp.pos[i],18,{st:'letter-spacing:.3em'})+A(192,Y[i]+50,esc(clean(c.summary))+'。'+esc(domText(c,rec.topic)),{cls:'t',w:160,h:64,st:'display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;white-space:normal;font-size:11.5px;line-height:1.45;letter-spacing:.04em;overflow:hidden;color:rgba(236,228,210,.82)'})).join('')+
-    cs.slice(1).map((c,i)=>{const t=pairLine(cs[i],c);const y=Y[i]+150;return`<div class="A chalk" style="left:186px;top:${y}px;font-size:${Math.min(17,190/Math.max(8,t.length))}px;transform:rotate(-6deg);white-space:nowrap">${chalkText(t,1400+i*900)}</div>`+chalkSVG(`M0 14 Q4 -6 22 -8`,40,180,y+8,30,20,1300+i*900)}).join('')+
+   h=T_(195,123,'三牌解读',17,{cls:'c',st:'letter-spacing:.3em'})+A(62,150,`<span style="flex:1;text-align:center;text-wrap:balance;line-height:1.3">${esc(rec.q)}</span>`,{cls:'t',w:266,st:'display:flex;align-items:center;min-height:28px;padding:3px 16px;font-size:${Math.max(10,Math.min(11.5,232/rec.q.length)).toFixed(1)}px;border-radius:14px;box-shadow:inset 0 0 0 1px rgba(226,196,138,.45);background:rgba(0,0,0,.3);letter-spacing:.04em'})+
+    cs.map((c,i)=>fc(c,'m',88,Y[i],88,143,i)+T_(195,Y[i]+20,R.sp.pos[i],18,{st:'letter-spacing:.3em'})+A(192,Y[i]+50,esc(brief(c.summary,32)),{cls:'t',w:140,st:'white-space:normal;font-size:11.5px;line-height:1.55;letter-spacing:.04em;text-wrap:pretty;color:rgba(236,228,210,.82)'})).join('')+
+    cs.slice(1).map((c,i)=>{const t=pairLine(cs[i],c);const y=Y[i]+146;const p1=t,p2='';const fz=Math.min(16,180/Math.max(p1.length,8));return`<div class="A chalk" style="left:186px;top:${y}px;font-size:${fz.toFixed(1)}px;line-height:1.2;transform:rotate(-4deg);white-space:nowrap">${chalkText(p1,1400+i*900)}${p2?'<br>'+chalkText(p2,1400+i*900+p1.length*70):''}</div>`+chalkSVG(`M0 14 Q4 -6 22 -8`,40,180,y+8,30,20,1300+i*900)}).join('')+
     A(48,672,sum+`<button class="morel" id="more">展开逐张解读 <span aria-hidden="true">›</span></button>`,{cls:'ink paperT msum',w:294,h:56})+bar3(195,762,100,13.5,saved)}
   else{const X=[439,739,1056],y=296,w=159,hh=246;
    h=T_(528,56,'此刻 · 你的问题',11,{cls:'ink2',st:'text-shadow:none;transform:rotate(-3deg);color:#6b5a44'})+A(500,90,`<div class="q" style="text-align:center">${esc(rec.q)}</div>`,{w:340,h:70,st:'transform:rotate(-3deg);display:flex;align-items:center;justify-content:center;overflow:hidden'})+

@@ -272,3 +272,5 @@
 #sheet.ovs .chnm .lk.on{color:#f0dcae;border-bottom:1px solid #e9d6ad}
 #sheet.ovs .chnm i{font-style:normal;color:rgba(233,214,173,.5)}
 #ab.m #sheet[data-k="16-story"] .pane>p{font-size:12.5px;line-height:1.9}
+.n9a button{border-bottom:1px solid rgba(140,104,52,.55);padding:0 1px 2px;color:#4a3720}
+.n9a button:hover{border-bottom-color:#a77d3c}
