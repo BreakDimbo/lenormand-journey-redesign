@@ -130,11 +130,11 @@ function cardHTML(c,v='d',w=120,h=null,extra=''){const lab=`${c.id} ${esc(zh(c))
 const backHTML2=(w,h)=>`<div class="card back" style="--w:${w}px;${h?`height:${h}px`:''}" aria-hidden="true"></div>`;
 const flip2=(c,v,w,h)=>`<div class="in3">${backHTML2(w,h)}${cardHTML(c,v,w,h,'face')}<div class="shade"></div></div>`;
 /* ---- chrome ---- */
-const NAV=[['#/','read','home','占卜仪式'],['#/atlas','atlas','book','牌库图鉴'],['#/history','history','doc','我的记录'],['#/today','today','heart','心灵札记'],['#/settings','settings','gear','设置']];
+const NAV=[['#/','read','home','占卜仪式'],['#/atlas','atlas','book','牌库图鉴'],['#/history','history','doc','我的记录'],['#/today','today','heart','今日一牌'],['#/settings','settings','gear','设置']];
 const TABIC={home:'moon',book:'book',doc:'doc',heart:'heart',gear:'gear'};
 function chromeD(o){const tr=o.tr===undefined?['让日常，','也成为一种仪式。','<span class="en" style="font-size:11.5px;letter-spacing:.04em">A More Attentive Life</span>']:o.tr;
  let h=`<a href="#/" class="A t" style="left:26px;top:20px;font-size:28px;letter-spacing:.12em;text-shadow:0 1px 8px #000">寂境<span class="en" style="font-size:22px;letter-spacing:.02em;margin-left:12px">Stillrealm</span></a>`+T_(26,66,'在静默中，看见生活的下一页。',12.5,{cls:'mu',st:'letter-spacing:.14em'});
- h+=`<nav class="nav" aria-label="主导航">${NAV.map(([href,k,ic,l],i)=>A(0,134+i*50.5,`<img src="assets/ic/${ic}.webp" alt=""><span>${l}</span>`,{tag:'a',w:150,h:40,at:`href="${href}" data-nav="${k}"`})).join('')}</nav>`;
+ h+=`<nav class="nav" aria-label="主导航">${NAV.map(([href,k,ic,l],i)=>A(0,145+i*56,`<img src="assets/ic/${ic}.webp" alt=""><span>${l}</span>`,{tag:'a',w:150,h:40,at:`href="${href}" data-nav="${k}"`})).join('')}</nav>`;
  if(tr&&tr.length)h+=T_(1302,22,tr.join('<br>'),12,{st:'line-height:1.75;letter-spacing:.1em'});
  if(o.bl)h+=T_(25,o.blY||774,o.bl.join('<br>'),12.5,{st:'line-height:1.65;letter-spacing:.12em'});
  if(o.br!==false)h+=A(o.brX||1396,o.brY||828,'CARDS<br>PEOPLE<br>A QUIETER YOU',{cls:'t en',st:'opacity:.72;transform:translateX(-100%);text-align:right;font-size:10.5px;line-height:1.75;letter-spacing:.26em'});
@@ -560,7 +560,7 @@ function route(){cleanup.forEach(f=>f());cleanup=[];World.clear();window.speechS
  ({'':vLanding,ask:()=>window.OV.ask(),topic:vTopic,spread:vSpread,draw:vDraw,reading:()=>vReading(b),atlas:vAtlas,graph:()=>vGraph(+b||0),card:()=>vCard(+b),history:vHistory,settings:vSettings,today:()=>{const d=new Date();vCard((d.getFullYear()*372+d.getMonth()*31+d.getDate())%36+1,true)}}[a||'']||v404)();
  const nav={atlas:'atlas',graph:'atlas',card:'atlas',history:'history',settings:'settings',today:'today'}[a]||'read';
  $$('[data-nav]').forEach(x=>x.dataset.nav===nav?x.setAttribute('aria-current','page'):x.removeAttribute('aria-current'));
- const T2={graph:'卡牌关系',topic:'选择方向',spread:'选择牌阵',draw:'洗牌与抽牌',reading:'解读',atlas:'牌库图鉴',card:'牌义',history:'我的记录',settings:'声音设置',today:'心灵札记'}[a];
+ const T2={graph:'卡牌关系',topic:'选择方向',spread:'选择牌阵',draw:'洗牌与抽牌',reading:'解读',atlas:'牌库图鉴',card:'牌义',history:'我的记录',settings:'声音设置',today:'今日一牌'}[a];
  document.title=(T2?T2+' · ':'')+'寂境 · 雷诺曼';scrollTo(0,0);main.focus({preventScroll:true})}
 window.LJ={loading,esc,zh,clean,cardHTML,chalkText,chalkSVG,M,RM,interpret,SPREADS,go2,newQuestion,toast,save,LS,domText,stage,A,T_,markDrawn,TPL,T,C,readingSheet,keepDialog,get S(){return S},set S(v){S=v},get cleanup(){return cleanup}};
 addEventListener('hashchange',route);route();

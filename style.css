@@ -431,7 +431,7 @@ select.sel{background:url(assets/v2/sel.webp) center/100% 100% no-repeat!importa
 /* nav focus */
 .nav a:focus-visible{box-shadow:none!important;color:#f6e3b4;background:linear-gradient(90deg,rgba(201,163,92,.22),transparent 85%)}
 .nav a:focus-visible::after{content:"";position:absolute;left:28px;right:40px;bottom:6px;height:1px;background:linear-gradient(90deg,rgba(222,186,116,.8),transparent)}
-.nav a{position:relative}
+.nav a{position:absolute}
 #tabs a:focus-visible{box-shadow:none!important;color:#f6e3b4}
 /* textarea focus on paper: no outline, ink caret + faint underline */
 textarea.qin{caret-color:#5a3d1c;padding:4px 6px}
