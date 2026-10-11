@@ -135,3 +135,12 @@ select.sel option{background:#1b1a14}
 .slip span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
 .m .slip span{-webkit-line-clamp:1}
 #chrome{z-index:5}
+
+button,a,input,textarea,select,[tabindex]{outline:none}
+:focus-visible{outline:none!important;box-shadow:0 0 0 2px #14100a,0 0 0 3.5px #d9b36a!important;border-radius:4px}
+.tile:focus-visible{box-shadow:inset 0 0 0 2px #d9b36a,0 0 0 2px #14100a,0 0 0 3.5px #d9b36a!important;border-radius:6px}
+.tile{background:none!important}
+.tile:hover{box-shadow:inset 0 0 0 1px rgba(217,179,106,.55)}
+.tile[aria-checked=true]{box-shadow:inset 0 0 0 2px #c9a35c,inset 0 0 0 3px rgba(60,40,15,.5),0 3px 10px rgba(0,0,0,.55)}
+.tile[aria-checked=true] .lb{color:#2b2116!important;text-decoration-color:#8a6a35}
+.m .tile[aria-checked=true] .lb{color:#f0dcae!important}
