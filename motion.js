@@ -114,10 +114,10 @@ function inkReading(){const v=$('.ab-in');if(!v||!/^#\/reading/.test(location.ha
  if(v.classList.contains('drawn'))go();else{const o=new MutationObserver(()=>{if(v.classList.contains('drawn')){o.disconnect();go()}});o.observe(v,{attributes:true,attributeFilter:['class']});setTimeout(()=>{o.disconnect();go()},9000)}}
 
 /* ---------- R6 wax seal for 收藏 ---------- */
-document.addEventListener('click',e=>{const b=e.target.closest('#dlg [data-a="1"]');if(!b)return;const h=$('#dlg h3');if(!h||!/收藏/.test(h.textContent))return;
+document.addEventListener('click',e=>{const b=e.target.closest('#dlg [data-a="1"]');if(!b)return;const h=$('#dlg h3');if(!$('#dlg .ovkp')&&!(h&&/收藏|收进/.test(h.textContent)))return;
  const k=$('#keep:not([disabled])')||$('#fav');if(!k||level()==='still')return;SFX.load('seal');
  setTimeout(()=>{const r=k.getBoundingClientRect();if(!r.width)return;const s=document.createElement('div');s.className='mo-seal';s.setAttribute('aria-hidden','true');
-  s.style.left=(r.left+r.width/2)+'px';s.style.top=(r.top+r.height/2)+'px';document.body.append(s);
+  s.style.left=(r.left+Math.min(r.width/2,26))+'px';s.style.top=(r.top+r.height/2)+'px';document.body.append(s);
   setTimeout(()=>{SFX.play('seal',{vol:.9});buzz(12)},level()==='full'?470:0);setTimeout(()=>s.remove(),3500)},120)},true);
 
 /* ---------- route hook ---------- */

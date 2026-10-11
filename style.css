@@ -596,3 +596,33 @@ body:has(#dlg:not([hidden])) #tabs{display:none!important}
 /* 5-card slots: no black boxes around the cards */
 .slot5 .card,.rd5 .slotf{box-shadow:none}
 #ab.m .pnav a{display:inline-block;min-width:72px;padding:4px 4px;text-align:center}#ab.m .pnav a::after{display:none!important}
+/* P2-29 逐张看 (mobile): stacked card + full-width text, sheet fills the screen, pager inside the paper */
+#ab.m #sheet[data-k="14-onecard"] .sheetp{top:212px;height:540px}
+#ab.m #sheet[data-k="14-onecard"] .one .oc{left:50%;width:132px;margin-left:-66px}
+#ab.m #sheet[data-k="14-onecard"] .one .oc .card{--w:132px!important;width:132px!important;height:199px!important}
+#ab.m #sheet[data-k="14-onecard"] .one>div:last-child{left:4px;right:4px;top:226px;width:auto;height:248px}
+#ab.m #sheet[data-k="14-onecard"] .one h2{font-size:17px;text-align:center;margin:0 0 10px}
+#ab.m #sheet[data-k="14-onecard"] .one p{font-size:12.5px;line-height:1.85;text-wrap:pretty}
+#ab.m #sheet[data-k="14-onecard"] .pager2{top:496px;left:24px;right:24px;height:36px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(90,65,30,.25)}
+#ab.m #sheet[data-k="14-onecard"] .pager2 .lk,#ab.m #sheet[data-k="14-onecard"] .pager2 span{color:#4a3420;font-size:13.5px;letter-spacing:.14em;padding:8px 4px}
+#ab.m #sheet[data-k="14-onecard"] .ovchalk{top:782px}
+/* P2-28 sheet: × clear of the corner ornament */
+#ab.m #sheet .sheetp>.x,#ab.m #sheet .x{margin:6px 6px 0 0}
+/* P2 typography: no orphans/widows anywhere on paper or felt */
+#ab p,#ab li,#ab .q,#ab .t,#sheet p,#dlg p{text-wrap:pretty}
+#ab h2,#ab h3,#ab h4,#sheet h2,#sheet h3,#sheet h4,#dlg h3,.cht{text-wrap:balance}
+/* P2-16 3/5/9 numerals legible */
+.m .seg button{font-size:16px!important;color:rgba(236,226,202,.78)}
+.m .seg button[aria-pressed=true]{color:#f6ead0}
+/* P2-30 deeper slider end labels */
+#sheet .sl{font-size:12px!important;color:#4a3420!important}
+.skipb{color:#e6d3a8!important;font-size:14px!important}
+#ab.m #cnt{font-size:18px}
+/* P2-53 switches sit IN the panel: recessed track (inset lamp shadow from above) + knob casting a short shadow down */
+.sw,.sw[aria-checked=true]{box-shadow:inset 0 2px 3px rgba(0,0,0,.65),inset 0 -1px 0 rgba(255,226,170,.12),0 1px 0 rgba(255,230,180,.10)!important}
+.sw::after{filter:drop-shadow(0 2px 1.5px rgba(0,0,0,.7)) drop-shadow(0 0 .5px rgba(0,0,0,.6))!important}
+.sw[aria-checked=true]::after{filter:drop-shadow(0 2px 1.5px rgba(0,0,0,.7)) brightness(1.12)!important}
+#ab.d .gc .gn2{font-size:12px!important;color:#2b1f13}#ab.d .gc.on .gn2{color:#f3e6c6}
+/* D-20: no code-drawn black wells under reading cards; the lamp shadow on the felt carries the depth */
+.well{display:none!important}
+#ab.d #sheet.ovs .rchalk{top:466px!important;color:rgba(238,232,214,.88)!important;font-size:16px}#ab.m #sheet.ovs .rchalk{color:rgba(238,232,214,.88)!important}
