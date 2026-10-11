@@ -77,7 +77,7 @@ const SIZE={3:'三张牌像三个镜头：来处、此刻、去向。',5:'五张
 function ctx(rec){const cards=rec.ids.map(i=>C[i-1]),n=cards.length,T=TOPIC[rec.topic]||TOPIC.overview,pos=window.SPREADS_POS[rec.spread];
  const core=n===9?cards[4]:n===5?cards[2]:cards[1],pol=Math.sign(cards.reduce((s,c)=>s+POL(c),0));
  const dk={relationship:'relationship',career:'career',wealth:'wealth','lost-item':'lost-item'}[rec.topic]||'general';
- const dom=c=>clean(((c.domains?.[dk]?.length?c.domains[dk]:c.domains?.general)||[]).join('')).slice(0,40)||clean(c.summary);
+ const dom=c=>{const z=(window.CLEAN||{})[c.id];if(z){const v=dk==='relationship'?z.love:dk==='career'?z.work:dk==='wealth'?z.money:z.core;return v.replace(/。$/,'')}return clean(((c.domains?.[dk]?.length?c.domains[dk]:c.domains?.general)||[]).join('')).slice(0,40)||clean(c.summary)};
  return{cards,n,T,pos,core,pol,dom}}
 function glance(rec){const r=rng(rec.id+'g'),{cards,n,T,pos,core,pol,dom}=ctx(rec);const a=cards[0],b=cards[n-1];
  return{headline:fill(pick(r,HEAD[pol]),{core:zh(core)}),conclusion:fill(pick(r,CONC[pol]),{a:zh(a),b:zh(b)})+' '+SIZE[n],
