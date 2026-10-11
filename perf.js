@@ -23,7 +23,7 @@ function plate(el,u){const k=(u.match(/\/([^/]+)-(desktop|mobile)\.webp$/)||[]);
 /* fonts + rarely used assets: warm up once the first screen has settled */
 addEventListener('load',()=>setTimeout(()=>idle(()=>{
  const s='的一是了我不人在他有这个上们来到时大地为子中你说生国年着就那和要她出也得里后自以会';
- ['400','500','600'].forEach(w=>document.fonts.load(`${w} 16px "Noto Serif SC"`,s).catch(()=>{}));
+ ['400','500','600'].forEach(w=>document.fonts.load(`${w} 16px "Noto Serif SC"`,s).catch(()=>{}));['16px "Long Cang"','600 16px "Cormorant Garamond"','italic 500 16px "Cormorant Garamond"','500 16px "Cormorant Garamond"'].forEach(f=>document.fonts.load(f,'洗牌 Abc').catch(()=>{}));
  const tst=new Image();tst.onload=()=>document.querySelector('.toast')?.classList.add('seen');tst.src='assets/v2/nf-m.webp'}),2500));
 if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 window.PERF={plate,set,load,prefetch};
