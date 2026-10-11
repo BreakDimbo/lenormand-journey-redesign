@@ -331,24 +331,24 @@ function vReading(id){
      <p style="margin-top:16px;display:flex;gap:16px;font-size:12.5px;letter-spacing:.12em" class="lk n9a"><button id="more">展开</button><button id="keep" ${saved?'disabled':''}><span>${saved?'已收藏':'收藏'}</span></button><button id="tts" aria-pressed="false"><span>朗读</span></button><button id="again">再问</button></p>`,{cls:'ink',w:214,st:'transform:rotate(-1.6deg);transform-origin:0 0'})}}
  else if(rec.spread==='five'){
   if(m){const Y=[188,284,380,476,572];h=T_(195,123,'五牌解读',16,{cls:'c',st:'letter-spacing:.3em'})+cs.map((c,i)=>fc(c,'m',70,Y[i],58,88,i)+T_(146,Y[i]+8,R.sp.pos[i],15,{st:'letter-spacing:.2em'})+A(146,Y[i]+34,esc(cx(c).core),{cls:'t',w:200,h:48,st:'white-space:normal;font-size:11.5px;line-height:1.6;letter-spacing:.06em;overflow:hidden;color:var(--muted)'})).join('')+
-    A(62,150,`<span style="flex:1;text-align:center;text-wrap:balance;line-height:1.3">${esc(rec.q)}</span>`,{cls:'t',w:266,st:'display:flex;align-items:center;min-height:28px;padding:3px 16px;font-size:${Math.max(10,Math.min(11.5,232/rec.q.length)).toFixed(1)}px;letter-spacing:.04em'})+A(48,672,sum+`<button class="morel" id="more">展开逐张解读 <span aria-hidden="true">›</span></button>`,{cls:'ink paperT msum',w:294,h:56})+bar3(195,762,100,13.5,saved)}
+    A(62,150,`<span style="flex:1;text-align:center;text-wrap:balance;line-height:1.3">${esc(rec.q)}</span>`,{cls:'t',w:266,st:'display:flex;align-items:center;min-height:28px;padding:3px 16px;font-size:${Math.max(10,Math.min(11.5,232/rec.q.length)).toFixed(1)}px;letter-spacing:.04em'})+A(36,676,sum+`<button class="morel" id="more">展开逐张解读 <span aria-hidden="true">›</span></button>`,{cls:'ink paperT msum',w:318,h:60})+bar3(195,762,100,13.5,saved)}
   else{const X=[0,1,2,3,4].map(i=>418+i*170),y=318,w=118,hh=180;
    h=T_(528,56,'此刻 · 你的问题',11,{cls:'ink2',st:'text-shadow:none;transform:rotate(-3deg);color:#6b5a44'})+A(505,92,`<div class="q" style="text-align:center">${esc(rec.q)}</div>`,{w:330,h:70,st:'transform:rotate(-3deg);overflow:hidden'})+
     cs.map((c,i)=>T_(X[i]+w/2,y-46,R.sp.pos[i],15,{cls:'c',st:'letter-spacing:.24em'})+well(X[i],y,w,hh,9)+fc(c,'d',X[i],y,w,hh,i)).join('')+
-    T_(799,526,chalkText(pairLine(cs[1],cs[3]),1600),20,{cls:'chalk c'})+
-    A(424,568,sumD(5),{cls:'ink paperT',w:760,h:140})+bar3(799,736,188,15,saved)}}
+    T_(799,516,chalkText(pairLine(cs[1],cs[3]),1600),20,{cls:'chalk c'})+
+    A(424,563,sumD(5),{cls:"ink paperT",w:760,h:140})+bar3(799,736,188,15,saved)}}
  else{
   if(m){const Y=[189,351,510];
    h=T_(195,123,'三牌解读',17,{cls:'c',st:'letter-spacing:.3em'})+A(62,150,`<span style="flex:1;text-align:center;text-wrap:balance;line-height:1.3">${esc(rec.q)}</span>`,{cls:'t',w:266,st:'display:flex;align-items:center;min-height:28px;padding:3px 16px;font-size:${Math.max(10,Math.min(11.5,232/rec.q.length)).toFixed(1)}px;border-radius:14px;box-shadow:inset 0 0 0 1px rgba(226,196,138,.45);background:rgba(0,0,0,.3);letter-spacing:.04em'})+
     cs.map((c,i)=>fc(c,'m',88,Y[i],88,143,i)+T_(195,Y[i]+20,R.sp.pos[i],18,{st:'letter-spacing:.3em'})+A(192,Y[i]+50,esc(cx(c).core),{cls:'t',w:140,st:'white-space:normal;font-size:11.5px;line-height:1.55;letter-spacing:.04em;text-wrap:pretty;color:rgba(236,228,210,.82)'})).join('')+
     cs.slice(1).map((c,i)=>{const t=pairLine(cs[i],c);const y=Y[i]+146;const p1=t,p2='';const fz=Math.min(16,180/Math.max(p1.length,8));return`<div class="A chalk" style="left:186px;top:${y}px;font-size:${fz.toFixed(1)}px;line-height:1.2;transform:rotate(-4deg);white-space:nowrap">${chalkText(p1,1400+i*900)}${p2?'<br>'+chalkText(p2,1400+i*900+p1.length*70):''}</div>`+chalkSVG(`M0 14 Q4 -6 22 -8`,40,180,y+8,30,20,1300+i*900)}).join('')+
-    A(48,672,sum+`<button class="morel" id="more">展开逐张解读 <span aria-hidden="true">›</span></button>`,{cls:'ink paperT msum',w:294,h:56})+bar3(195,762,100,13.5,saved)}
+    A(36,676,sum+`<button class="morel" id="more">展开逐张解读 <span aria-hidden="true">›</span></button>`,{cls:'ink paperT msum',w:318,h:60})+bar3(195,762,100,13.5,saved)}
   else{const X=[439,739,1056],y=296,w=159,hh=246;
    h=T_(528,56,'此刻 · 你的问题',11,{cls:'ink2',st:'text-shadow:none;transform:rotate(-3deg);color:#6b5a44'})+A(500,90,`<div class="q" style="text-align:center">${esc(rec.q)}</div>`,{w:340,h:70,st:'transform:rotate(-3deg);display:flex;align-items:center;justify-content:center;overflow:hidden'})+
     A(910,96,'卡牌不是预言，<br>而是让你听见内在声音的另一种语言。',{cls:'t',st:'font-size:12.5px;line-height:1.95'})+A(1167,150,'—— &nbsp;Stillrealm',{cls:'t',st:'transform:translateX(-100%);font-size:12px'})+
     cs.map((c,i)=>T_(X[i]+w/2,y-58,R.sp.pos[i],16,{cls:'c',st:'letter-spacing:.24em'})+well(X[i],y,w,hh,11)+fc(c,'d',X[i],y,w,hh,i)).join('')+
     cs.slice(1).map((c,i)=>{const[a,b]=split2(pairLine(cs[i],c));const cx=(X[i]+w+X[i+1])/2;return T_(cx,y+66,chalkText(a,1400+i*900)+'<br>'+chalkText(b,1400+i*900+a.length*70),Math.min(21,128/Math.max(a.length,b.length)),{cls:'c chalk',st:'line-height:1.55;text-align:center'})+chalkSVG('M0 6 Q40 3 84 5 M76 1 L84 5 L76 9',100,cx-42,y+136,90,12,1300+i*900)}).join('')+
-    A(436,568,sumD(3),{cls:'ink paperT',w:734,h:140})+bar3(799,736,188,15,saved)}}
+    A(436,563,sumD(3),{cls:"ink paperT",w:734,h:140})+bar3(799,736,188,15,saved)}}
  if(rec.spread==='five')key='05-five';const v=stage(key,h,{ch:m?{by:rec.spread==='nine'?88:60,bfs:28,foot:true,brand:true}:{bl:rec.spread==='nine'?null:['在每一张牌里','无预设的未来','只有更清晰的你']}});
  const total=flipIn(v,cs,rec.spread==='nine'?180:520);setTimeout(()=>v.classList.add('drawn'),RM()?0:Math.max(0,total-1400));
  $('#more').onclick=()=>readingSheet(rec,{tab:'glance'});if(saved&&!vReading.noAuto)readingSheet(rec,{ro:true,tab:'restore'});

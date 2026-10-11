@@ -652,3 +652,5 @@ html body .gc .gn2{display:block!important;order:2;margin-top:1px;font:500 11px/
 html body .gc.on .gn2{color:#f3e6c6}
 html body #ab.m .gc .gn2{font-size:8.5px!important;letter-spacing:0}
 html body .gc img{order:1;flex:1;min-height:0}
+.msum{padding:0 28px;box-sizing:border-box}
+.msum{gap:1px}.msum .tone{line-height:1.6}.msum .morel{margin-right:6px}
