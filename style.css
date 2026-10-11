@@ -139,7 +139,7 @@ select.sel option{background:#1b1a14}
 button,a,input,textarea,select,[tabindex]{outline:none}
 :focus-visible{outline:none!important;box-shadow:0 0 0 2px #14100a,0 0 0 3.5px #d9b36a!important;border-radius:4px}
 .tile:focus-visible{box-shadow:inset 0 0 0 2px #d9b36a,0 0 0 2px #14100a,0 0 0 3.5px #d9b36a!important;border-radius:6px}
-.tile{background:none!important}
+
 .tile:hover{box-shadow:inset 0 0 0 1px rgba(217,179,106,.55)}
 .tile[aria-checked=true]{box-shadow:inset 0 0 0 2px #c9a35c,inset 0 0 0 3px rgba(60,40,15,.5),0 3px 10px rgba(0,0,0,.55)}
 .tile[aria-checked=true] .lb{color:#2b2116!important;text-decoration-color:#8a6a35}
@@ -148,3 +148,27 @@ button,a,input,textarea,select,[tabindex]{outline:none}
 #ab:not(.m) .tile[aria-checked=true]{background:radial-gradient(ellipse at 50% 40%,#2b3a2b,#162016 75%)!important;box-shadow:inset 0 0 0 1px #3a2a12,inset 0 0 0 3px #c9a35c,inset 0 0 0 4px #6e5022,inset 0 0 0 9px rgba(20,28,20,.9),inset 0 0 0 10px rgba(201,163,92,.55),0 4px 12px rgba(0,0,0,.6)}
 .tile[aria-checked=true] .sic{opacity:1}
 .tile[aria-checked=true] .lb{color:#ecd9ae!important;text-decoration-color:rgba(201,163,92,.7)!important;text-shadow:0 1px 1px #000}
+/* ---- material micro-motion (see MOTION.md §Hover & press) ---- */
+:root{--spr:linear(0,.25 8%,.62 18%,.92 30%,1.06 42%,1.08 50%,1.03 64%,.99 80%,1);--spr-t:220ms}
+#ab:not(.m) .tile{background-size:100% 100%!important;transition:transform var(--spr-t) var(--spr),box-shadow var(--spr-t) ease-out,filter 180ms}
+#ab:not(.m) .tile[data-i="0"]{background:url(assets/tile/p0.webp)}#ab:not(.m) .tile[data-i="1"]{background:url(assets/tile/p1.webp)}#ab:not(.m) .tile[data-i="2"]{background:url(assets/tile/p2.webp)}#ab:not(.m) .tile[data-i="3"]{background:url(assets/tile/p3.webp)}#ab:not(.m) .tile[data-i="4"]{background:url(assets/tile/p4.webp)}#ab:not(.m) .tile[data-i="5"]{background:url(assets/tile/p5.webp)}
+#ab:not(.m) .tile[aria-checked=false]{box-shadow:0 1px 2px rgba(0,0,0,.5)}
+#ab:not(.m) .tile[aria-checked=false]:hover{transform:translateY(-3px) rotate(-.4deg);box-shadow:0 8px 14px -4px rgba(0,0,0,.55),0 2px 3px rgba(0,0,0,.3)}
+.tile:active,.slip:active,.thc:active{transform:translateY(0) scale(.98)!important;transition-duration:90ms!important}
+#ab:not(.m) .tile[aria-checked=false]:active{box-shadow:0 0 1px rgba(0,0,0,.6)}
+#ab:not(.m) .tile[aria-checked=true]{animation:tileSel 260ms var(--spr)}
+@keyframes tileSel{0%{transform:scale(.97);filter:brightness(1.25)}100%{transform:none;filter:none}}
+.tile .sic{transition:opacity 200ms ease-out}
+.slip{transition:transform var(--spr-t) var(--spr),box-shadow var(--spr-t) ease-out}
+.slip:hover{transform:translateY(-2px) rotate(-.3deg);box-shadow:0 7px 12px -4px rgba(0,0,0,.55)}
+.btn,.pill{position:relative;overflow:hidden;transition:transform 160ms var(--spr),box-shadow 160ms,filter 220ms}
+.btn::after,.pill::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,236,190,.16) 50%,transparent 65%);transform:translateX(-120%);transition:transform 700ms cubic-bezier(.3,.1,.2,1);pointer-events:none}
+.btn:hover::after,.pill:hover::after{transform:translateX(120%)}
+.btn:hover,.pill:hover{filter:sepia(.12) brightness(1.06)}
+.btn:active,.pill:active{transform:translateY(1.5px);box-shadow:inset 0 2px 4px rgba(0,0,0,.6)!important;transition-duration:70ms}
+.card{transition:transform var(--spr-t) var(--spr),box-shadow var(--spr-t)}
+a.A:hover>.card,.thc:hover .card,.gn:hover{transform:translateY(-3px);box-shadow:inset 0 0 0 1px rgba(70,48,22,.55),0 1px 0 #cdbb93,0 2px 0 #a8946b,0 3px 0 #7d6a48,0 12px 16px -6px rgba(0,0,0,.7)}
+.chalk,.chalk *{transition:none!important;transform:none}
+.lk,.backs a,.swap{transition:color 180ms}
+@media (prefers-reduced-motion:reduce){.tile,.slip,.btn,.pill,.card,.thc{transition:none!important;animation:none!important}.btn::after,.pill::after{display:none}.tile:hover,.slip:hover,a.A:hover>.card{transform:none!important}}
+.rm .tile,.rm .slip,.rm .btn,.rm .pill,.rm .card{transition:none!important;animation:none!important}
