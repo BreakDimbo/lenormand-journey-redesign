@@ -510,3 +510,6 @@ a.A:hover>.card,.thc:hover .card,.gc:hover{transform:translateY(-1px)!important}
 .dlgp.cfm-p::before{top:-12px}
 .nf2{position:absolute;overflow:visible}.nf2::before{top:-12px}
 .dlgp:not(.cdlg):not(.cfm-p) h3{color:#2a1d10}.dlgp:not(.cdlg):not(.cfm-p) .mu2{color:#5a4632}
+/* filter bar: rounded brass frame only; sprite's square dark corners clipped away */
+.fbar{border:0!important;border-image:none!important}
+.fbar::before{content:"";position:absolute;inset:0;border:12px solid transparent;border-image:url(assets/v2/sel.webp) 14 fill/12px stretch;clip-path:inset(1px round 13px)}
