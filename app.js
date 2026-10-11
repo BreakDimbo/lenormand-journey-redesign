@@ -14,7 +14,7 @@ const SPREADS={three:{name:'三张线性牌',count:3,desc:'看清变化',pos:['�
  nine:{name:'九张肖像牌阵',count:9,desc:'展开全貌',pos:['过去·隐','过去','过去·显','此刻·隐','核心','此刻·显','未来·隐','未来','未来·显']}};
 const DOMKEY={relationship:'relationship',career:'career',wealth:'wealth','lost-item':'lost-item',decision:'general',overview:'general'};
 const LS={get:(k,d)=>{try{return JSON.parse(localStorage.getItem('sr.'+k))??d}catch{return d}},set:(k,v)=>localStorage.setItem('sr.'+k,JSON.stringify(v))};
-const prefs=Object.assign({ambient:false,vol:.5,tts:true,voice:'',reduce:false},LS.get('prefs',{}));
+const prefs=Object.assign({bgm:true,ambient:true,vol:.5,tts:true,voice:'',reduce:false},LS.get('prefs',{}));if(prefs.bgm===undefined)prefs.bgm=true;prefs.ambient=prefs.bgm;
 const savePrefs=()=>{LS.set('prefs',prefs);document.documentElement.classList.toggle('rm',RM())};
 const RM=()=>prefs.reduce||matchMedia('(prefers-reduced-motion: reduce)').matches;
 document.documentElement.classList.toggle('rm',RM());
@@ -77,22 +77,27 @@ function bindDrag(b,{onDrop,onPick}={}){
 }
 
 /* ================= sound ================= */
-const Sound={ctx:null,on:false,nodes:[],out:null,
- start(){const A=window.AudioContext||window.webkitAudioContext;if(!A)return;this.ctx=this.ctx||new A();const c=this.ctx;c.resume();
-  const out=c.createGain();out.gain.value=0;out.connect(c.destination);out.gain.linearRampToValueAtTime(.06*prefs.vol,c.currentTime+4);
-  const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=800;lp.connect(out);
-  const fk={rain:1,fire:.84,still:1.12}[prefs.amb]||1;lp.frequency.value={rain:900,fire:520,still:700}[prefs.amb]||800;[55,82.4,110,164.8,220].map(f=>f*fk).forEach((f,i)=>{const o=c.createOscillator();o.type=i%2?'sine':'triangle';o.frequency.value=f;o.detune.value=(i-2)*4;const g=c.createGain();g.gain.value=.18/(i+1);
-   const l=c.createOscillator();l.frequency.value=.03+i*.017;const lg=c.createGain();lg.gain.value=.08/(i+1);l.connect(lg).connect(g.gain);o.connect(g).connect(lp);o.start();l.start();this.nodes.push(o,l)});
-  this.out=out;this.on=true},
- stop(){if(!this.ctx||!this.on)return;const c=this.ctx,o=this.out,n=this.nodes;o.gain.cancelScheduledValues(c.currentTime);o.gain.setValueAtTime(o.gain.value,c.currentTime);o.gain.linearRampToValueAtTime(0,c.currentTime+1.2);setTimeout(()=>n.forEach(x=>{try{x.stop()}catch{}}),1300);this.nodes=[];this.on=false},
- vol(){if(this.on&&this.out)this.out.gain.setTargetAtTime(.06*prefs.vol,this.ctx.currentTime,.2)},
+const Sound={ctx:null,on:false,out:null,el:null,duck:1,
+ lvl(){return .32*prefs.vol*this.duck},
+ init(){if(this.el)return true;const A=window.AudioContext||window.webkitAudioContext;const el=new Audio();el.loop=true;el.preload='auto';el.crossOrigin='anonymous';
+  el.src=el.canPlayType('audio/ogg; codecs="vorbis"')?'assets/audio/lenormand-bgm-loop.ogg':'assets/audio/lenormand-bgm-loop.mp3';this.el=el;
+  if(A){try{this.ctx=new A();const src=this.ctx.createMediaElementSource(el);this.out=this.ctx.createGain();this.out.gain.value=0;src.connect(this.out).connect(this.ctx.destination)}catch(e){this.ctx=null}}
+  if(!this.ctx)el.volume=0;return true},
+ ramp(v,t){if(this.ctx){const g=this.out.gain,n=this.ctx.currentTime;g.cancelScheduledValues(n);g.setValueAtTime(g.value,n);g.linearRampToValueAtTime(v,n+t)}
+  else{const el=this.el,a=el.volume,t0=performance.now();const f=()=>{const k=Math.min(1,(performance.now()-t0)/(t*1000));el.volume=Math.max(0,Math.min(1,a+(v-a)*k));if(k<1)requestAnimationFrame(f)};f()}},
+ start(){this.init();this.ctx?.resume();const p=this.el.play();if(p&&p.catch)p.catch(()=>{});this.on=true;this.ramp(this.lvl(),2);syncSnd()},
+ stop(){if(!this.el||!this.on)return;this.on=false;this.ramp(0,.8);const el=this.el;setTimeout(()=>{if(!this.on)el.pause()},900);syncSnd()},
+ vol(){if(this.on)this.ramp(this.lvl(),.25)},
+ setDuck(d){this.duck=d?.28:1;this.vol()},
  tap(){if(!this.on||!this.ctx)return;const c=this.ctx,b=c.createBuffer(1,c.sampleRate*.06,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,3);
   const s=c.createBufferSource();s.buffer=b;const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=1800;const g=c.createGain();g.gain.value=.25*prefs.vol;s.connect(f).connect(g).connect(c.destination);s.start()}};
+window.Sound=Sound;function syncSnd(){const b=document.getElementById('sndb');if(b){b.setAttribute('aria-pressed',String(prefs.bgm));b.setAttribute('aria-label',prefs.bgm?'关闭背景音乐':'开启背景音乐')}}
+function toggleBgm(){prefs.bgm=!prefs.bgm;prefs.ambient=prefs.bgm;savePrefs();prefs.bgm?Sound.start():Sound.stop();syncSnd()}
 const voices=()=>(window.speechSynthesis?.getVoices()||[]).filter(v=>/zh/i.test(v.lang));
 const Voice={speaking:false,speak(text,btn){const s=window.speechSynthesis;if(!s){toast('此浏览器不支持朗读');return}
- if(this.speaking){s.cancel();this.speaking=false;btn?.setAttribute('aria-pressed','false');return}
+ if(this.speaking){s.cancel();this.speaking=false;Sound.setDuck(false);btn?.setAttribute('aria-pressed','false');return}
  const u=new SpeechSynthesisUtterance(text);u.lang='zh-CN';u.rate=.88;u.pitch=.95;const v=voices().find(v=>v.name===prefs.voice)||voices()[0];if(v)u.voice=v;
- u.onend=u.onerror=()=>{this.speaking=false;btn?.setAttribute('aria-pressed','false')};s.speak(u);this.speaking=true;btn?.setAttribute('aria-pressed','true')}};
+ u.onend=u.onerror=()=>{this.speaking=false;Sound.setDuck(false);btn?.setAttribute('aria-pressed','false')};Sound.setDuck(true);s.speak(u);this.speaking=true;btn?.setAttribute('aria-pressed','true')}};
 
 /* ================= interpretation ================= */
 function domText(c,topic){const k=DOMKEY[topic]||'general';const arr=(c.domains?.[k]?.length?c.domains[k]:c.domains?.general)||[];return clean(arr.join(''))}
@@ -445,9 +450,9 @@ function vSettings(){const m=M(),vs=voices();
  let kid=null;knob.onpointerdown=e=>{kid=e.pointerId;knob.setPointerCapture(kid)};knob.onpointermove=e=>{if(e.pointerId!==kid)return;const r=knob.getBoundingClientRect();let a=Math.atan2(e.clientY-r.top-r.height/2,e.clientX-r.left-r.width/2)*180/Math.PI+90;if(a>180)a-=360;prefs.vol=Math.max(0,Math.min(1,(a+135)/270));setK();Sound.vol()};
  knob.onpointerup=()=>{kid=null;savePrefs()};knob.onkeydown=e=>{if(/Right|Up/.test(e.key))prefs.vol=Math.min(1,prefs.vol+.05);else if(/Left|Down/.test(e.key))prefs.vol=Math.max(0,prefs.vol-.05);else return;e.preventDefault();setK();Sound.vol();savePrefs()};
  const swf=(id,key,fn)=>{$('#'+id).onclick=e=>{prefs[key]=!prefs[key];e.currentTarget.setAttribute('aria-checked',prefs[key]);savePrefs();$$('.swl').forEach(l=>l.textContent=prefs[l.dataset.k]?'开':'关');fn&&fn()}};
- swf('amb','ambient',()=>prefs.ambient?Sound.start():Sound.stop());swf('tts','tts');swf('rm','reduce');
+ swf('amb','ambient',()=>{prefs.bgm=prefs.ambient;savePrefs();prefs.bgm?Sound.start():Sound.stop()});swf('tts','tts');swf('rm','reduce');
  $('#voice').onchange=e=>{prefs.voice=e.target.value;savePrefs();Voice.speak('静下来，听见内心的声音。')};
- $('#ambsel').onchange=e=>{prefs.amb=e.target.value;savePrefs();if(Sound.on){Sound.stop();setTimeout(()=>Sound.start(),1400)}};
+ $('#ambsel').onchange=e=>{prefs.amb=e.target.value;savePrefs()};
  $('#back')&&($('#back').onclick=()=>history.length>1?history.back():go2('#/'));
 }
 /* ================= overlays & new states ================= */
@@ -531,6 +536,7 @@ function route(){cleanup.forEach(f=>f());cleanup=[];World.clear();window.speechS
  const T2={topic:'选择方向',spread:'选择牌阵',draw:'洗牌与抽牌',reading:'解读',atlas:'牌库图鉴',card:'牌义',history:'我的记录',settings:'声音设置',today:'心灵札记'}[a];
  document.title=(T2?T2+' · ':'')+'寂境 · 雷诺曼';scrollTo(0,0);main.focus({preventScroll:true})}
 addEventListener('hashchange',route);route();
-if(prefs.ambient)addEventListener('pointerdown',()=>{if(prefs.ambient&&!Sound.on)Sound.start()},{once:true});
+{const kick=e=>{if(e.target.closest&&e.target.closest('#sndb'))return;removeEventListener('pointerdown',kick,true);removeEventListener('keydown',kick,true);if(prefs.bgm&&!Sound.on)Sound.start()};addEventListener('pointerdown',kick,true);addEventListener('keydown',kick,true);
+ const b=document.createElement('button');b.id='sndb';b.type='button';b.textContent='声';b.onclick=toggleBgm;document.body.appendChild(b);syncSnd()}
 speechSynthesis?.addEventListener?.('voiceschanged',()=>{if(location.hash==='#/settings')vSettings()});
 })();

@@ -293,3 +293,8 @@ a.A:hover>.card,.thc:hover .card,.gn:hover{transform:translateY(-3px);box-shadow
 .msum{display:flex;flex-direction:column;justify-content:center;gap:4px}
 .msum .tone{font-size:12px;line-height:1.75}
 .msum .morel{align-self:flex-end;font-size:11px}
+#sndb{position:fixed;top:14px;right:16px;z-index:65;width:34px;height:34px;border-radius:50%;font:500 14px/1 var(--serif);color:#f0dcae;
+ background:radial-gradient(circle at 35% 30%,#b48c4c,#6e5022 60%,#3e2c12);box-shadow:inset 0 1px 0 rgba(255,236,190,.5),inset 0 0 0 1px #2a1d0c,0 3px 6px rgba(0,0,0,.6);text-shadow:0 1px 1px #000;transition:transform 160ms var(--spr),filter 200ms}
+#sndb[aria-pressed=false]{filter:grayscale(.8) brightness(.7);color:#b8a882}
+#sndb[aria-pressed=false]::after{content:"";position:absolute;left:8px;right:8px;top:50%;height:1px;background:#e8d8b0;transform:rotate(-40deg)}
+#sndb:hover{filter:brightness(1.08)}#sndb:active{transform:translateY(1px)}
