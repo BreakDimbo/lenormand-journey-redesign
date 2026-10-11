@@ -6,8 +6,10 @@
 <title>寂境 · 雷诺曼</title>
 <meta name="description" content="寂境雷诺曼 — 在一张桌子前，把问题压在纸上，亲手抽牌，看牌自己拼成一句话。">
 <meta name="theme-color" content="#141c16">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400;1,500&family=Ma+Shan+Zheng&family=Long+Cang&family=Noto+Serif+SC:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/nss400-0.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/plate/01-landing-desktop.avif" as="image" type="image/avif" media="(min-width:820.02px)" fetchpriority="high">
+<link rel="preload" href="assets/plate/01-landing-mobile.avif" as="image" type="image/avif" media="(max-width:820px)" fetchpriority="high">
+<link rel="stylesheet" href="fonts.css">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="ov.css">
 <link rel="icon" href="assets/cards/33.webp">
@@ -19,6 +21,8 @@
 <nav id="tabs" aria-label="主导航"></nav>
 <div class="toast" role="status" aria-live="polite"></div>
 <div id="sheet" hidden><div class="paper sheetp" role="dialog" aria-modal="true" aria-label="逐张解读"><button class="x" aria-label="关闭">×</button><div class="sc"></div></div></div>
+<script src="lq.js"></script>
+<script src="perf.js"></script>
 <script src="phrases.js"></script>
 <script src="data.js"></script>
 <script src="clean.js"></script>

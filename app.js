@@ -147,7 +147,7 @@ function chromeM(o){const y=o.by??103,fs=o.bfs||30;let h='';
  if(o.back)h+=`<button class="A" style="left:19px;top:24px;width:30px;height:30px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(226,196,138,.6);color:var(--brass-hi);font-size:16px;background:rgba(0,0,0,.35)" onclick="history.length>1?history.back():location.hash='#/'" aria-label="返回">‹</button>`;
  chrome.innerHTML=h;
  if(o.tabs){tabs.innerHTML=`<div class="bar">${NAV.map(([href,k,ic,l])=>`<a href="${href}" data-nav="${k}"><img src="assets/ic/${TABIC[ic]}.webp" alt=""><span>${l}</span></a>`).join('')}</div>`;tabs.classList.add('on')}else tabs.classList.remove('on')}
-function stage(key,html,o={}){MODE=M()?'m':'d';ABH=o.h||(MODE==='m'?844:900);ab.className=MODE;plate.src=`assets/plate/${key}-${MODE==='m'?'mobile':'desktop'}.webp`;
+function stage(key,html,o={}){MODE=M()?'m':'d';ABH=o.h||(MODE==='m'?844:900);ab.className=MODE;window.PERF?PERF.plate(plate,`assets/plate/${key}-${MODE==='m'?'mobile':'desktop'}.webp`):plate.src=`assets/plate/${key}-${MODE==='m'?'mobile':'desktop'}.webp`;
  (MODE==='m'?chromeM:chromeD)(o.ch||{});main.innerHTML=`<div class="ab-in">${html}</div>`;fit();return main.firstElementChild}
 const chalkSVG=(d,len,x,y,w,h,delay=0)=>A(x,y,`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="overflow:visible"><path class="chalkline" style="--len:${len};transition-delay:${delay}ms" d="${d}"/></svg>`,{st:'line-height:0;pointer-events:none'});
 const markDrawn=el=>requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('drawn')));

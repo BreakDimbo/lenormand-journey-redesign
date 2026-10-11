@@ -3,7 +3,7 @@
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const L=()=>window.LJ,mode=()=>L().M()?'mobile':'desktop',ab=()=>$('#ab');
 const P=(k)=>`assets/plate2/${k}-${mode()}.webp`;
-function platefor(host,k){let im=host.querySelector(':scope>img.ovp');if(!im){im=document.createElement('img');im.className='ovp';im.alt='';im.setAttribute('aria-hidden','true');host.prepend(im)}if(!im.src.endsWith(P(k)))im.src=P(k)}
+function platefor(host,k){let im=host.querySelector(':scope>img.ovp');if(!im){im=document.createElement('img');im.className='ovp';im.alt='';im.setAttribute('aria-hidden','true');host.prepend(im)}window.PERF?PERF.set(im,P(k)):(im.src.endsWith(P(k))||(im.src=P(k)))}
 const KEY={glance:'13-glance',cards:'14-onecard',deep:'15-deeper',story:'16-story',restore:'23-restore'};
 const CN=['一','二','三','四'];
 /* ---------- reading sheet ---------- */
