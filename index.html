@@ -4,32 +4,33 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>寂境 · 雷诺曼</title>
-<meta name="description" content="寂境雷诺曼 — 把困惑整理成可观察的问题，以组合成句的方式读牌。">
-<meta name="theme-color" content="#14110f">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Noto+Serif+SC:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<meta name="description" content="寂境雷诺曼 — 在一张桌子前，把问题压在纸上，亲手抽牌，看牌自己拼成一句话。">
+<meta name="theme-color" content="#141c16">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,400&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/table.webp">
 <link rel="stylesheet" href="style.css">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2314110f'/%3E%3Crect x='10' y='6' width='12' height='20' fill='none' stroke='%23d8cdb8' stroke-width='1.2'/%3E%3C/svg%3E">
+<link rel="icon" href="assets/cards/33.webp">
 </head>
 <body>
+<div class="tablebg" aria-hidden="true"></div>
+<div class="lamp" aria-hidden="true"></div>
+<div class="deckdeco" aria-hidden="true"><i style="transform:translate(0px,0.0px) rotate(-0.6deg)"></i><i style="transform:translate(2px,-2.2px) rotate(0.0deg)"></i><i style="transform:translate(4px,-4.4px) rotate(0.6deg)"></i><i style="transform:translate(6px,-6.6000000000000005px) rotate(-0.6deg)"></i><i style="transform:translate(8px,-8.8px) rotate(0.0deg)"></i><i style="transform:translate(10px,-11.0px) rotate(0.6deg)"></i><i style="transform:translate(12px,-13.200000000000001px) rotate(-0.6deg)"></i><i style="transform:translate(14px,-15.400000000000002px) rotate(0.0deg)"></i><i style="transform:translate(16px,-17.6px) rotate(0.6deg)"></i></div>
 <a class="skip" href="#main">跳到正文</a>
-<header class="masthead">
-  <a class="brand" href="#/" aria-label="寂境 首页"><span class="brand-zh">寂境</span><span class="brand-en">Stillrealm</span></a>
-  <nav aria-label="主导航">
-    <a href="#/" data-nav="read">占卜</a>
-    <a href="#/learn" data-nav="learn">学牌</a>
-    <a href="#/history" data-nav="history">来路</a>
+<aside class="side">
+  <a class="brand" href="#/"><b>寂境</b><i>Stillrealm</i><small>在静默中，看见生活的下一页。</small></a>
+  <nav class="nav" aria-label="主导航">
+    <a href="#/" data-nav="read"><svg viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/></svg><span>占卜仪式</span></a>
+    <a href="#/atlas" data-nav="atlas"><svg viewBox="0 0 24 24"><path d="M3 5h7a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H3zM21 5h-7a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h7z"/></svg><span>牌库图鉴</span></a>
+    <a href="#/history" data-nav="history"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6zM9 10h7M9 14h7M9 18h4"/></svg><span>我的记录</span></a>
+    <a href="#/settings" data-nav="settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></svg><span>声音设置</span></a>
   </nav>
-</header>
+  <p class="side-foot">在每一张牌里<br>无须读出未来<br>只有更清晰的你</p>
+</aside>
+<p class="corner" aria-hidden="true">CARDS<br>PEOPLE<br>A QUIETER YOU</p>
 <main id="main" tabindex="-1"></main>
-<footer class="colophon">
-  <p><span>寂境 · Stillrealm</span><span>三十六张牌，一句尚未说出的话。</span></p>
-  <p class="fine">解读仅供自我觉察，不替代医疗、法律或财务建议。记录只保存在这台设备。</p>
-</footer>
 <div class="toast" role="status" aria-live="polite"></div>
 <script src="data.js"></script>
-<script src="glyphs.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
