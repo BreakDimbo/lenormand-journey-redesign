@@ -644,3 +644,11 @@ html body #ab.m .ixs .ixr{font-size:13px;line-height:1.75}
 /* 36: mobile atlas — readable number + name under each card (card art keeps its baked label) */
 #ab.m .acm .cap{position:absolute;left:0;right:0;top:100%;margin-top:2px;text-align:center;font:500 11px/1.2 var(--serif);letter-spacing:.08em;color:rgba(240,230,206,.92);text-shadow:0 1px 2px rgba(0,0,0,.9);white-space:nowrap;pointer-events:none}
 #ab.m .acm .cap i{font-style:normal;color:rgba(222,190,124,.95);margin-right:4px}
+/* desktop atlas: same restrained number+name caption as mobile */
+#ab.d .acd .cap{position:absolute;left:-10px;right:-10px;top:100%;margin-top:2px;text-align:center;font:500 11.5px/1.2 var(--serif);letter-spacing:.08em;color:rgba(240,230,206,.92);text-shadow:0 1px 2px rgba(0,0,0,.9);white-space:nowrap;pointer-events:none}
+#ab.d .acd .cap i{font-style:normal;color:rgba(222,190,124,.95);margin-right:4px}
+/* graph tiles: restore the number+name caption under the new card art (art keeps its baked label) */
+html body .gc .gn2{display:block!important;order:2;margin-top:1px;font:500 11px/1.15 var(--serif);letter-spacing:.04em;color:#2b1f13}
+html body .gc.on .gn2{color:#f3e6c6}
+html body #ab.m .gc .gn2{font-size:8.5px!important;letter-spacing:0}
+html body .gc img{order:1;flex:1;min-height:0}
