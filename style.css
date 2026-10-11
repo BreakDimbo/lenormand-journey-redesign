@@ -494,3 +494,19 @@ main:focus,main:focus-visible,#ab>main:focus-visible{box-shadow:none!important;o
 a.A:hover>.card,.thc:hover .card,.gc:hover{transform:translateY(-1px)!important}
 .slip:active,.tile:active,.thc:active{transform:translateY(1px)!important;box-shadow:0 1px 2px rgba(0,0,0,.5)!important}
 .btn.hit>span[aria-hidden]{margin-right:.35em;letter-spacing:0}
+/* ---- atlas filter bar (mockup 07): one brass header bar, inset search, engraved tabs, one baseline ---- */
+.fbar{border:12px solid transparent;border-image:url(assets/v2/sel.webp) 14 fill/12px stretch;filter:drop-shadow(0 4px 6px rgba(0,0,0,.55));pointer-events:none}
+#ab:not(.m) .search{background:rgba(6,7,5,.72) url(assets/ic/search.webp) 13px center/15px no-repeat!important;box-shadow:inset 0 2px 4px rgba(0,0,0,.8),inset 0 -1px 0 rgba(233,207,152,.12)!important}
+#ab:not(.m) .fil button{height:32px!important;min-width:0!important;padding:0 10px;margin-top:0!important;text-shadow:0 -1px 0 rgba(0,0,0,.8),0 1px 0 rgba(233,207,152,.18)}
+#ab:not(.m) .fil button[data-f=all]{padding:0 12px}
+#ab:not(.m) .fil button+button::before{content:"";position:absolute;left:-1px;top:9px;height:14px;width:1px;background:rgba(233,207,152,.28)}
+#ab:not(.m) .gtab{background:rgba(9,10,7,.92);box-shadow:inset 0 1px 3px rgba(0,0,0,.7);padding:2px}
+#ab:not(.m) .gtab a{padding:0 13px;line-height:28px;text-shadow:0 -1px 0 rgba(0,0,0,.8)}
+/* settings selectors: engraved label centred on the plate like mockup 10 */
+.sel{text-align:center;text-align-last:center}
+/* P0-1: one photographic paper master (cd-d torn sheet) for every dialog, 9-sliced so torn edges stay at full resolution, + brass tack */
+.dlgp:not(.cdlg):not(.cfm-p):not(.ovkp){background:none!important;box-shadow:none!important;border-radius:0!important;border:34px solid transparent;border-image:url(assets/v2/cd-d.webp) 70 fill/34px stretch;padding:14px 18px 10px!important;overflow:visible!important;filter:drop-shadow(0 22px 34px rgba(0,0,0,.6));position:relative;color:#2b1f13}
+.dlgp:not(.cdlg):not(.ovkp)::before,.nf2::before{content:"";position:absolute;left:50%;top:-44px;width:36px;height:36px;margin-left:-18px;background:url(assets/v2/tack.webp) center/contain no-repeat;filter:drop-shadow(0 3px 3px rgba(0,0,0,.55));z-index:3}
+.dlgp.cfm-p::before{top:-12px}
+.nf2{position:absolute;overflow:visible}.nf2::before{top:-12px}
+.dlgp:not(.cdlg):not(.cfm-p) h3{color:#2a1d10}.dlgp:not(.cdlg):not(.cfm-p) .mu2{color:#5a4632}
