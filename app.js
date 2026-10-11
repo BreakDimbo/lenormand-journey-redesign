@@ -160,13 +160,13 @@ function vLanding(){const m=M();const ok=S.q.trim().length>=4;
   A(320,505,`<span id="cnt">${S.q.length}</span>/600`,{cls:'en ink2',st:'transform:translateX(-100%);font-size:12px;font-style:italic'})+
   T_(195,548,chalkText('有些答案，一直在等你。'),18,{cls:'c chalk'})+chalkSVG('M2 14 Q90 2 200 6',220,95,568,210,18,900)+
   A(103,656,'把问题压在桌上 <span aria-hidden="true">→</span>',{tag:'button',cls:'btn hit',w:184,h:44,st:'font-size:15px',at:`id="go" aria-disabled="${!ok}"`})+
-  `<a class="A t c mu" href="#/topic" style="left:195px;top:712px;font-size:11px;border-bottom:1px dashed;letter-spacing:.14em">或者先借一句问法</a>`,{ch:{by:103,tabs:true}})
+  `<a class="A t c mu" href="#/ask" style="left:195px;top:712px;font-size:11px;border-bottom:1px dashed;letter-spacing:.14em">或者先借一句问法</a>`,{ch:{by:103,tabs:true}})
  :stage('01-landing',
   T_(803,121,'尚未说出的事',21,{cls:'c',st:'letter-spacing:.32em'})+A(803,165,`<svg width="110" height="14" aria-hidden="true"><path d="M0 7H44M66 7H110" stroke="rgba(226,196,138,.5)" stroke-width=".8"/><path d="M50 10q5-9 11-6-4 6-11 6z" fill="rgba(226,196,138,.7)"/></svg>`,{cls:'c',st:'line-height:0'})+
   `<label class="sr" for="q">写下你想问的事</label><textarea id="q" class="A qin" maxlength="600" placeholder="写下你想问的事…" style="left:578px;top:292px;width:470px;height:270px;font:400 21px/1.8 var(--serif);letter-spacing:.14em">${esc(S.q)}</textarea>`+
   A(1060,566,`<span id="cnt">${S.q.length}</span>/600`,{cls:'en ink2',st:'transform:translateX(-100%);font-size:13px;font-style:italic'})+
   A(649,656,'把问题压在桌上 <span aria-hidden="true">→</span>',{tag:'button',cls:'btn hit',w:309,h:62,st:'font-size:19px',at:`id="go" aria-disabled="${!ok}"`})+
-  `<a class="A t c mu" href="#/topic" style="left:803px;top:736px;font-size:12.5px;border-bottom:1px dashed;letter-spacing:.16em">或者先借一句问法</a>`,
+  `<a class="A t c mu" href="#/ask" style="left:803px;top:736px;font-size:12.5px;border-bottom:1px dashed;letter-spacing:.16em">或者先借一句问法</a>`,
   {ch:{bl:['36 张卡牌','无预设的未来','只有更清晰的你']}});
  markDrawn(v);
  const q=$('#q'),go=$('#go');q.addEventListener('input',()=>{S.q=q.value;$('#cnt').textContent=q.value.length;go.setAttribute('aria-disabled',q.value.trim().length<4);save()});
@@ -347,7 +347,7 @@ function vReading(id){
     A(436,594,sumD(3),{cls:'ink paperT',w:734,h:98})+bar3(799,736,188,15,saved)}}
  if(rec.spread==='five')key='05-five';const v=stage(key,h,{ch:m?{by:rec.spread==='nine'?88:60,bfs:28,foot:true,brand:true}:{bl:rec.spread==='nine'?null:['在每一张牌里','无预设的未来','只有更清晰的你']}});
  const total=flipIn(v,cs,rec.spread==='nine'?180:520);setTimeout(()=>v.classList.add('drawn'),RM()?0:Math.max(0,total-1400));
- $('#more').onclick=()=>readingSheet(rec,{tab:'glance'});if(saved&&!vReading.noAuto)readingSheet(rec,{ro:true,tab:rec.answers?'story':'glance'});
+ $('#more').onclick=()=>readingSheet(rec,{tab:'glance'});if(saved&&!vReading.noAuto)readingSheet(rec,{ro:true,tab:'restore'});
  $('#keep').onclick=e=>{if(saved)return;const b=e.currentTarget;keepDialog(rec,()=>{b.querySelector('span').textContent='已收藏';b.disabled=true})};
  $('#tts').onclick=e=>prefs.tts?Voice.speak(narration,e.currentTarget):toast('朗读已在设置中关闭');
  $('#again').onclick=()=>newQuestion();
@@ -469,7 +469,7 @@ function ask(title,msg,ok='删去'){return new Promise(res=>{const p=openDlg(`<h
 function factsDialog(){const p=openDlg(`<h3>补充已知事实</h3><p class="mu2">已经发生了什么？写下的事实会被织进完整故事里。</p><textarea id="fx" maxlength="600" placeholder="例如：上个月我们大吵了一次，之后他很少主动联系。">${esc(S.facts)}</textarea><p class="cnt"><span id="fxc">${S.facts.length}</span>/600</p><div class="drow"><button class="pill" data-a="1">放进纸条</button></div>`);
  const t=$('#fx',p);t.oninput=()=>{$('#fxc',p).textContent=t.value.length};p.onclick=e=>{if(e.target.closest('[data-a]')){S.facts=t.value;save();closeDlg();toast(S.facts?'事实已补充':'已清空补充事实')}}}
 function loading(next){if(RM())return next();const L=['正在辨认每张牌的显性含义…','正在把相邻的牌连成句子…','正在对照你的问题与位置…','故事的轮廓渐渐清楚了…'];
- const o=document.createElement('div');o.id='load';o.setAttribute('role','status');o.innerHTML=`<div class="ll">${L.map((l,i)=>`<p class="chalk" style="animation-delay:${i*520}ms">${chalkText(l,i*520)}</p>`).join('')}</div><button class="skipb">跳过 ›</button>`;document.body.append(o);requestAnimationFrame(()=>o.classList.add('drawn'));
+ const o=document.createElement('div');o.id='load';o.setAttribute('role','status');o.innerHTML=`<div class="ll">${L.map((l,i)=>`<p class="chalk" style="animation-delay:${i*520}ms">${chalkText(l,i*520)}</p>`).join('')}</div><button class="skipb">跳过 ›</button>`;document.body.append(o);window.OV&&OV.loading(o);requestAnimationFrame(()=>o.classList.add('drawn'));
  let done=false;const fin=()=>{if(done)return;done=true;clearTimeout(t);o.remove();next()};const t=setTimeout(fin,2500);o.onclick=fin;addEventListener('keydown',fin,{once:true})}
 function newQuestion(){S={topic:S.topic,q:'',facts:'',spread:null,picked:[]};save();$('#sheet').hidden=true;closeDlg();go2('#/')}
 /* ---- reading sheet ---- */
@@ -478,7 +478,7 @@ function readingSheet(rec,o={}){const R=interpret(rec),cs=R.cards,ro=!!o.ro;cons
  const sh=$('#sheet'),sc=$('.sc',sh);sh.hidden=false;sh.dataset.ro=ro;
  const thumbs=()=>`<div class="strip ${st.strip?'':'shut'}"><button class="lk tog" aria-expanded="${st.strip}">${st.strip?'收起牌阵 ▴':'展开牌阵 ▾'}</button><div class="th">${cs.map((c,i)=>`<button class="thc" data-c="${i}" aria-label="${R.sp.pos[i]} · ${esc(zh(c))}，查看牌义">${cardHTML(c,'d',cs.length>5?44:58)}<small>${R.sp.pos[i]}</small></button>`).join('')}</div></div>`;
  const tabsH=()=>`<nav class="tabs" role="tablist">${[['glance','初见'],['cards','逐张看'],['deep','继续深入']].concat(st.story||ro?[['story','完整故事']]:[]).map(([k,l])=>`<button role="tab" aria-selected="${st.tab===k}" data-t="${k}">${l}</button>`).join('')}</nav>`;
- const pane=()=>{if(st.tab==='glance')return`<p class="kick">此刻 · 你的问题</p><p class="qq">${esc(rec.q)}</p><h2>${esc(G.headline)}</h2><h4>先说结论</h4><p>${esc(G.conclusion)}</p><h4>线索</h4><ul class="clues">${G.clues.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><div class="drow"><button class="lk" data-t="cards">逐张看 ›</button><button class="pill" data-t="deep">继续深入 ›</button></div>`;
+ const pane=()=>{if(st.tab==='restore'&&window.OV)return OV.restore(rec,R,st);if(st.tab==='glance')return`<p class="kick">此刻 · 你的问题</p><p class="qq">${esc(rec.q)}</p><h2>${esc(G.headline)}</h2><h4>先说结论</h4><p>${esc(G.conclusion)}</p><h4>线索</h4><ul class="clues">${G.clues.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><div class="drow"><button class="lk" data-t="cards">逐张看 ›</button><button class="pill" data-t="deep">继续深入 ›</button></div>`;
   if(st.tab==='cards'){const c=cs[st.i];return`<div class="one"><div class="oc">${cardHTML(c,'d',150)}</div><div><p class="kick">${R.sp.pos[st.i]} · 第 ${st.i+1} 张</p><h2>${esc(zh(c))} <span class="en">${esc(c.name)}</span></h2><p>${esc(clean(c.summary))}。</p><p>${esc(domText(c,rec.topic))}</p><p class="chalkp">${esc(PH[c.id].s)}，${esc(PH[c.id].p)}。</p></div></div><div class="pager2"><button class="lk" data-n="-1" ${st.i?'':'disabled'} aria-label="上一张">‹ 上一张</button><span aria-live="polite">${st.i+1} / ${cs.length}</span><button class="lk" data-n="1" ${st.i<cs.length-1?'':'disabled'} aria-label="下一张">下一张 ›</button></div>`}
   if(st.tab==='deep'){const all=FQ.every((_,i)=>st.ans[i]&&String(st.ans[i]).trim());return`<h4>此刻，你对这件事有几分把握？</h4><div class="sl"><span>1</span><input type="range" min="1" max="10" step="1" id="lv" value="${st.lv}" ${ro?'disabled':''} aria-valuetext="${st.lv} 分"><span>10</span><b id="lvv">${st.lv}</b></div>
    ${FQ.map((f,i)=>{const own=st.ans[i]&&!f.o.includes(st.ans[i]);return`<fieldset ${ro?'disabled':''}><legend>${i+1}. ${esc(f.q)}</legend>${f.o.map(x=>`<label><input type="radio" name="q${i}" value="${esc(x)}" ${st.ans[i]===x?'checked':''}> ${esc(x)}</label>`).join('')}<label class="own"><input type="radio" name="q${i}" value="__own" ${own?'checked':''}> 自己填写 <input type="text" class="ownt" data-i="${i}" maxlength="80" placeholder="用你的话说…" value="${own?esc(st.ans[i]):''}" ${own?'':'tabindex="-1"'}></label></fieldset>`}).join('')}
@@ -486,7 +486,7 @@ function readingSheet(rec,o={}){const R=interpret(rec),cs=R.cards,ro=!!o.ro;cons
   const S2=st.story||(st.story=STORY.story(rec,st.ans,st.lv)),c=S2[st.ch];
   return`<p class="kick">完整故事 · 第 ${st.ch+1} 章 / 4</p><h2 class="cht">${['一','二','三','四'][st.ch]} · ${c.t}</h2>${c.p.map(x=>`<p>${esc(x)}</p>`).join('')}<div class="pager2"><button class="lk" data-chn="-1" ${st.ch?'':'disabled'}>‹ ${st.ch?S2[st.ch-1].t:'上一章'}</button><span>${st.ch+1} / 4</span><button class="lk" data-chn="1" ${st.ch<3?'':'disabled'}>${st.ch<3?S2[st.ch+1].t:'下一章'} ›</button></div>`};
  const foot=()=>`<footer>${ro?'<span class="mu2">已收藏 · 只读</span>':`<button class="lk" id="fav">收藏</button>`}<button class="lk" id="newq">换一个问题</button></footer>`;
- const render=()=>{sc.innerHTML=thumbs()+tabsH()+`<div class="pane" role="tabpanel">${pane()}</div>`+foot();sc.scrollTop=0};
+ const render=()=>{sc.innerHTML=thumbs()+tabsH()+`<div class="pane" role="tabpanel">${pane()}</div>`+foot();sc.scrollTop=0;window.OV&&OV.sheet(sh,st,rec,R,ro)};
  const upd=()=>{const all=FQ.every((_,i)=>st.ans[i]&&String(st.ans[i]).trim());const t=$('#tell',sc);if(t){t.disabled=!all;t.title=all?'':'回答完每一个问题后才能展开'}};
  render();$('.x',sh).focus();$('.x',sh).onclick=()=>{sh.hidden=true};sh.onclick=e=>{if(e.target===sh)sh.hidden=true};
  sc.onclick=e=>{const t=e.target.closest('[data-t]');if(t){st.tab=t.dataset.t;render();return}
@@ -505,7 +505,7 @@ function readingSheet(rec,o={}){const R=interpret(rec),cs=R.cards,ro=!!o.ro;cons
 function cardDialog(c,pos,topic){const p=openDlg(`<div class="cd"><div class="flipcard big" style="position:relative;width:170px;height:255px"><div class="in3" style="transition:transform .8s cubic-bezier(.3,1.3,.5,1)">${cardHTML(c,'d',170,255)}${backHTML2(170,255).replace('class="card back"','class="card back bk2"')}</div></div><div><p class="kick">${pos?esc(pos)+' · ':''}No.${pad(c.id)}</p><h3>${esc(zh(c))} <span class="en">${esc(c.name)}</span></h3><p>${esc(clean(c.summary))}。</p><p>${esc(domText(c,topic||'overview'))}</p><p class="mu2">关键词：${esc((c.nouns||[]).map(clean).slice(0,5).join('、'))}</p></div></div><div class="drow"><button class="lk" id="flipb" aria-pressed="false">翻到牌背</button><a class="lk" href="#/card/${c.id}">完整牌义 ›</a><button class="pill" id="cl" autofocus>收起</button></div>`,'wide');
  let f=false;$('#flipb',p).onclick=e=>{f=!f;$('.in3',p).style.transform=f?'rotateY(180deg)':'none';e.target.textContent=f?'翻回正面':'翻到牌背';e.target.setAttribute('aria-pressed',f);Sound.tap()};$('#cl',p).onclick=closeDlg;$('a',p).onclick=()=>{closeDlg();$('#sheet').hidden=true}}
 function keepDialog(rec,done){const has=rec.answers&&Object.values(rec.answers).some(Boolean);
- const p=openDlg(`<h3>收藏这次占卜</h3><p class="mu2">收进「我的记录」，只保存在这台设备上。</p><p class="qq">「${esc(rec.q)}」</p><label class="ck"><input type="checkbox" id="ka" ${has?'checked':'disabled'}> 一并保存我的跟进回答${has?'':'（还没有回答）'}</label><div class="drow"><button class="lk" data-a="0">取消</button><button class="pill" data-a="1" autofocus>收藏</button></div>`,'small');
+ const p=openDlg(`<h3>收藏这次占卜</h3><p class="mu2">收进「我的记录」，只保存在这台设备上。</p><p class="qq">「${esc(rec.q)}」</p><label class="ck"><input type="checkbox" id="ka" ${has?'checked':'disabled'}> 一并保存我的跟进回答${has?'':'（还没有回答）'}</label><div class="drow"><button class="lk" data-a="0">取消</button><button class="pill" data-a="1" autofocus>收藏</button></div>`,'small');window.OV&&OV.keep(p,rec);
  p.onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;if(b.dataset.a==='1'){const r=Object.assign({},rec);if(!$('#ka',p).checked){delete r.answers;delete r.lv}r.saved=Date.now();LS.set('history',[r,...LS.get('history',[]).filter(x=>x.id!==r.id)].slice(0,100));toast('已收进「我的记录」');done&&done()}closeDlg()}}
 /* ---- relationship graph ---- */
 const suit=c=>(clean(c.pokerCard).match(/^(黑桃|红桃|红心|梅花|方块|方片)/)||[])[1];
@@ -530,11 +530,12 @@ let cleanup=[];
 function go2(h){if(location.hash===h)route();else location.hash=h}
 function route(){cleanup.forEach(f=>f());cleanup=[];World.clear();window.speechSynthesis?.cancel();$('#sheet').hidden=true;
  const h=location.hash.replace(/^#/,'')||'/';const[,a,b]=h.split('/');document.body.dataset.r=a||'';
- ({'':vLanding,topic:vTopic,spread:vSpread,draw:vDraw,reading:()=>vReading(b),atlas:vAtlas,card:()=>vCard(+b),history:vHistory,settings:vSettings,today:()=>{const d=new Date();vCard((d.getFullYear()*372+d.getMonth()*31+d.getDate())%36+1,true)}}[a||'']||vLanding)();
+ ({'':vLanding,ask:()=>window.OV.ask(),topic:vTopic,spread:vSpread,draw:vDraw,reading:()=>vReading(b),atlas:vAtlas,card:()=>vCard(+b),history:vHistory,settings:vSettings,today:()=>{const d=new Date();vCard((d.getFullYear()*372+d.getMonth()*31+d.getDate())%36+1,true)}}[a||'']||vLanding)();
  const nav={atlas:'atlas',card:'atlas',history:'history',settings:'settings',today:'today'}[a]||'read';
  $$('[data-nav]').forEach(x=>x.dataset.nav===nav?x.setAttribute('aria-current','page'):x.removeAttribute('aria-current'));
  const T2={topic:'选择方向',spread:'选择牌阵',draw:'洗牌与抽牌',reading:'解读',atlas:'牌库图鉴',card:'牌义',history:'我的记录',settings:'声音设置',today:'心灵札记'}[a];
  document.title=(T2?T2+' · ':'')+'寂境 · 雷诺曼';scrollTo(0,0);main.focus({preventScroll:true})}
+window.LJ={loading,esc,zh,clean,cardHTML,chalkText,chalkSVG,M,RM,interpret,SPREADS,go2,newQuestion,toast,save,LS,domText,stage,A,T_,markDrawn,TPL,T,C,readingSheet,keepDialog,get S(){return S},set S(v){S=v},get cleanup(){return cleanup}};
 addEventListener('hashchange',route);route();
 {const kick=e=>{if(e.target.closest&&e.target.closest('#sndb'))return;removeEventListener('pointerdown',kick,true);removeEventListener('keydown',kick,true);if(prefs.bgm&&!Sound.on)Sound.start()};addEventListener('pointerdown',kick,true);addEventListener('keydown',kick,true);
  const b=document.createElement('button');b.id='sndb';b.type='button';b.textContent='声';b.onclick=toggleBgm;document.body.appendChild(b);syncSnd()}
