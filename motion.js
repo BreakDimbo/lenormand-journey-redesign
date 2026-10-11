@@ -37,7 +37,7 @@ const idleFor=()=>performance.now()-lastInput;
 const ab=$('#ab');
 const amb=document.createElement('div');amb.className='mo-amb';amb.setAttribute('aria-hidden','true');
 const cv=document.createElement('canvas');cv.className='mo-dust';cv.setAttribute('aria-hidden','true');
-ab.append(amb,cv);
+(ab.querySelector(".plate")||ab.firstChild).after(amb,cv);
 // 1/f-ish noise: sum of three slow sines with incommensurate periods
 const breath=t=>.5*Math.sin(t/7100)+.3*Math.sin(t/11300+1.7)+.2*Math.sin(t/4300+4.1);
 const Amb={timer:0,raf:0,motes:[],dip:0,nextDip:0,cw:0,ch:0,ctx:null,frame:0,box:null,
@@ -59,9 +59,9 @@ const Amb={timer:0,raf:0,motes:[],dip:0,nextDip:0,cw:0,ch:0,ctx:null,frame:0,box
    if(p.y>b.h+6||p.x<-6||p.x>b.w+6)Object.assign(p,this.mote(false));
    const L=this.lit(p.x,p.y);if(L<=.02)continue;c.globalAlpha=p.a*L;const s=p.r*4;c.drawImage(this.sprite,p.x-s/2,p.y-s/2,s,s)}},
  loop(t){this.raf=0;if(document.hidden)return;const full=FULL()&&!lowPower();
-  if(full&&idleFor()<60000){if((this.frame++&1)===0)this.draw(t);this.raf=requestAnimationFrame(x=>this.loop(x))}else cv.style.opacity='0'},
+  if(full&&idleFor()<60000&&!/^#\/draw/.test(location.hash)){if((this.frame++&1)===0)this.draw(t);this.raf=requestAnimationFrame(x=>this.loop(x))}else cv.style.opacity='0'},
  tickLamp(){if(document.hidden||level()!=='full'){amb.style.opacity='.035';return}
-  const t=performance.now();let o=.035-breath(t)*.015;
+  const t=performance.now();const busy=t<MO.busy||/^#\/draw/.test(location.hash);amb.classList.toggle('off',busy);if(busy)return;let o=.035-breath(t)*.015;
   if(t>this.nextDip){this.dip=t;this.nextDip=t+40000+Math.random()*50000}
   if(t-this.dip<240)o+=.04;amb.style.opacity=o.toFixed(4);
   if(idleFor()>90000){this.stopLamp()}},
@@ -121,7 +121,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('#dlg [data-a="1"
   setTimeout(()=>{SFX.play('seal',{vol:.9});buzz(12)},level()==='full'?470:0);setTimeout(()=>s.remove(),3500)},120)},true);
 
 /* ---------- route hook ---------- */
-function onRoute(){setLevel();wrapTap();requestAnimationFrame(()=>{Amb.layout();Amb.wake();watchShuffle();litCards();inkReading()})}
+function onRoute(){setLevel();MO.busy=performance.now()+(/^#\/reading/.test(location.hash)?8000:0);amb.classList.toggle('off',MO.busy>performance.now()||/^#\/draw/.test(location.hash));wrapTap();requestAnimationFrame(()=>{Amb.layout();Amb.wake();watchShuffle();litCards();inkReading()})}
 
 /* battery: drop to reduced ambient on low battery */
 navigator.getBattery?.().then(b=>{const f=()=>{MO.battLow=!b.charging&&b.level<.2};f();b.addEventListener('levelchange',f);b.addEventListener('chargingchange',f)}).catch(()=>{});

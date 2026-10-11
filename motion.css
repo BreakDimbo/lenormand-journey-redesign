@@ -1,14 +1,16 @@
 /* Motion v2 (batch 1) — see MOTION.md §V2. Only transform/opacity animate; no glow, no particles-as-effect. */
 html{--mo-e:cubic-bezier(.16,.84,.3,1)}
 /* A1 lamp breathing — a dimmer, never a glow: a dark edge-weighted veil whose opacity drifts. */
-.mo-amb{position:absolute;inset:0;z-index:40;pointer-events:none;opacity:.035;transition:opacity .25s linear;
+.mo-amb{position:absolute;inset:0;pointer-events:none;transition:opacity 4s linear;opacity:.035;
  background:radial-gradient(ellipse 70% 85% at 52% -8%,rgba(0,0,0,.25) 0%,rgba(0,0,0,.75) 60%,#000 100%)}
+/* hidden while the table is busy (shuffle, flips): the cut hides the switch; fades back over 4s */
+.mo-amb.off{opacity:0!important;visibility:hidden;transition:none}
 /* A2 dust in the cone */
-.mo-dust{position:absolute;z-index:39;pointer-events:none}
+.mo-dust{position:absolute;pointer-events:none;will-change:transform}
 /* T1 lamp dims between scenes: edges first (gradient), centre last */
-.mo-veil{position:fixed;inset:0;z-index:48;pointer-events:none;opacity:0;
+.mo-veil{position:fixed;inset:0;z-index:48;pointer-events:none;opacity:0;visibility:hidden;
  background:radial-gradient(ellipse 60% 70% at 52% 0%,rgba(4,6,5,.62) 0%,rgba(4,6,5,.9) 70%)}
-.mo-veil.dn{opacity:1;transition:opacity .28s cubic-bezier(.4,0,.8,.6)}
+.mo-veil.dn,.mo-veil.up{visibility:visible}.mo-veil.dn{opacity:1;transition:opacity .28s cubic-bezier(.4,0,.8,.6)}
 .mo-veil.up{animation:mo-up .62s cubic-bezier(.2,.6,.3,1) both}
 @keyframes mo-up{0%{opacity:1}78%{opacity:.07}84%{opacity:.11}100%{opacity:0}}
 /* T3 paper slides in under a hand (individual translate/rotate so authored transforms survive) */
@@ -27,7 +29,7 @@ html{--mo-e:cubic-bezier(.16,.84,.3,1)}
 /* R5 ink bleeding into paper */
 .mo-ink-wait .paperT,.mo-ink-wait .ink:not(.ink2){visibility:hidden}
 .mo-s{display:inline;animation:mo-ink 1.5s cubic-bezier(.25,.6,.3,1) both}
-@keyframes mo-ink{0%{opacity:0;filter:blur(1.6px);color:#120c06}18%{opacity:.9;filter:blur(.7px)}45%{filter:blur(.25px);color:#140e08}100%{opacity:1;filter:none}}
+@keyframes mo-ink{0%{opacity:0;text-shadow:0 0 1.4px currentColor;color:#120c06}20%{opacity:.92}55%{text-shadow:0 0 .3px currentColor;color:#150f08}100%{opacity:1;text-shadow:none}}
 /* R6 wax seal */
 .mo-seal{position:fixed;z-index:80;width:66px;height:66px;margin:-33px 0 0 -33px;pointer-events:none;background:url(assets/mo/seal.webp) center/contain no-repeat;
  filter:drop-shadow(0 2px 2px rgba(0,0,0,.55));animation:mo-seal 3.4s cubic-bezier(.3,.7,.3,1) both}
