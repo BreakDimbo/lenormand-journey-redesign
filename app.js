@@ -159,10 +159,11 @@ function vDraw(){
  <p class="counter chalk" id="cnt" aria-live="polite">画圈洗牌</p>
  <div class="actions"><button class="brass dark" id="auto">替我洗牌</button><button class="brass" id="go" disabled>翻开 <span aria-hidden="true">→</span></button></div>`);
  const stage=$('#stage'),slotsEl=$('#slots');World.clear();
+ stage.insertAdjacentHTML('afterbegin','<svg class="swirlhint chalk" aria-hidden="true" viewBox="0 0 200 160"><path class="chalkline" style="--len:420" d="M40 30 A85 65 0 0 0 30 120 M160 40 A85 65 0 0 1 150 130"/><path class="chalkline" style="--len:30" d="M24 112 L30 122 L40 115 M144 125 L150 132 L158 124"/><text x="150" y="20">画圈洗牌</text></svg>');requestAnimationFrame(()=>stage.classList.add('drawn'));
  const W=()=>stage.clientWidth;const cw=()=>parseFloat(getComputedStyle(stage).getPropertyValue('--cw'))||120;
  // layout
  const nineMode=N>5;
- const layout=()=>{const w=W(),c=cw(),mob=mobile();const sc=nineMode?(mob?.42:.5):N>3?(mob?.5:.62):(mob?.68:.82);
+ const layout=()=>{const w=W(),c=cw(),mob=mobile();const hs=$('.swirlhint',stage);if(hs){const R2=c*(mob?1.3:1.6);hs.style.cssText=`position:absolute;left:${(mob?w/2:w*.24)-R2*1.15}px;top:${(mob?c*.95:c*1.2)-R2*.9}px;width:${R2*2.3}px;height:${R2*1.85}px;pointer-events:none;overflow:visible`}const sc=nineMode?(mob?.42:.5):N>3?(mob?.5:.62):(mob?.68:.82);
   const sw=c*sc;slotsEl.style.cssText=`position:absolute;--cw:${sw}px;display:grid;grid-template-columns:repeat(${nineMode?3:N},auto);gap:${nineMode?sw*.42:sw*.3}px ${sw*.32}px;`;
   if(mob){slotsEl.style.left='50%';slotsEl.style.transform='translateX(-50%)';slotsEl.style.top=(c*3.35)+'px'}
   else{slotsEl.style.left=(w*.56)+'px';slotsEl.style.top=(nineMode?40:c*1.45)+'px'}
@@ -198,7 +199,9 @@ function vDraw(){
  const slotPos=i=>{const s=slots()[i],r=s.getBoundingClientRect(),sr=stage.getBoundingClientRect();return{x:r.left-sr.left+(r.width-bw())/2,y:r.top-sr.top+(r.height-bh())/2,r,s}};
  function toFan(){if(phase!=='shuffle')return;phase='fan';World.forces=null;$('#auto').textContent='替我抽';$('#instr').textContent='拖一张牌放进凹槽，或轻点一张';$('#cnt').textContent=`已抽 0 / ${N}`;
   const w=W(),n=36,fanW=mobile()?w*.98:w*.62,R=fanW*1.5,baseY=mobile()?c0*2.05:c0*3.15,fx=mobile()?w/2:w*.36;
-  bodies.forEach((b,i)=>{const t=(i-(n-1)/2)/(n-1);const ang=t*2*Math.asin(fanW/2/R);
+  const pile=bodies.slice(0,14),fan=bodies.slice(14);
+  pile.forEach((b,i)=>{b.spring(b.x,b.y,b.r,140,.8)});
+  fan.forEach((b,i)=>{const n=fan.length;const t=(i-(n-1)/2)/(n-1);const ang=t*2*Math.asin(fanW/2/R);
    setTimeout(()=>{b.spring(fx-bw()/2+Math.sin(ang)*R,baseY-bh()/2+R*(1-Math.cos(ang))*1.0+bh()*.2,ang*180/Math.PI,RM()?2000:180,.7);b.zi=i;World.start()},RM()?0:i*18)});
   bodies.forEach(b=>bindDrag(b,{onPick:()=>{Sound.tap()},onDrop:drop}));
   bodies.forEach(b=>b.el.addEventListener('click',()=>{if(phase==='fan'&&!b.placed&&!b.moved)place(b,S.picked.length)}));
@@ -236,12 +239,13 @@ function vReading(id){
  if(!nine){const vert=mobile()&&rec.spread==='five'||mobile()&&false;
   body=`<div class="spread3 ${mobile()&&rec.spread==='five'?'v':''}" style="${rec.spread==='five'?'--cw:clamp(80px,8.6vw,124px)':''}">${R.cards.map((c,i)=>`${i?`<div class="gap chalk" data-pair="${i}"><span>${chalkText(pairLine(R.cards[i-1],c),i*900)}</span><svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><path class="chalkline" style="--len:110;transition-delay:${i*900-300}ms" d="M2 6 Q50 3 96 5 M88 1 L96 5 L88 9"/></svg></div>`:''}<div style="display:flex;flex-direction:column;align-items:center;gap:10px"><span class="title" style="font-size:14px">${R.sp.pos[i]}</span>${flipHTML(c)}</div>`).join('')}</div>`}
  else{const lines=[];const L=(a,b)=>lines.push([a,b]);[0,1,2,3,5,6,7,8].forEach(i=>L(4,i));[0,1,3,4,6,7].forEach(i=>L(i,i+1));[0,1,2,3,4,5].forEach(i=>L(i,i+3));
-  body=`<div class="grid9wrap"><div><div class="grid9" id="g9"><svg class="lines" aria-hidden="true"></svg>${R.cards.map((c,i)=>`<button class="flipcard ${i===4?'center':''}" data-i="${i}" aria-label="${R.sp.pos[i]} · ${esc(zh(c))}">${flipHTML(c).replace(/^<div class="flipcard">|<\/div>$/g,'')}</button>`).join('')}</div>
+  body=`<div class="grid9wrap"><div><div class="grid9" id="g9"><svg class="lines" aria-hidden="true"></svg><span class="rowlab">过去<small>Past</small></span><span class="rowlab">此刻<small>Present</small></span><span class="rowlab">未来<small>Future</small></span>${R.cards.map((c,i)=>`<button class="flipcard ${i===4?'center':''}" data-i="${i}" aria-label="${R.sp.pos[i]} · ${esc(zh(c))}">${flipHTML(c).replace(/^<div class="flipcard">|<\/div>$/g,'')}</button>`).join('')}</div>
   <p class="focusnote chalk" id="fn" aria-live="polite">轻点一张牌，看它和周围的牌说了什么</p></div>
   <div class="paper side9"><h4>过去 · 第一行</h4><p>${R.cards.slice(0,3).map(zh).join(' · ')}：${esc(clean(R.cards[1].summary))}</p><h4>此刻 · 中间一行</h4><p>${R.cards.slice(3,6).map(zh).join(' · ')}：${esc(clean(R.cards[4].summary))}</p><h4>未来 · 第三行</h4><p>${R.cards.slice(6,9).map(zh).join(' · ')}：${esc(clean(R.cards[7].summary))}</p></div></div>`;
   setTimeout(()=>{const g=$('#g9');if(!g)return;const svg=$('svg',g);const draw=()=>{const gr=g.getBoundingClientRect();const pts=$$('.flipcard',g).map(e=>{const r=e.getBoundingClientRect();return[r.left-gr.left+r.width/2,r.top-gr.top+r.height/2]});
-    svg.innerHTML=lines.map(([a,b],k)=>{const[x1,y1]=pts[a],[x2,y2]=pts[b];const len=Math.hypot(x2-x1,y2-y1);const mx=(x1+x2)/2+(k%3-1)*3,my=(y1+y2)/2+(k%2?3:-3);
-     return`<g class="lineg" data-a="${a}" data-b="${b}"><path class="chalkline" style="--len:${len|0};transition-delay:${1800+k*60}ms" d="M${x1} ${y1} Q${mx} ${my} ${x2} ${y2}"/></g>`}).join('')};
+    svg.innerHTML=lines.map(([a,b],k)=>{const[x1,y1]=pts[a],[x2,y2]=pts[b];const len=Math.hypot(x2-x1,y2-y1)*1.05;const nx=-(y2-y1)/len,ny=(x2-x1)/len,bow=(k%2?1:-1)*len*.08;const mx=(x1+x2)/2+nx*bow,my=(y1+y2)/2+ny*bow;
+     const note=(a===4&&[1,3,5,7].includes(b))?`<text x="${mx+nx*10}" y="${my+ny*10}" class="lnote">${esc(noun(R.cards[b]))}</text>`:'';return`<g class="lineg" data-a="${a}" data-b="${b}"><path class="chalkline" style="--len:${len|0};transition-delay:${1800+k*60}ms" d="M${x1} ${y1} Q${mx} ${my} ${x2} ${y2}"/>${note}</g>`}).join('');
+    const rl=$$('.rowlab',g);[0,3,6].forEach((ix,r)=>{if(rl[r])rl[r].style.top=(pts[ix][1]-30)+'px'})};
    draw();g.parentElement.classList.add('drawn');addEventListener('resize',draw);cleanup.push(()=>removeEventListener('resize',draw));
    g.onclick=e=>{const b=e.target.closest('.flipcard');if(!b)return;const i=+b.dataset.i;g.classList.add('focus');$$('.lineg',g).forEach(l=>l.classList.toggle('on',+l.dataset.a===i||+l.dataset.b===i));
     const nb=lines.filter(([a,c])=>a===i||c===i).map(([a,c])=>a===i?c:a);const c=R.cards[i];
@@ -249,11 +253,11 @@ function vReading(id){
  const v=view(`${mbrand()}${qPaper(rec.q)}${aside}${body}
  <div class="paper strip readpaper" id="rp"><p>${esc(R.summary)}</p><div class="more">${R.cards.map((c,i)=>`<h3>${R.sp.pos[i]} · ${esc(zh(c))} ${esc(c.name)}</h3><p>${esc(clean(c.summary))}。${esc(domText(c,rec.topic))}</p>`).join('')}<h3>可以做的一步</h3><p>${esc(R.advice)}</p>${R.caution?`<h3>留意</h3><p>${esc(R.caution)}</p>`:''}${R.timing?`<h3>时间感</h3><p>${esc(R.timing)}</p>`:''}${rec.facts?`<h3>你补充的事实</h3><p>${esc(rec.facts)}</p>`:''}</div>
  <button class="toggle-more" id="more">展开逐张解读</button></div>
- <div class="actions"><div class="bar"><button id="keep" ${saved?'disabled':''}>${saved?'已保存':'保存'}</button><button id="tts" aria-pressed="false">朗读</button><button id="again">再问</button></div></div>`);
+ <div class="actions"><div class="bar"><button id="keep" ${saved?'disabled':''}><img src="assets/ic/save.webp" alt=""><span>${saved?'已保存':'保存'}</span></button><button id="tts" aria-pressed="false"><img src="assets/ic/play.webp" alt=""><span>朗读</span></button><button id="again"><img src="assets/ic/again.webp" alt=""><span>再问</span></button></div></div>`);
  const total=flipIn(v,R.cards,nine?180:520);
  if(!nine)setTimeout(()=>$('.spread3')?.classList.add('drawn'),RM()?0:total-200);
  $('#more').onclick=e=>{const o=$('#rp').classList.toggle('open');e.target.textContent=o?'收起':'展开逐张解读'};
- $('#keep').onclick=e=>{if(saved)return;LS.set('history',[rec,...LS.get('history',[])].slice(0,100));e.target.textContent='已保存';e.target.disabled=true;toast('已收进「我的记录」')};
+ $('#keep').onclick=e=>{if(saved)return;LS.set('history',[rec,...LS.get('history',[])].slice(0,100));e.currentTarget.querySelector('span').textContent='已保存';e.currentTarget.disabled=true;toast('已收进「我的记录」')};
  $('#tts').onclick=e=>prefs.tts?Voice.speak(narration,e.currentTarget):toast('朗读已在设置中关闭');
  $('#again').onclick=()=>{S={topic:S.topic,q:'',facts:'',spread:null,picked:[]};save();go2('#/')};
 }
@@ -278,7 +282,7 @@ function vCard(id){const c=C[id-1];if(!c)return go2('#/atlas');const p=C[(id+34)
 }
 function vHistory(){const h=LS.get('history',[]);const fmt=t=>{const d=new Date(t);return `${d.getMonth()+1}月${d.getDate()}日`};
  view(`${mbrand()}<div class="paper qnote" style="padding:22px 46px"><div class="weight" aria-hidden="true"></div><div class="q" style="font-size:22px">来路余痕</div><div class="tag">每一次提问，都是一段旅程的足迹</div></div>
- ${h.length?`<div class="hist" id="hist"><svg class="path" aria-hidden="true"></svg>${h.map(r=>`<div class="bundle">${r.ids.slice(0,3).map(i=>cardHTML(C[i-1])).join('')}<span class="twine" aria-hidden="true"></span><a class="tagp" href="#/reading/${r.id}"><time>${fmt(r.at)}</time>${esc(r.q.slice(0,30))}${r.q.length>30?'…':''}</a><button class="del chalk" data-del="${r.id}" aria-label="删除这条记录">删去</button></div>`).join('')}</div>
+ ${h.length?`<div class="hist" id="hist"><svg class="path" aria-hidden="true"></svg>${h.map(r=>`<div class="bundle">${r.ids.slice(0,3).map(i=>cardHTML(C[i-1])).join('')}<span class="twine" aria-hidden="true"></span><a class="tagp" href="#/reading/${r.id}"><time>${fmt(r.at)}</time>${esc(r.q.slice(0,30))}${r.q.length>30?'…':''}</a><span class="cap chalk">${esc((T.find(t=>t.id===r.topic)||{}).label||'')} · ${esc(SPREADS[r.spread]?.name||'')}</span><button class="del chalk" data-del="${r.id}" aria-label="删除这条记录">删去</button></div>`).join('')}</div>
  <div class="actions"><button class="brass dark" id="clear">清空</button></div>`:`<p class="empty chalk">桌上还没有留下记录</p><div class="actions"><a class="brass" href="#/">问第一件事 →</a></div>`}`);
  const el=$('#hist');if(el){const path=()=>{const er=el.getBoundingClientRect();const p=$$('.bundle',el).map(b=>{const r=b.getBoundingClientRect();return[r.left-er.left+60,r.top-er.top+170]});$('.path',el).innerHTML=p.length>1?`<path d="M${p.map(x=>x.join(' ')).join(' L')}" fill="none" stroke="rgba(240,236,224,.5)" stroke-width="1.5" stroke-dasharray="2 8" stroke-linecap="round"/>`:''};path();
   el.onclick=e=>{const d=e.target.closest('[data-del]');if(d){LS.set('history',LS.get('history',[]).filter(r=>r.id!==d.dataset.del));vHistory();toast('已删去')}}}
@@ -287,10 +291,10 @@ function vSettings(){
  const vs=voices();
  view(`${mbrand('声音与设置')}<div class="paper qnote" style="padding:22px 46px"><div class="weight" aria-hidden="true"></div><div class="q" style="font-size:22px">声音与设置</div><div class="tag">让桌边的声音陪你，或者保持安静</div></div>
  <div class="panel">
-  <div class="cell"><h3>环境声</h3><div class="grille"></div><button class="sw" role="switch" id="amb" aria-checked="${prefs.ambient}" aria-label="环境声"></button><p>低沉的室内底噪，默认关闭</p></div>
-  <div class="cell"><h3>音量</h3><div class="knob" id="knob" role="slider" tabindex="0" aria-label="音量" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(prefs.vol*100)}"></div><p id="volv">${Math.round(prefs.vol*100)}%</p></div>
-  <div class="cell"><h3>朗读解读</h3><button class="sw" role="switch" id="tts" aria-checked="${prefs.tts}" aria-label="朗读解读"></button><select id="voice" aria-label="声音"><option value="">系统默认中文</option>${vs.map(v=>`<option ${v.name===prefs.voice?'selected':''}>${esc(v.name)}</option>`).join('')}</select><p>使用浏览器内置语音，免费、离线</p></div>
-  <div class="cell"><h3>减少动效</h3><button class="sw" role="switch" id="rm" aria-checked="${prefs.reduce}" aria-label="减少动效"></button><p>跟随系统，或在此关闭物理动效</p></div>
+  <div class="cell"><img class="cic" src="assets/ic/nature.webp" alt=""><h3>环境声</h3><img class="grille" src="assets/grille.webp" alt=""><button class="sw" role="switch" id="amb" aria-checked="${prefs.ambient}" aria-label="环境声"></button><p>低沉的室内底噪，默认关闭</p></div>
+  <div class="cell"><img class="cic" src="assets/ic/volume.webp" alt=""><h3>音量</h3><div class="knob" id="knob" role="slider" tabindex="0" aria-label="音量" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(prefs.vol*100)}"></div><p id="volv">${Math.round(prefs.vol*100)}%</p></div>
+  <div class="cell"><img class="cic" src="assets/ic/voice.webp" alt=""><h3>朗读解读</h3><button class="sw" role="switch" id="tts" aria-checked="${prefs.tts}" aria-label="朗读解读"></button><select id="voice" aria-label="声音"><option value="">系统默认中文</option>${vs.map(v=>`<option ${v.name===prefs.voice?'selected':''}>${esc(v.name)}</option>`).join('')}</select><p>使用浏览器内置语音，免费、离线</p></div>
+  <div class="cell"><img class="cic" src="assets/ic/motion.webp" alt=""><h3>减少动效</h3><button class="sw" role="switch" id="rm" aria-checked="${prefs.reduce}" aria-label="减少动效"></button><p>跟随系统，或在此关闭物理动效</p></div>
  </div><p class="chalk hint" style="margin-top:26px">静下来，听见内心的声音</p>`);
  const knob=$('#knob');const setK=()=>{knob.style.transform=`rotate(${-135+prefs.vol*270}deg)`;$('#volv').textContent=Math.round(prefs.vol*100)+'%';knob.setAttribute('aria-valuenow',Math.round(prefs.vol*100))};setK();
  let kid=null;knob.onpointerdown=e=>{kid=e.pointerId;knob.setPointerCapture(kid)};knob.onpointermove=e=>{if(e.pointerId!==kid)return;const r=knob.getBoundingClientRect();let a=Math.atan2(e.clientY-r.top-r.height/2,e.clientX-r.left-r.width/2)*180/Math.PI+90;if(a>180)a-=360;prefs.vol=Math.max(0,Math.min(1,(a+135)/270));setK();Sound.vol()};
@@ -302,14 +306,14 @@ function vSettings(){
 /* ================= router ================= */
 let cleanup=[];
 function go2(h){if(location.hash===h)route();else location.hash=h}
-function setBg(){const a=location.hash.split('/')[1]||'';let k={'':'01-landing',topic:'02-topic',spread:'03-spread',draw:'04-shuffle',reading:'05-reading3',atlas:'07-atlas',card:'08-card',history:'09-history',settings:'10-sound'}[a]||'01-landing';
+function setBg(){const a=location.hash.split('/')[1]||'';let k={'':'01-landing',topic:'02-topic',spread:'03-spread',draw:'04-shuffle',reading:'05-reading3',atlas:'07-atlas',card:'08-card',today:'08-card',history:'09-history',settings:'10-sound'}[a]||'01-landing';
  if(a==='reading'&&document.querySelector('.grid9'))k='06-reading9';$('.tablebg').style.backgroundImage=`url(assets/bg/${k}-${mobile()?'mobile':'desktop'}.webp)`}
 addEventListener('resize',()=>setBg());
 function route(){document.body.dataset.r=(location.hash.split('/')[1]||'');cleanup.forEach(f=>f());cleanup=[];World.clear();window.speechSynthesis?.cancel();
  const h=location.hash.replace(/^#/,'')||'/';const[,a,b]=h.split('/');
- const nav={atlas:'atlas',card:'atlas',history:'history',settings:'settings'}[a]||'read';
+ const nav={atlas:'atlas',card:'atlas',history:'history',settings:'settings',today:'today'}[a]||'read';
  $$('.nav a').forEach(x=>x.dataset.nav===nav?x.setAttribute('aria-current','page'):x.removeAttribute('aria-current'));
- ({'':vLanding,topic:vTopic,spread:vSpread,draw:vDraw,reading:()=>vReading(b),atlas:vAtlas,card:()=>vCard(+b),history:vHistory,settings:vSettings}[a||'']||vLanding)();
+ ({'':vLanding,topic:vTopic,spread:vSpread,draw:vDraw,reading:()=>vReading(b),atlas:vAtlas,card:()=>vCard(+b),history:vHistory,settings:vSettings,today:()=>{const d=new Date();const n=(d.getFullYear()*372+d.getMonth()*31+d.getDate())%36+1;vCard(n);const h=document.querySelector('.detail');h&&h.insertAdjacentHTML('beforebegin','<p class="chalk hint" style="margin-top:10px">今日一牌 · 把它放在心上走过这一天</p>')}}[a||'']||vLanding)();
  const T2={topic:'选择方向',spread:'选择牌阵',draw:'洗牌与抽牌',reading:'解读',atlas:'牌库图鉴',card:'牌义',history:'我的记录',settings:'声音设置'}[a];
  setBg();document.title=(T2?T2+' · ':'')+'寂境 · 雷诺曼';scrollTo(0,0);main.focus({preventScroll:true})}
 addEventListener('hashchange',route);route();
