@@ -45,3 +45,48 @@ html[data-motion=reduced] .mo-veil.up{animation-duration:.2s}
 html[data-motion=still] .mo-veil,html[data-motion=still] .mo-seal{display:none}
 html[data-motion=still] .dlgp,html[data-motion=still] .sheetp,html[data-motion=still] #dlg,html[data-motion=still] #sheet,html[data-motion=still] .mo-s{animation:none!important}
 html[data-motion=still] .mo-ink-wait .paperT,html[data-motion=still] .mo-ink-wait .ink{visibility:visible}
+/* ===== batch 2 ===== */
+/* A3 the lamp shade sways after a cut — the light layers swing about the lamp, damped */
+.mo-sway .mo-amb,.mo-sway .mo-dust,.mo-sway .mo-win{animation:mo-sway 4.2s cubic-bezier(.3,.1,.3,1) both;transform-origin:52% -10%}
+@keyframes mo-sway{0%{rotate:.22deg}25%{rotate:-.15deg}50%{rotate:.09deg}75%{rotate:-.04deg}100%{rotate:0deg}}
+/* A4 a draft shifts one loose sheet about its pinned corner */
+.mo-lift{animation:mo-lift 1.6s cubic-bezier(.35,.1,.3,1);transform-origin:0 0}
+@keyframes mo-lift{0%,100%{rotate:0deg;translate:0 0}35%{rotate:.55deg;translate:0 -.6px}60%{rotate:-.12deg}}
+/* A5 felt nap */
+.mo-nap{position:absolute;inset:0;pointer-events:none;width:100%;height:100%}
+/* A6 Hammershøi window light + rain shadows (results page, or late at night) */
+.mo-win{position:absolute;pointer-events:none;opacity:0;transition:opacity 3s ease;overflow:hidden;
+ background:url(assets/mo/window.webp) center/100% 100%;-webkit-mask:url(assets/mo/window.webp) center/100% 100%;mask:url(assets/mo/window.webp) center/100% 100%}
+.mo-win.on{opacity:.45}
+.mo-win i{position:absolute;top:-12%;width:2px;height:18px;border-radius:1px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.9) 70%,rgba(0,0,0,.3));
+ animation:mo-drop linear infinite;will-change:translate}
+@keyframes mo-drop{0%{translate:0 0}100%{translate:3px 520px}}
+/* T2 dolly + rack focus between table scenes */
+.mo-dolly>#main,.mo-dolly>.plate{animation:mo-dolly 1.4s cubic-bezier(.25,.6,.3,1) both;transform-origin:52% 45%;will-change:scale,translate}
+@keyframes mo-dolly{0%{scale:1.035;translate:0 -1%}100%{scale:1;translate:0 0}}
+.mo-focus{position:absolute;left:0;top:0;width:100%;pointer-events:none;animation:mo-focus 1.3s cubic-bezier(.4,0,.3,1) both}
+@keyframes mo-focus{0%{opacity:1}100%{opacity:0}}
+/* T4 a hand passes under the lamp */
+.mo-hand{position:fixed;z-index:200;top:8vh;left:0;width:min(120vw,1200px);aspect-ratio:2;pointer-events:none;background:url(assets/mo/hand.webp) center/contain no-repeat;
+ opacity:.7;animation:mo-hand 1.3s cubic-bezier(.45,.05,.4,1) both}
+@keyframes mo-hand{0%{translate:-100% 6vh;rotate:-4deg}100%{translate:110vw -4vh;rotate:3deg}}
+/* R4 chalk crumbs: fall a few px and stay */
+.mo-crumb{fill:var(--chalk);opacity:.55;animation:mo-crumb .5s cubic-bezier(.5,0,1,1) both}
+@keyframes mo-crumb{0%{translate:0 0;opacity:0}15%{opacity:.6}100%{translate:var(--dx,0) var(--dy,6px)}}
+/* R7 the question slip settles and is pinned */
+.mo-pin{animation:mo-pin .8s cubic-bezier(.3,.7,.3,1) both}
+@keyframes mo-pin{0%{scale:1.014;translate:0 -4px}70%{scale:.998;translate:0 .4px}100%{scale:1;translate:0 0}}
+/* M1 warmth of a finger on a held card */
+.body .card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;mix-blend-mode:soft-light;
+ background:radial-gradient(circle 40px at var(--mx,50%) var(--my,50%),rgba(255,196,150,.5),rgba(255,196,150,0));transition:opacity 1.5s ease}
+.body.dragging .card::after{opacity:1;transition:opacity .6s ease .3s}
+/* M2 brass: the reflection rests where the cursor is (quiet), presses 1.5px */
+.btn:hover::after,.pill:hover::after{transform:translateX(calc(var(--rx,0)*1%));transition:transform .5s cubic-bezier(.2,.6,.3,1)}
+.bar3 button,.bpill{transition:translate 180ms var(--spr,ease)}.bar3 button:active,.bpill:active{translate:0 1.5px;transition-duration:60ms}
+/* M3 objects outside the lamp answer more faintly */
+.mo-far:hover{filter:brightness(.95)!important}
+html[data-motion=reduced] .mo-win i,html[data-motion=still] .mo-win,html[data-motion=still] .mo-nap,html[data-motion=reduced] .mo-nap{display:none}
+html[data-motion=reduced] .mo-hand,html[data-motion=still] .mo-hand,html[data-motion=reduced] .mo-focus,html[data-motion=still] .mo-focus{display:none}
+html[data-motion=reduced] .mo-dolly>#main,html[data-motion=reduced] .mo-dolly>.plate,html[data-motion=still] .mo-dolly>#main,html[data-motion=still] .mo-dolly>.plate,
+html:not([data-motion=full]) .mo-sway *,html:not([data-motion=full]) .mo-lift,html:not([data-motion=full]) .mo-pin{animation:none!important}
+html:not([data-motion=full]) .mo-crumb{animation:none}

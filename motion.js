@@ -120,11 +120,65 @@ document.addEventListener('click',e=>{const b=e.target.closest('#dlg [data-a="1"
   s.style.left=(r.left+Math.min(r.width/2,26))+'px';s.style.top=(r.top+r.height/2)+'px';document.body.append(s);
   setTimeout(()=>{SFX.play('seal',{vol:.9});buzz(12)},level()==='full'?470:0);setTimeout(()=>s.remove(),3500)},120)},true);
 
+/* =================== batch 2 =================== */
+const isM=()=>ab.classList.contains('m');
+const busy=()=>performance.now()<MO.busy||/^#\/draw/.test(location.hash);
+/* A3 lamp sway after each cut */
+function sway(){if(!FULL())return;ab.classList.remove('mo-sway');void ab.offsetWidth;ab.classList.add('mo-sway');clearTimeout(sway.t);sway.t=setTimeout(()=>ab.classList.remove('mo-sway'),4300)}
+/* A4 a draft every 20–40s, only while idle, never during the ritual */
+let draftT=0;function draft(){clearTimeout(draftT);draftT=setTimeout(()=>{draft();if(!FULL()||document.hidden||busy()||idleFor()<4000)return;MO.gust()},20000+Math.random()*20000)}
+MO.gust=()=>{
+ const c=$$('.ab-in .paperT,.ab-in .slip,.ab-in .tagp').filter(e=>e.offsetWidth&&!e.closest('.mo-pinned'));if(!c.length)return;const e=c[Math.random()*c.length|0];
+ e.classList.remove('mo-lift');void e.offsetWidth;e.classList.add('mo-lift');setTimeout(()=>e.classList.remove('mo-lift'),1700)};
+/* A5 felt nap: desktop + fine pointer only; brushed trail, 1/8 resolution, runs only while a trail exists */
+const Nap={on:false,init(){if(coarse||!matchMedia('(pointer:fine)').matches)return;this.cv=document.createElement('canvas');this.cv.className='mo-nap';this.cv.setAttribute('aria-hidden','true');
+  amb.before(this.cv);this.m=document.createElement('canvas');this.img=new Image();this.img.src='assets/mo/nap.webp';this.size();
+  addEventListener('pointermove',e=>this.move(e),{passive:true});addEventListener('resize',()=>this.size())},
+ size(){if(!this.cv)return;const W=1440,H=ab.offsetHeight||900;this.cv.width=this.m.width=W/8|0;this.cv.height=this.m.height=H/8|0;this.cv.style.height=H+'px'},
+ move(e){if(!FULL()||isM()||busy()||e.pointerType!=='mouse')return;if(e.target.closest('a,button,.card,.body,.paperT,.slip,.tile,#sheet,#dlg,.nav'))return;
+  const r=ab.getBoundingClientRect(),k=r.width/1440,x=(e.clientX-r.left)/k/8,y=(e.clientY-r.top)/k/8;const g=this.m.getContext('2d');
+  if(this.lx!=null&&Math.hypot(x-this.lx,y-this.ly)<12){g.globalCompositeOperation='source-over';g.strokeStyle='rgba(255,255,255,.35)';g.lineCap='round';g.lineWidth=2.2;g.beginPath();g.moveTo(this.lx,this.ly);g.lineTo(x,y);g.stroke()}
+  this.lx=x;this.ly=y;this.left=150;if(!this.on){this.on=true;requestAnimationFrame(()=>this.tick())}},
+ tick(){if(document.hidden||--this.left<0){this.on=false;this.lx=null;return}if((this.left&1)===1){requestAnimationFrame(()=>this.tick());return}const g=this.m.getContext('2d');
+  g.globalCompositeOperation='destination-out';g.fillStyle='rgba(0,0,0,.035)';g.fillRect(0,0,this.m.width,this.m.height);
+  const c=this.cv.getContext('2d');c.globalCompositeOperation='copy';c.drawImage(this.m,0,0);c.globalCompositeOperation='source-in';
+  if(this.img.complete){c.fillStyle=c.createPattern(this.img,'repeat');c.globalAlpha=.11;c.fillRect(0,0,this.cv.width,this.cv.height);c.globalAlpha=1}
+  requestAnimationFrame(()=>this.tick())}};
+/* A6 window light + rain shadows: results page, or late at night anywhere on the table */
+const win=document.createElement('div');win.className='mo-win';win.setAttribute('aria-hidden','true');
+function windowLight(){const h=new Date().getHours(),late=h>=22||h<5,show=level()!=='still'&&(/^#\/reading/.test(location.hash)||late)&&!/^#\/draw/.test(location.hash);
+ if(!win.parentNode)amb.after(win);const m=isM();Object.assign(win.style,m?{left:'190px',top:'560px',width:'230px',height:'160px',rotate:'-8deg'}:{left:'1040px',top:'500px',width:'420px',height:'290px',rotate:'-9deg'});
+ if(show&&!win.childElementCount&&FULL())for(let i=0;i<4;i++){const d=document.createElement('i');d.style.left=(12+Math.random()*76)+'%';d.style.animationDuration=(7+Math.random()*5)+'s';d.style.animationDelay=(-Math.random()*10)+'s';win.append(d)}
+ if(show){win.style.display='';requestAnimationFrame(()=>requestAnimationFrame(()=>win.classList.add('on')))}else{win.classList.remove('on');win.style.display='none'}}
+/* A7 the clock you only hear: soft tick, reading / landing, only with sound on, stops when idle or hidden */
+let clockT=0;function clock(){clearInterval(clockT);const h=location.hash;if(!(h===''||h==='#/'||h.startsWith('#/reading')))return;SFX.warm('tick');
+ clockT=setInterval(()=>{if(document.hidden||idleFor()>60000||!SFX.ok()||busy())return;SFX.play('tick',{vol:.16,rate:.9})},1000)}
+/* T2 dolly + rack focus on the ritual path */
+let lastKey='';function dolly(){const k=(location.hash.match(/^#\/(\w+)/)||[])[1]||'';const path=['topic','spread','draw','reading','ask'];const go=path.includes(k)&&k!==lastKey;lastKey=k;
+ if(!go||level()!=='full')return;const pl=$('.plate',ab);if(pl&&pl.src){const f=document.createElement('canvas');f.className='mo-focus';f.setAttribute('aria-hidden','true');f.width=160;f.height=Math.round(160*(pl.naturalHeight||900)/(pl.naturalWidth||1440));try{f.getContext('2d').drawImage(pl,0,0,f.width,f.height)}catch{}pl.after(f);setTimeout(()=>f.remove(),1400)}
+ ab.classList.remove('mo-dolly');void ab.offsetWidth;ab.classList.add('mo-dolly');setTimeout(()=>ab.classList.remove('mo-dolly'),1700)}
+/* T4 a hand passes under the lamp as the reading begins (loading screen) */
+new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.id==='load'&&level()==='full'){const h=document.createElement('div');h.className='mo-hand';h.setAttribute('aria-hidden','true');document.body.append(h);setTimeout(()=>h.remove(),1400)}}).observe(document.body,{childList:true});
+/* R4 chalk crumbs at stroke ends */
+function crumbs(){const v=$('.ab-in');if(!v||level()==='still')return;const run=()=>$$('.chalkline',v).slice(0,12).forEach(p=>{if(p._cr||Math.random()<.3)return;p._cr=1;
+  const d=parseFloat(p.style.transitionDelay)||0;setTimeout(()=>{try{const L=p.getTotalLength(),pt=p.getPointAtLength(L*.98),n=1+(Math.random()*2|0);
+   for(let i=0;i<n;i++){const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('class','mo-crumb');c.setAttribute('cx',pt.x+(Math.random()-.5)*4);c.setAttribute('cy',pt.y+1);c.setAttribute('r',(.5+Math.random()*.6).toFixed(2));
+    c.style.setProperty('--dy',(4+Math.random()*4).toFixed(1)+'px');c.style.setProperty('--dx',((Math.random()-.5)*2).toFixed(1)+'px');c.style.animationDelay=(i*90)+'ms';p.parentNode.append(c)}}catch{}},d+650)});
+ if(v.classList.contains('drawn'))run();else{const o=new MutationObserver(()=>{if(v.classList.contains('drawn')){o.disconnect();run()}});o.observe(v,{attributes:true,attributeFilter:['class']});setTimeout(()=>o.disconnect(),10000)}}
+/* R7 the question slip settles and is pinned under the brass weight */
+function pin(){const q=$('.ab-in .q');if(!q||!FULL())return;const p=q.closest('.A')||q;p.classList.add('mo-pinned');q.classList.add('mo-pin')}
+/* M1 finger position on a held card */
+document.addEventListener('pointerdown',e=>{const b=e.target.closest('.body');if(!b)return;const r=b.getBoundingClientRect();b.style.setProperty('--mx',((e.clientX-r.left)/r.width*100).toFixed(1)+'%');b.style.setProperty('--my',((e.clientY-r.top)/r.height*100).toFixed(1)+'%')},true);
+/* M2 + M3 brass reflection follows the cursor; things outside the lamp answer more faintly */
+document.addEventListener('pointerover',e=>{const t=e.target.closest('a,button,.tile,.slip');if(!t||t._mo)return;t._mo=1;const r=t.getBoundingClientRect();
+ const x=(r.left+r.width/2)/innerWidth-.52,y=(r.top+r.height/2)/innerHeight+.1;if(Math.hypot(x,y*.8)>.62)t.classList.add('mo-far')},{passive:true});
+document.addEventListener('pointermove',e=>{const t=e.target.closest?.('.btn,.pill');if(!t)return;const r=t.getBoundingClientRect();t.style.setProperty('--rx',(((e.clientX-r.left)/r.width-.5)*40).toFixed(1))},{passive:true});
+
 /* ---------- route hook ---------- */
-function onRoute(){setLevel();MO.busy=performance.now()+(/^#\/reading/.test(location.hash)?8000:0);amb.classList.toggle('off',MO.busy>performance.now()||/^#\/draw/.test(location.hash));wrapTap();requestAnimationFrame(()=>{Amb.layout();Amb.wake();watchShuffle();litCards();inkReading()})}
+function onRoute(){setLevel();MO.busy=performance.now()+(/^#\/reading/.test(location.hash)?8000:0);amb.classList.toggle('off',MO.busy>performance.now()||/^#\/draw/.test(location.hash));wrapTap();requestAnimationFrame(()=>{Amb.layout();Amb.wake();watchShuffle();litCards();inkReading();sway();draft();windowLight();clock();dolly();crumbs();pin()})}
 
 /* battery: drop to reduced ambient on low battery */
 navigator.getBattery?.().then(b=>{const f=()=>{MO.battLow=!b.charging&&b.level<.2};f();b.addEventListener('levelchange',f);b.addEventListener('chargingchange',f)}).catch(()=>{});
 
-Amb.init();onRoute();
+Amb.init();Nap.init();onRoute();
 })();
