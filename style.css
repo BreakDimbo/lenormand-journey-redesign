@@ -465,3 +465,31 @@ main:focus,main:focus-visible,#ab>main:focus-visible{box-shadow:none!important;o
 .estack{position:relative}.estack .card{position:absolute;left:0;top:0;box-shadow:0 6px 12px rgba(0,0,0,.55)}.estack .card:nth-child(1){transform:rotate(-8deg) translate(-10px,6px)}.estack .card:nth-child(2){transform:rotate(3deg) translate(6px,2px)}.estack .card:nth-child(3){transform:rotate(-1deg)}
 .nf2.eh{padding:18px 28px;transform:rotate(1.5deg)}.nf2.eh h2{font-size:22px;letter-spacing:.14em}.nf2.eh p{font-size:13px;line-height:1.85;text-wrap:balance}
 .nf2.eh.m{background-image:url(assets/v2/nf-d.webp);padding:12px 14px}.nf2.eh.m h2{font-size:15px;letter-spacing:.1em}.nf2.eh.m p{font-size:11px;line-height:1.75}
+/* volume knob: one plate-cut knob, rotating body + static lamp highlight */
+.knob{background:none!important;border-radius:50%;transform:none!important;touch-action:none}
+.knob .kb,.knob .kh{position:absolute;inset:0;background:center/100% 100% no-repeat;border-radius:50%;pointer-events:none}
+.knob .kb{will-change:transform}
+.knob .kh{mix-blend-mode:screen}
+.knob:active{cursor:grabbing}
+.lkb{border-bottom:1px solid rgba(233,207,152,.35);padding-bottom:2px;color:var(--muted)}.lkb:hover{color:var(--ivory)}
+/* 声 sound token: Codex brass bell push, engraved glyph; pressed-in = music on */
+#sndb{width:44px!important;height:44px!important;border-radius:50%!important;background:url(assets/v2/snd-off.webp) center/100% 100% no-repeat!important;box-shadow:none!important;color:transparent!important;font-size:0!important;text-shadow:none!important;filter:drop-shadow(0 3px 3px rgba(0,0,0,.55))!important;transition:transform 200ms ease-out,filter 200ms ease-out}
+#sndb::after,#sndb::before{display:none!important}
+#sndb[aria-pressed=true]{background-image:url(assets/v2/snd-on.webp)!important;filter:drop-shadow(0 1.5px 1.5px rgba(0,0,0,.6))!important}
+#sndb:hover{transform:translateY(-1px);filter:drop-shadow(0 4px 5px rgba(0,0,0,.5)) brightness(1.04)!important}
+#sndb:active{transform:translateY(1px);filter:drop-shadow(0 1px 1px rgba(0,0,0,.65)) brightness(.98)!important}
+#sndb:focus-visible{box-shadow:0 0 0 2px rgba(20,14,8,.85),0 0 0 3.5px rgba(222,186,116,.7)!important}
+/* ---- restrained physical hover language (MOTION.md §Hover & press v2): no sweeps, no flashes ---- */
+.btn::after,.pill::after{display:none!important;content:none!important}
+@keyframes tileSel{0%{transform:scale(.985)}100%{transform:none}}
+.btn,.pill,.bpill,.btn.hit,.seg button,.fil button,.chip,.dsel,.sw,.cfk,.lk{transition:transform 200ms ease-out,backdrop-filter 200ms ease-out,filter 200ms ease-out,color 200ms ease-out,box-shadow 200ms ease-out!important}
+.btn:hover,.pill:hover,.btn.hit:hover,.bpill:hover{filter:none!important;transform:translateY(-1px);backdrop-filter:brightness(1.04)!important;color:#f6e6be}
+.btn:active,.pill:active,.btn.hit:active,.bpill:active{transform:translateY(1px)!important;backdrop-filter:brightness(.98)!important;box-shadow:none!important}
+.dsel:hover,.chip:hover,.sw:hover{filter:brightness(1.04)!important;transform:translateY(-1px)}
+.dsel:active,.chip:active,.sw:active{filter:brightness(.98)!important;transform:translateY(1px)}
+.tray[aria-checked=false]:hover{background:none!important;box-shadow:0 6px 12px -6px rgba(0,0,0,.6)!important;transform:translateY(-1px)}
+/* paper: lift + longer, softer lamp shadow only */
+#ab:not(.m) .tile[aria-checked=false]:hover,.slip:hover{transform:translateY(-1px)!important;box-shadow:0 5px 9px -4px rgba(0,0,0,.55),0 1px 2px rgba(0,0,0,.3)!important;filter:none!important}
+.tile:hover{background-color:transparent}
+a.A:hover>.card,.thc:hover .card,.gc:hover{transform:translateY(-1px)!important}
+.slip:active,.tile:active,.thc:active{transform:translateY(1px)!important;box-shadow:0 1px 2px rgba(0,0,0,.5)!important}
