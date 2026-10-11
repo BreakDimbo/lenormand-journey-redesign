@@ -122,11 +122,12 @@ function fit(){const mob=M();const W=mob?390:1440,BH=mob?844:900;SC=Math.min(inn
 addEventListener('resize',()=>{const m=M()?'m':'d';if(m!==MODE)route();else fit()});
 const pad=n=>String(n).padStart(2,'0');
 const enTag=c=>(c.tags||[]).slice(0,2).join(' · ');
-function cardHTML(c,v='d',w=120,h=null,extra=''){const lab=`${c.id} ${esc(zh(c))} ${esc(c.name)}`;const img=`<img src="assets/cards/${pad(c.id)}.webp" alt="" loading="lazy" decoding="async" draggable="false">`;
+const cardSrc=(id,w=200)=>`assets/cards3/${w<=110?'t/':''}${pad(id)}.${window.AVIF&&w>110?'avif':'webp'}`;
+function cardHTML(c,v='d',w=120,h=null,extra=''){const lab=`${c.id} ${esc(zh(c))} ${esc(c.name)}`;const img=`<img class="f3" src="${cardSrc(c.id,w)}" alt="" loading="lazy" decoding="async" draggable="false">`;
  const st=`--w:${w}px;${h?`height:${h}px;`:''}`;
- if(v==='m')return`<div class="card m ${extra}" style="${st}" role="img" aria-label="${lab}"><span class="n n1">${c.id}</span><span class="n n2">${c.id}</span>${img}<div class="zh">${esc(zh(c))}</div><div class="enn">${esc(c.name)}</div><div class="kw">${esc(enTag(c))}</div></div>`;
- if(v==='sq')return`<div class="card d sq ${extra}" style="${st}" role="img" aria-label="${lab}"><div class="hd"><span>${c.id}</span>${esc(zh(c))}</div>${img}<div class="enn">${esc(c.name.toUpperCase())}</div></div>`;
- return`<div class="card d ${extra}" style="${st}" role="img" aria-label="${lab}"><div class="hd"><span>${c.id}</span>${esc(zh(c))}</div>${img}<div class="enn">${esc(c.name.toUpperCase())}</div><div class="kw">${esc(kw(c))}</div></div>`}
+ if(v==='m')return`<div class="card v3 m ${extra}" style="${st}" role="img" aria-label="${lab}"><span class="n n1">${c.id}</span><span class="n n2">${c.id}</span>${img}<div class="zh">${esc(zh(c))}</div><div class="enn">${esc(c.name)}</div><div class="kw">${esc(enTag(c))}</div></div>`;
+ if(v==='sq')return`<div class="card v3 d sq ${extra}" style="${st}" role="img" aria-label="${lab}"><div class="hd"><span>${c.id}</span>${esc(zh(c))}</div>${img}<div class="enn">${esc(c.name.toUpperCase())}</div></div>`;
+ return`<div class="card v3 d ${extra}" style="${st}" role="img" aria-label="${lab}"><div class="hd"><span>${c.id}</span>${esc(zh(c))}</div>${img}<div class="enn">${esc(c.name.toUpperCase())}</div><div class="kw">${esc(kw(c))}</div></div>`}
 const backHTML2=(w,h)=>`<div class="card back" style="--w:${w}px;${h?`height:${h}px`:''}" aria-hidden="true"></div>`;
 const flip2=(c,v,w,h)=>`<div class="in3">${backHTML2(w,h)}${cardHTML(c,v,w,h,'face')}<div class="shade"></div></div>`;
 /* ---- chrome ---- */
@@ -544,11 +545,11 @@ function vGraph(sel){if(sel)gsel=sel;const m=M();
  const draw=()=>{const c=C[gsel-1],rel=related(c),ids=rel.map(r=>r.x.id).slice(0,m?4:4);
   const pos=id=>{const i=id-1;return[G.gx+(i%6)*G.p+G.cw/2,G.gy+Math.floor(i/6)*G.p*(m?1:1.008)+G.ch/2]};const[sx,sy]=pos(gsel);
   const svg=`<svg class="A" style="left:0;top:0;overflow:visible;pointer-events:none" width="1" height="1" aria-hidden="true">${ids.map(id=>{const[x,y]=pos(id);return`<path class="gl2" d="M${sx} ${sy} L${x} ${y}"/>`}).join('')}</svg>`;
-  const cells=C.map(x=>{const[px,py]=pos(x.id);return`<button class="gc A ${x.id===gsel?'on':ids.includes(x.id)?'rel':''}" data-g="${x.id}" aria-pressed="${x.id===gsel}" aria-label="${x.id} ${esc(zh(x))}" style="left:${px-G.cw/2}px;top:${py-G.ch/2}px;width:${G.cw}px;height:${G.ch}px;font-size:${G.fs}px"><span class="gn2">${x.id} ${esc(zh(x))}</span><img src="assets/cards/${pad(x.id)}.webp" alt="" loading="lazy"></button>`}).join('');
-  const side=m?A(16,574,`<p class="gmh">关联</p>${rel.slice(0,4).map(r=>`<button class="gmr" data-g="${r.x.id}"><img src="assets/cards/${pad(r.x.id)}.webp" alt=""><span>${r.x.id} ${esc(zh(r.x))}<small class="en">${esc(r.x.name)}</small></span></button>`).join('')}`,{cls:'gside m mrow',w:358})+A(24,542,`<span class="gk on"></span>当前 <span class="gk rel"></span>关联`,{cls:'glg'})+
+  const cells=C.map(x=>{const[px,py]=pos(x.id);return`<button class="gc A ${x.id===gsel?'on':ids.includes(x.id)?'rel':''}" data-g="${x.id}" aria-pressed="${x.id===gsel}" aria-label="${x.id} ${esc(zh(x))}" style="left:${px-G.cw/2}px;top:${py-G.ch/2}px;width:${G.cw}px;height:${G.ch}px;font-size:${G.fs}px"><span class="gn2">${x.id} ${esc(zh(x))}</span><img src="${cardSrc(x.id,100)}" alt="" loading="lazy"></button>`}).join('');
+  const side=m?A(16,574,`<p class="gmh">关联</p>${rel.slice(0,4).map(r=>`<button class="gmr" data-g="${r.x.id}"><img src="${cardSrc(r.x.id,100)}" alt=""><span>${r.x.id} ${esc(zh(r.x))}<small class="en">${esc(r.x.name)}</small></span></button>`).join('')}`,{cls:'gside m mrow',w:358})+A(24,542,`<span class="gk on"></span>当前 <span class="gk rel"></span>关联`,{cls:'glg'})+
    A(40,622,`<a href="#/card/${c.id}" aria-label="查看 ${esc(zh(c))} 牌义">${cardHTML(c,'m',64,96)}</a>`)+A(118,630,`<p class="gm1">${c.id} ${esc(zh(c))} <span class="en">${esc(c.name)}</span></p><p class="gm4">${esc(PH[c.id].p)}</p><a class="lk gm3" href="#/card/${c.id}">查看牌义 ›</a>`,{w:236})
    :A(981,186,`<a href="#/card/${c.id}" aria-label="查看 ${esc(zh(c))} 牌义">${cardHTML(c,'d',152,236)}</a>`)+T_(981,450,'相关卡牌',14,{st:'letter-spacing:.24em'})+
-    `<ul class="grel A" style="left:981px;top:478px;width:236px">${rel.slice(0,4).map(r=>`<li><button data-g="${r.x.id}"><img src="assets/cards/${pad(r.x.id)}.webp" alt=""><b>${r.x.id} ${esc(zh(r.x))}</b><small>${esc(PH[r.x.id].p)}</small></button></li>`).join('')}</ul>`;
+    `<ul class="grel A" style="left:981px;top:478px;width:236px">${rel.slice(0,4).map(r=>`<li><button data-g="${r.x.id}"><img src="${cardSrc(r.x.id,100)}" alt=""><b>${r.x.id} ${esc(zh(r.x))}</b><small>${esc(PH[r.x.id].p)}</small></button></li>`).join('')}</ul>`;
   $('#gwrap').innerHTML=A(G.sx,G.sy,'',{cls:'gsheet'+(m?' m':''),w:G.sw,h:G.sh})+svg+cells+side};
  const v=stage(m?'07-atlas':'19-graph',head+'<div id="gwrap"></div>',{ch:m?{by:30,bfs:22,orn:false,tabs:true}:{tr:null,br:false,bl:null},h:m?844:900});markDrawn(v);draw();
  v.onclick=e=>{const g=e.target.closest('[data-g]');if(g){gsel=+g.dataset.g;draw();$(`.gc[data-g="${gsel}"]`)?.focus()}}}

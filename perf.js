@@ -2,7 +2,7 @@
    decoded-image cache, idle prefetch of the next likely screen, idle font warm-up, SW. */
 (()=>{'use strict';
 const cache=new Map();let avif=false;
-const t=new Image();const avifReady=new Promise(r=>{t.onload=()=>{avif=t.width>0;r()};t.onerror=()=>r()});t.src='data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAAB0AAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAIAAAACAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIAAYAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACVtZGF0EgAKCBgANogQEAwgMg8f8D///8WfhwB8+ErK42A=';
+const t=new Image();const avifReady=new Promise(r=>{t.onload=()=>{avif=t.width>0;window.AVIF=avif;r()};t.onerror=()=>r()});t.src='data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAAB0AAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAIAAAACAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIAAYAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACVtZGF0EgAKCBgANogQEAwgMg8f8D///8WfhwB8+ErK42A=';
 const real=u=>avif&&/assets\/plate2?\/.*\.webp$/.test(u)?u.replace(/\.webp$/,'.avif'):u;
 function load(u){let p=cache.get(u);if(p)return p;const im=new Image();im.decoding='async';
  p=avifReady.then(()=>new Promise(res=>{const done=()=>res(im);im.onload=()=>{(im.decode?im.decode():Promise.resolve()).then(done,done)};

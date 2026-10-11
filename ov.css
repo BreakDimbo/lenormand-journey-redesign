@@ -306,3 +306,12 @@ fieldset input[type=radio]:focus-visible{outline:none;box-shadow:0 0 0 2px rgba(
 .card.d .hd{font-size:max(12.5px,calc(var(--w)*.108))}
 .card.d .enn{font-size:max(9.5px,calc(var(--w)*.072))}
 .toast:not(.on):not(.seen){background-image:none}
+/* ===== Deck v3 (Hammershøi): the whole face is one baked image; code draws no frame/name ===== */
+.card.v3{background:none!important;border:0!important;box-shadow:none!important;border-radius:calc(var(--w)*.045);overflow:visible!important}
+.card.v3::before,.card.v3::after{display:none!important}
+.card.v3>:not(img.f3){display:none!important}
+.card.v3 img.f3{position:absolute!important;inset:0!important;left:0!important;top:0!important;width:100%!important;height:100%!important;aspect-ratio:auto!important;object-fit:contain!important;mix-blend-mode:normal!important;
+ filter:drop-shadow(0 max(1px,calc(var(--w)*.012)) 0 rgba(52,40,24,.92)) drop-shadow(0 calc(var(--w)*.045) calc(var(--w)*.06) rgba(0,0,0,.5))!important}
+.gc img{object-fit:contain!important;mix-blend-mode:normal!important;filter:drop-shadow(0 1px 0 rgba(52,40,24,.9)) drop-shadow(0 2px 3px rgba(0,0,0,.45))!important}
+.gc .gn2{display:none!important}
+.gmr img,.grel img{object-fit:contain!important;mix-blend-mode:normal!important;filter:none!important}

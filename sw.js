@@ -1,6 +1,6 @@
 /* Stale-while-revalidate for the app shell and assets: repeat visits and screen switches are served from cache,
    and anything the team redeploys is picked up in the background for the next load. Bump V to purge. */
-const V='lj-v1';
+const V='lj-v1-deck3';
 self.addEventListener('install',e=>self.skipWaiting());
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;const u=new URL(r.url);if(u.origin!==location.origin)return;
