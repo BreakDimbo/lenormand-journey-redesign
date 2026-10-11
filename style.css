@@ -545,3 +545,32 @@ a.A:hover>.card,.thc:hover .card,.gc:hover{transform:translateY(-1px)!important}
  #ab.m .fil button::after,#ab.m a#graph::after,#ab.m .del::after,#ab.m [aria-label="朗读"]::after,#sheet .tabs button::after,#sheet .x::after,#sheet .lk::after,#ab.m .gn::after,#ab.m .A>a[href^="#/"]:not(.acm)::after{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}
  #sheet .tabs button{position:relative}
 }
+/* tap responsiveness: no double-tap-zoom wait, no tap flash */
+a,button,input,select,label,[role=switch],[role=tab],[role=radio]{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+/* ---- mobile QA pass ---- */
+.qin,#fx,#facts{scrollbar-width:none}.qin::-webkit-scrollbar,#fx::-webkit-scrollbar,#facts::-webkit-scrollbar{display:none}
+.m .slip span{-webkit-line-clamp:2;text-wrap:pretty!important;letter-spacing:.02em}
+.m .slip{font-size:10.5px!important;padding:0 6px!important}
+/* facts sheet: ink-on-paper field, no capsule, no grip */
+#fx{display:block;width:100%;min-height:110px;resize:none;background:transparent!important;border:0;border-radius:0;box-shadow:none!important;padding:6px 2px;color:#2b1f13;font:400 15px/1.85 var(--serif);background-image:repeating-linear-gradient(transparent 0 26.7px,rgba(90,64,34,.22) 26.7px 27.7px)!important;outline:none}
+#fx:focus-visible{caret-color:#6b3d14}
+.fxx{right:6px;top:-6px;left:auto!important;width:44px;height:44px;font-size:24px;color:#4a3420}
+/* deeper sheet (mobile): action row pinned to the sheet's baked brass button, outside the scrolling form */
+#ab.m #sheet[data-k="15-deeper"] .drow:not(.pane .drow){position:absolute;left:17px;top:51px;margin:0;width:0;height:0}
+/* sheets and dialogs sit above the bottom nav */
+#ab.m:has(#sheet:not([hidden])) ~ #tabs,body:has(#sheet:not([hidden])) #tabs{display:none!important}
+body:has(#dlg:not([hidden])) #tabs{display:none!important}
+/* graph (mobile): 6x6 tiles across the full sheet, legible labels, related row under the sheet */
+#ab.m .gc .gn2{font-size:9px!important;line-height:1.1;white-space:nowrap}
+#ab.m .gside.mrow{display:flex;align-items:center;gap:6px}
+#ab.m .gside.mrow .gmh{margin:0 4px 0 0;font-size:11px;letter-spacing:.2em;color:var(--brass-hi);writing-mode:vertical-rl}
+#ab.m .gside.mrow .gmr{flex:1;display:flex;align-items:center;gap:5px;min-height:44px;padding:2px 4px;font-size:11px;color:#efe4c8;text-align:left}
+#ab.m .gside.mrow .gmr img{width:22px;height:33px;object-fit:cover;border-radius:2px;box-shadow:0 2px 3px rgba(0,0,0,.5)}
+#ab.m .gside.mrow .gmr small{display:block;font-size:9px;opacity:.7}
+#ab.m ~ #sndb,.m #sndb,#sndb{box-shadow:0 0 0 2px rgba(12,9,5,.8),0 0 0 3px rgba(222,186,116,.35)!important}
+#ab.m .gside.m.mrow{flex-direction:row;border-left:0;padding-left:0;color:#efe4c8}
+#ab.m button.btn[disabled]{opacity:.5;color:rgba(239,228,200,.6)!important;cursor:default}
+/* history: 删去 legible, ≥44px hit */
+#ab.m .del{font-size:12px!important;color:#e6d3a8!important;letter-spacing:.14em;opacity:1!important}
+#ab.m #sheet[data-k="15-deeper"] .drow:not(.pane .drow) #tell{width:230px!important;height:35px!important;line-height:35px;padding:0;letter-spacing:.3em;font-size:14px!important}
+#ab.m #sheet[data-k="15-deeper"] .drow:not(.pane .drow) #skip2{top:500px!important;color:#5a4128!important;font-size:12px!important}
