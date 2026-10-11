@@ -111,7 +111,7 @@ let ABH=900,MODE='';
 const px=v=>v==null?'':(typeof v==='number'?v+'px':v);
 const A=(x,y,html='',o={})=>{const{w,h,cls='',st='',tag='div',at=''}=o;return`<${tag} class="A ${cls}" style="left:${px(x)};top:${px(y)};${w!=null?`width:${px(w)};`:''}${h!=null?`height:${px(h)};`:''}${st}" ${at}>${html}</${tag}>`};
 const T_=(x,y,txt,fs,o={})=>A(x,y,txt,{...o,cls:'t '+(o.cls||''),st:`font-size:${fs}px;${o.st||''}`});
-function fit(){const mob=M();const W=mob?390:1440;SC=innerWidth/W;ab.style.width=W+'px';const h=Math.max(mob?844:900,ABH);ab.style.height=h+'px';ab.style.transform=`scale(${SC})`;wrap.style.height=h*SC+'px';
+function fit(){const mob=M();const W=mob?390:1440,BH=mob?844:900;SC=Math.min(innerWidth/W,innerHeight/BH);if(mob&&innerWidth<=480)SC=innerWidth/W;const h=Math.max(BH,ABH);ab.style.width=W+'px';ab.style.height=h+'px';const ox=Math.max(0,(innerWidth-W*SC)/2);ab.style.transform=`translateX(${ox}px) scale(${SC})`;ab.dataset.ox=ox;wrap.style.height=Math.max(innerHeight,h*SC)+'px';$('#fill').style.backgroundImage=`url(${plate.src})`;tabs.style.left=ox+'px';tabs.style.right='auto';
  tabs.style.transform=`scale(${SC})`;tabs.style.width='390px'}
 addEventListener('resize',()=>{const m=M()?'m':'d';if(m!==MODE)route();else fit()});
 const pad=n=>String(n).padStart(2,'0');
@@ -154,21 +154,21 @@ function vLanding(){const m=M();const ok=S.q.trim().length>=4;
   `<label class="sr" for="q">写下你想问的事</label><textarea id="q" class="A qin" maxlength="600" placeholder="写下你想问的事…" style="left:84px;top:356px;width:246px;height:150px;font:400 25px/1.55 var(--brush)">${esc(S.q)}</textarea>`+
   A(320,505,`<span id="cnt">${S.q.length}</span>/600`,{cls:'en ink2',st:'transform:translateX(-100%);font-size:12px;font-style:italic'})+
   T_(195,548,chalkText('有些答案，一直在等你。'),18,{cls:'c chalk'})+chalkSVG('M2 14 Q90 2 200 6',220,95,568,210,18,900)+
-  A(103,656,'把问题压在桌上 <span aria-hidden="true">→</span>',{tag:'button',cls:'btn hit',w:184,h:44,st:'font-size:15px',at:`id="go" ${ok?'':'disabled'}`})+
+  A(103,656,'把问题压在桌上 <span aria-hidden="true">→</span>',{tag:'button',cls:'btn hit',w:184,h:44,st:'font-size:15px',at:`id="go" aria-disabled="${!ok}"`})+
   `<a class="A t c mu" href="#/topic" style="left:195px;top:712px;font-size:11px;border-bottom:1px dashed;letter-spacing:.14em">或者先借一句问法</a>`,{ch:{by:103,tabs:true}})
  :stage('01-landing',
   T_(803,121,'尚未说出的事',21,{cls:'c',st:'letter-spacing:.32em'})+A(803,165,`<svg width="110" height="14" aria-hidden="true"><path d="M0 7H44M66 7H110" stroke="rgba(226,196,138,.5)" stroke-width=".8"/><path d="M50 10q5-9 11-6-4 6-11 6z" fill="rgba(226,196,138,.7)"/></svg>`,{cls:'c',st:'line-height:0'})+
   `<label class="sr" for="q">写下你想问的事</label><textarea id="q" class="A qin" maxlength="600" placeholder="写下你想问的事…" style="left:578px;top:292px;width:470px;height:270px;font:400 21px/1.8 var(--serif);letter-spacing:.14em">${esc(S.q)}</textarea>`+
   A(1060,566,`<span id="cnt">${S.q.length}</span>/600`,{cls:'en ink2',st:'transform:translateX(-100%);font-size:13px;font-style:italic'})+
-  A(649,656,'把问题压在桌上 <span aria-hidden="true">→</span>',{tag:'button',cls:'btn hit',w:309,h:62,st:'font-size:19px',at:`id="go" ${ok?'':'disabled'}`})+
+  A(649,656,'把问题压在桌上 <span aria-hidden="true">→</span>',{tag:'button',cls:'btn hit',w:309,h:62,st:'font-size:19px',at:`id="go" aria-disabled="${!ok}"`})+
   `<a class="A t c mu" href="#/topic" style="left:803px;top:736px;font-size:12.5px;border-bottom:1px dashed;letter-spacing:.16em">或者先借一句问法</a>`,
   {ch:{bl:['36 张卡牌','无预设的未来','只有更清晰的你']}});
  markDrawn(v);
- const q=$('#q'),go=$('#go');q.addEventListener('input',()=>{S.q=q.value;$('#cnt').textContent=q.value.length;go.disabled=q.value.trim().length<4;save()});
- go.onclick=()=>{if(!RM())q.animate([{transform:'translateY(0)'},{transform:'translateY(-6px)',offset:.4},{transform:'none'}],{duration:380,easing:'cubic-bezier(.22,.61,.36,1)'});Sound.tap();setTimeout(()=>go2('#/topic'),RM()?0:400)};
+ const q=$('#q'),go=$('#go');q.addEventListener('input',()=>{S.q=q.value;$('#cnt').textContent=q.value.length;go.setAttribute('aria-disabled',q.value.trim().length<4);save()});
+ go.onclick=()=>{if(q.value.trim().length<4){toast(q.value.trim()?'再多写几个字，让问题更具体一点':'先写下你想问的事');q.focus();!RM()&&q.animate([{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'none'}],{duration:260});return}if(!RM())q.animate([{transform:'translateY(0)'},{transform:'translateY(-6px)',offset:.4},{transform:'none'}],{duration:380,easing:'cubic-bezier(.22,.61,.36,1)'});Sound.tap();setTimeout(()=>go2('#/topic'),RM()?0:400)};
 }
 function vTopic(){const m=M();
- const tpl=()=>TPL.filter(t=>t.domain===S.topic).slice(0,3);
+ const tpl=()=>{const L=TPL.filter(t=>t.domain===S.topic);if(!L.length)return[];const o=(S.so||0)%L.length;return[0,1,2].map(i=>L[(o+i)%L.length]).filter((x,i,a)=>a.indexOf(x)===i)};
  const TD=m?{tiles:[[40,265,150,75],[203,265,147,75],[40,348,150,74],[203,348,147,74],[40,430,150,73],[203,430,147,73]],lbY:52,lbF:12.5,slips:[[92,537,223,34],[100,574,213,32],[108,610,205,34]],sF:11}
   :{tiles:[[489,281,167,112],[684,281,167,112],[489,413,167,112],[684,413,167,112],[489,545,167,112],[684,545,167,112]],lbY:74,lbF:14,slips:[[905,298,305,96],[930,421,276,74],[910,505,252,80]],sF:15};
  const tiles=`<div role="radiogroup" aria-label="主题">${T.map((t,i)=>{const[x,y,w,h]=TD.tiles[i];return`<button class="tile A" role="radio" aria-checked="${t.id===S.topic}" data-id="${t.id}" data-i="${i}" aria-description="${esc(t.whisper)}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px">${m?'':`<img class="sic" src="assets/tile/ic${i}.webp" alt="" aria-hidden="true">`}<span class="lb" style="top:${TD.lbY}px;font-size:${TD.lbF}px">${esc(t.label)}</span></button>`}).join('')}</div>`;
@@ -176,41 +176,43 @@ function vTopic(){const m=M();
  const v=m?stage('02-topic',
   A(62,182,`<div class="q" id="qq" style="font-size:12.5px;line-height:1.5;text-align:center;letter-spacing:.04em">${qtext(S.q,'（还没写下问题，可以从下面借一句）')}</div>`,{w:270,h:46,st:'display:flex;align-items:center;justify-content:center;overflow:hidden'})+
   T_(195,241,'选择你关心的主题',12,{cls:'c',st:'letter-spacing:.24em'})+tiles+
-  T_(195,514,'借一个问题',12.5,{cls:'c',st:'letter-spacing:.24em'})+`<div id="slips">${slips()}</div>`+
+  T_(195,514,'借一个问题',12.5,{cls:'c',st:'letter-spacing:.24em'})+A(286,513,'换一组灵感 ↻',{tag:'button',cls:'t swap',st:'font-size:10.5px;letter-spacing:.06em;color:var(--brass-hi)'})+A(20,513,'＋ 补充事实',{tag:'button',cls:'t',st:'font-size:10.5px;letter-spacing:.06em;color:var(--brass-hi)',at:'id="factsbtn"'})+`<div id="slips">${slips()}</div>`+
   T_(118,672,chalkText('让心里的疑问，慢慢清晰'),17,{cls:'chalk',st:'transform:rotate(-7deg);transform-origin:0 0'})+chalkSVG('M0 22 Q80 4 175 0',190,128,694,180,24,1200)+
   A(37,732,'开始占卜 <span aria-hidden="true">→</span>',{tag:'button',cls:'btn hit',w:313,h:44,st:'font-size:16px',at:`id="go"`}),{ch:{by:95,foot:true}})
  :stage('02-topic',
   T_(528,52,'此刻 · 你的问题',11,{cls:'ink2',st:'text-shadow:none;transform:rotate(-4deg);color:#6b5a44'})+
   A(505,82,`<div class="q" id="qq" style="text-align:center">${qtext(S.q,'（还没写下问题，可以从右边借一句）')}</div>`,{w:320,h:90,st:'display:flex;align-items:center;justify-content:center;transform:rotate(-4deg);overflow:hidden'})+
   T_(668,224,'选择一个想探问的方向',18,{cls:'c',st:'letter-spacing:.2em'})+tiles+
-  T_(1034,244,'借一句问法，开始倾听',17,{cls:'c',st:'letter-spacing:.16em'})+`<div id="slips">${slips()}</div>`+
+  T_(1034,244,'借一句问法，开始倾听',17,{cls:'c',st:'letter-spacing:.16em'})+A(1036,272,'换一组灵感 ↻',{tag:'button',cls:'t swap c',st:'font-size:12.5px;letter-spacing:.14em;color:var(--brass-hi)'})+`<div id="slips">${slips()}</div>`+
   T_(1036,603,chalkText('轻点纸条，借用这个问题'),17,{cls:'chalk'})+chalkSVG('M30 30 Q8 24 4 2 M0 9 L4 1 L10 7',80,975,578,40,34,1000)+
   A(907,100,'好的问题，<br>会带你走向更真实的自己。',{cls:'t',st:'font-size:12.5px;line-height:1.95;letter-spacing:.12em'})+A(1178,156,'—— &nbsp;寂境 &nbsp;Stillrealm',{cls:'t',st:'transform:translateX(-100%);font-size:12px'})+
-  `<details class="A" style="left:905px;top:648px;width:300px"><summary class="t mu" style="font-size:12.5px;cursor:pointer;letter-spacing:.12em">＋ 补充已知事实（可选）</summary><textarea id="facts" maxlength="400" placeholder="已经发生了什么？" style="margin-top:8px;width:100%;height:64px;padding:8px 10px;font-size:13px;background:rgba(0,0,0,.4);border-radius:4px;box-shadow:inset 0 0 0 1px rgba(176,141,85,.4);color:var(--ivory)">${esc(S.facts)}</textarea></details>`+
+  `<details class="A" style="left:905px;top:648px;width:300px"><summary class="t mu" style="font-size:12.5px;cursor:pointer;letter-spacing:.12em">＋ 补充已知事实（可选）</summary><textarea id="facts" maxlength="600" placeholder="已经发生了什么？" style="margin-top:8px;width:100%;height:64px;padding:8px 10px;font-size:13px;background:rgba(0,0,0,.4);border-radius:4px;box-shadow:inset 0 0 0 1px rgba(176,141,85,.4);color:var(--ivory)">${esc(S.facts)}</textarea><span class="t mu en" style="display:block;text-align:right;font-size:12px;font-style:italic"><span id="fcnt">${S.facts.length}</span>/600</span></details>`+
   A(560,712,'带着问题，继续 <span aria-hidden="true">→</span>',{tag:'button',cls:'btn hit',w:301,h:53,st:'font-size:19px',at:`id="go"`})+
   T_(708,786,'让一个清晰的问题，成为仪式的开始。',12.5,{cls:'c mu'}),{ch:{bl:['36 张卡牌','无预设的未来','只有更清晰的你']}});
  markDrawn(v);
  v.addEventListener('click',e=>{const b=e.target.closest('.tile');if(b){S.topic=b.dataset.id;save();$$('.tile').forEach(x=>x.setAttribute('aria-checked',x===b));$('#slips').innerHTML=slips();return}
   const s=e.target.closest('.slip');if(s){S.q=s.dataset.t;save();$('#qq').textContent=S.q;!RM()&&$('#qq').animate([{opacity:.2,transform:'translateY(-6px)'},{opacity:1,transform:'none'}],{duration:380,easing:'ease-out'})}});
- $('#facts')&&($('#facts').oninput=e=>{S.facts=e.target.value;save()});
- $('#go').onclick=()=>{if(S.q.trim().length<4){toast('先写下或借一句问题');return}go2('#/spread')};
+ $('#facts')&&($('#facts').oninput=e=>{S.facts=e.target.value;$('#fcnt').textContent=S.facts.length;save()});
+ $$('.swap').forEach(b=>b.onclick=()=>{S.so=(S.so||0)+3;save();$('#slips').innerHTML=slips();!RM()&&$$('#slips .slip').forEach((x,i)=>x.animate([{opacity:0,transform:'translateX(14px)'},{opacity:1,transform:'none'}],{duration:360,delay:i*60,easing:'ease-out',fill:'backwards'}))});
+ $('#factsbtn')&&($('#factsbtn').onclick=()=>factsDialog());
+ $('#go').onclick=()=>{if(S.q.trim().length<4){toast('问题还是空的——写下一句，或从纸条里借一句');!RM()&&$('#qq').animate([{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'none'}],{duration:260});return}go2('#/spread')};
 }
 function recommend(){const q=S.q;if(/还是|或者|哪一个|二选一|两条/.test(q)||S.topic==='decision')return'five';if(S.topic==='overview'||q.length>90)return'nine';return'three'}
 function vSpread(){if(!S.q.trim())return go2('#/');const rec=recommend();S.spread=S.spread||rec;const m=M();
- const TR=m?{three:[72,200,246,108,195,290],five:[70,322,250,95,195,398],nine:[98,425,194,186,195,593]}:{three:[414,329,232,181,530,532],five:[669,329,301,181,820,532],nine:[993,270,234,261,1110,552]};
+ const TR=m?{three:[72,200,246,108,195,290],five:[70,322,250,95,195,398],nine:[98,425,194,186,195,593]}:{three:[421,330,236,184,530,532],five:[676,330,306,184,820,532],nine:[1007,273,236,263,1110,552]};
  const ids=['three','five','nine'];const fs=m?11:14;
  const trays=`<div role="radiogroup" aria-label="牌阵">${ids.map(id=>{const[x,y,w,h,lx,ly]=TR[id],s=SPREADS[id];return`<button class="tray A" role="radio" aria-checked="${S.spread===id}" data-id="${id}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px" aria-label="${s.name}"></button>`+T_(lx,ly,`${s.name} · ${s.desc}`,fs,{cls:'c',st:'pointer-events:none;letter-spacing:.16em'})}).join('')}</div>`;
  const recPos=m?{three:[322,236],five:[324,352],nine:[300,460]}:{three:[455,272],five:[700,272],nine:[1010,215]};const[rx,ry]=recPos[rec];
- const seg=(cx,cy,dx)=>`<div class="seg" role="group" aria-label="牌数">${ids.map((id,i)=>`<button data-id="${id}" aria-pressed="${S.spread===id}" style="left:${cx+(i-1)*dx}px;top:${cy}px">${SPREADS[id].count}</button>`).join('')}</div>`;
+ const seg=(cx,cy,dx)=>{const si=Math.max(0,ids.indexOf(S.spread)),H=Math.round(dx*.5);return`<div class="seg A" role="group" aria-label="牌数" style="left:${cx-dx*1.5-6}px;top:${cy-H/2-4}px;width:${dx*3+12}px;height:${H+8}px;--dx:${dx}px;--si:${si}"><i class="thumb" aria-hidden="true"></i>${ids.map((id,i)=>`<button data-id="${id}" aria-pressed="${S.spread===id}" style="left:${6+i*dx}px;width:${dx}px">${SPREADS[id].count}</button>`).join('')}</div>`};
  const v=m?stage('03-spread',T_(195,175,'选择牌阵',15,{cls:'c',st:'letter-spacing:.3em'})+trays+T_(rx,ry,chalkText('推荐'),17,{cls:'chalk',st:'transform:rotate(-18deg)'})+chalkSVG('M0 16 Q20 22 34 4',50,rx-4,ry+20,40,24,700)+seg(196,647,55)+
    A(55,713,'就这样摆 <span aria-hidden="true">→</span>',{tag:'button',cls:'btn hit',w:278,h:47,st:'font-size:17px',at:'id="go"'}),{ch:{by:95,foot:true}})
  :stage('03-spread',T_(528,52,'此刻 · 你的问题',11,{cls:'ink2',st:'text-shadow:none;transform:rotate(-4deg);color:#6b5a44'})+
    T_(660,98,'选择牌阵',23,{cls:'c ink',st:'text-shadow:none;transform:translateX(-50%) rotate(-4deg);color:#2b2116;letter-spacing:.24em'})+T_(668,140,'不同的视角，通往不同的答案。',13,{cls:'c',st:'text-shadow:none;transform:translateX(-50%) rotate(-4deg);color:#4a3b28'})+
    A(942,96,'有时，<br>不是答案改变了我们，<br>而是提问的方式。',{cls:'t',st:'font-size:12.5px;line-height:1.95'})+A(1178,175,'—— &nbsp;寂境 &nbsp;Stillrealm',{cls:'t',st:'transform:translateX(-100%);font-size:12px'})+
-   trays+T_(rx,ry,chalkText('推荐'),22,{cls:'chalk',st:'transform:rotate(-8deg)'})+chalkSVG('M70 4 Q20 6 2 40 M0 30 L2 42 L12 36',110,rx-48,ry+22,80,46,700)+seg(772,634,84)+
+   trays+T_(rx,ry,chalkText('推荐'),22,{cls:'chalk',st:'transform:rotate(-8deg)'})+chalkSVG('M70 4 Q20 6 2 40 M0 30 L2 42 L12 36',110,rx-48,ry+22,80,46,700)+seg(780,637,82)+
    A(621,683,'就这样摆 <span aria-hidden="true">→</span>',{tag:'button',cls:'btn hit',w:296,h:60,st:'font-size:20px',at:'id="go"'}),{ch:{bl:['36 张卡牌','无预设的未来','只有更清晰的你']}});
  markDrawn(v);
- const set=id=>{S.spread=id;save();$$('.tray').forEach(x=>x.setAttribute('aria-checked',x.dataset.id===id));$$('.seg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.id===id))};
+ const set=id=>{S.spread=id;save();$$('.tray').forEach(x=>x.setAttribute('aria-checked',x.dataset.id===id));$$('.seg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.id===id));const sg=$('.seg');if(sg)sg.style.setProperty('--si',[...sg.querySelectorAll('button')].findIndex(x=>x.dataset.id===id))};
  v.addEventListener('click',e=>{const b=e.target.closest('.tray,.seg button');if(b)set(b.dataset.id)});
  $('#go').onclick=()=>{S.picked=[];save();go2('#/draw')};
 }
@@ -226,13 +228,13 @@ function vDraw(){if(!S.spread)return go2('#/spread');const sp=SPREADS[S.spread],
  const v=m?stage('04-draw',`<div id="stage" class="A" style="inset:0">${slotsH}</div>`+
    T_(318,180,chalkText('画圈洗牌'),15,{cls:'chalk',st:'transform:rotate(14deg)'})+chalkSVG('M70 10 Q-10 60 20 170 M14 160 L20 172 L28 162',260,40,158,80,180,200)+chalkSVG('M10 0 Q80 40 40 165 M34 155 L40 167 L48 157',240,300,190,80,180,500)+
    T_(195,503,'<span id="cnt">画圈洗牌</span>',16,{cls:'c chalk'})+chalkSVG('M0 6 Q60 -2 120 8',130,135,530,120,12,300)+
-   A(88,737,'替我洗牌',{tag:'button',cls:'btn hit',w:212,h:43,st:'font-size:16px;z-index:900',at:'id="act"'}),{ch:{by:72,bfs:28,foot:true}})
+   A(88,737,'替我洗牌',{tag:'button',cls:'btn hit',w:212,h:43,st:'font-size:16px;z-index:900',at:'id="act"'})+`<p class="A t backs" style="left:195px;top:704px;transform:translateX(-50%);font-size:11.5px;z-index:900"><a href="#/spread">‹ 更换牌阵</a><span>·</span><a href="#/">修改问题</a></p>`,{ch:{by:72,bfs:28,foot:true}})
  :stage('04-draw',`<div id="stage" class="A" style="inset:0">${slotsH}</div>`+
    T_(880,82,'洗牌与抽牌',22,{cls:'c',st:'text-shadow:none;color:#2b2116;transform:translateX(-50%) rotate(-3deg);letter-spacing:.2em'})+T_(886,122,'静下心，让指尖带你找到答案。',13,{cls:'c',st:'text-shadow:none;color:#4a3b28;transform:translateX(-50%) rotate(-3deg)'})+
    A(979,212,'有些答案，<br>并不在远方，而在你愿意停下来的此刻。',{cls:'t',st:'font-size:12.5px;line-height:1.95'})+A(1207,262,'—— &nbsp;寂境 &nbsp;Stillrealm',{cls:'t',st:'transform:translateX(-100%);font-size:12px'})+
    chalkSVG('M110 6 Q20 10 8 90 Q10 160 70 182 M2 76 L8 92 L18 80',330,690,240,120,190,200)+T_(706,300,chalkText('画圈洗牌'),18,{cls:'chalk',st:'transform:rotate(-22deg)'})+
    T_(cx,top-36,`<span style="opacity:.6">———</span>&nbsp; <span id="cnt">画圈洗牌</span> &nbsp;<span style="opacity:.6">———</span>`,15,{cls:'c',st:'letter-spacing:.18em'})+
-   A(cx,bot+16,'替我洗牌',{tag:'button',cls:'btn t',st:'transform:translateX(-50%);font-size:15px;letter-spacing:.24em;border-bottom:1px solid rgba(233,207,152,.6);padding:4px 6px;z-index:900',at:'id="act"'}),{ch:{bl:['36 张卡牌','无预设的未来','只有更清晰的你']}});
+   A(cx,bot+16,'替我洗牌',{tag:'button',cls:'btn t',st:'transform:translateX(-50%);font-size:15px;letter-spacing:.24em;border-bottom:1px solid rgba(233,207,152,.6);padding:4px 6px;z-index:900',at:'id="act"'})+`<p class="A t backs" style="left:1236px;top:${top-40}px;font-size:12.5px;z-index:900;flex-direction:column;align-items:flex-start;gap:6px"><a href="#/spread">‹ 更换牌阵</a><a href="#/">‹ 修改问题</a></p>`,{ch:{bl:['36 张卡牌','无预设的未来','只有更清晰的你']}});
  markDrawn(v);
  const st=$('#stage');World.clear();
  const deck=shuffle(C.map(c=>c.id)),bodies=[];
@@ -273,7 +275,7 @@ function vDraw(){if(!S.spread)return go2('#/spread');const sp=SPREADS[S.spread],
  act.onclick=()=>{if(phase==='shuffle'){if(RM())return toFan();let n=0;const it=setInterval(()=>{swirl=Math.min(2.5,swirl+.5);World.start();if(++n>14){clearInterval(it);setTimeout(toFan,450)}},60);return}
   if(phase==='fan'){const free=shuffle(bodies.filter(b=>b.placed==null&&!bodies.slice(0,m?18:16).includes(b)));let k=0;for(let i=0;i<N;i++){if(slots()[i].dataset.full)continue;const b=free[k++];setTimeout(()=>place(b,i),RM()?0:k*240)}return}
   const ids=S.picked.slice(0,N);if(ids.length<N||ids.some(x=>!x))return;const rec={id:Date.now().toString(36),at:Date.now(),topic:S.topic,q:S.q,facts:S.facts,spread:S.spread,ids};
-  sessionStorage.setItem('sr.current',JSON.stringify(rec));go2('#/reading/'+rec.id)};
+  sessionStorage.setItem('sr.current',JSON.stringify(rec));loading(()=>go2('#/reading/'+rec.id))};
  cleanup.push(()=>World.clear());
 }
 /* ---- reading ---- */
@@ -291,19 +293,21 @@ const fc=(c,v,x,y,w,h,i,extra='')=>`<div class="flipcard" data-i="${i}" style="l
 const well=(x,y,w,h,p=10)=>A(x-p,y-p,'',{cls:'well',w:w+2*p,h:h+2*p});
 function openSheet(R,rec){const sc=$('#sheet .sc');sc.innerHTML=`<p style="font-size:13px;color:#6b5a44;letter-spacing:.12em">此刻 · 你的问题</p><p style="font-size:18px;margin:4px 0 10px">${esc(rec.q)}</p><p>${esc(R.summary)}</p>${R.cards.map((c,i)=>`<h3>${R.sp.pos[i]} · ${esc(zh(c))} ${esc(c.name)}</h3><p>${esc(clean(c.summary))}。${esc(domText(c,rec.topic))}</p>`).join('')}<h3>可以做的一步</h3><p>${esc(R.advice)}</p>${R.caution?`<h3>留意</h3><p>${esc(R.caution)}</p>`:''}${R.timing?`<h3>时间感</h3><p>${esc(R.timing)}</p>`:''}${rec.facts?`<h3>你补充的事实</h3><p>${esc(rec.facts)}</p>`:''}`;
  const sh=$('#sheet');sh.hidden=false;$('.x',sh).focus();const close=()=>{sh.hidden=true};$('.x',sh).onclick=close;sh.onclick=e=>{if(e.target===sh)close()};sh.onkeydown=e=>{if(e.key==='Escape')close()}}
-const bar3=(cx,y,dx,fs,saved,two)=>`<div class="bar3">${[['keep','save',saved?'已保存':'保存'],['tts','play','朗读'],['again','again','再问']].filter(x=>!two||x[0]!=='tts').map(([id,ic,l],i)=>`<button id="${id}" style="left:${cx+(two?(i-.5)*2:(i-1))*dx}px;top:${y}px;font-size:${fs}px" ${id==='keep'&&saved?'disabled':''} ${id==='tts'?'aria-pressed="false"':''}><img src="assets/ic/${ic}.webp" alt=""><span>${l}</span></button>`).join('')}</div>`;
+const bar3=(cx,y,dx,fs,saved,two)=>`<div class="bar3">${[['keep','save',saved?'已收藏':'收藏'],['tts','play','朗读'],['again','again','再问']].filter(x=>!two||x[0]!=='tts').map(([id,ic,l],i)=>`<button id="${id}" style="left:${cx+(two?(i-.5)*2:(i-1))*dx}px;top:${y}px;font-size:${fs}px" ${id==='keep'&&saved?'disabled':''} ${id==='tts'?'aria-pressed="false"':''}><img src="assets/ic/${ic}.webp" alt=""><span>${l}</span></button>`).join('')}</div>`;
 function vReading(id){
  let rec=LS.get('history',[]).find(r=>r.id===id);const saved=!!rec;if(!rec){try{const c=JSON.parse(sessionStorage.getItem('sr.current'));if(c?.id===id)rec=c}catch{}}
  if(!rec)return go2('#/history');const R=interpret(rec),m=M(),cs=R.cards;const narration=[rec.q,R.summary,'建议：'+R.advice].join('。');let h='',key='05-reading3';
- const sum=`<p style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${esc(R.summary)}</p>`;
+ const tone=R.summary.split('。').filter(Boolean).pop()+'。';
+ const sumD=(n)=>{const k=Math.min(n,5);return`<div class="sumg" style="grid-template-columns:repeat(${k},1fr)">${cs.slice(0,k).map((c,i)=>`<div><p class="sl1"><em>${R.sp.pos[i]}</em><b>${esc(zh(c))}</b></p><p class="sl2">${esc(clean(c.summary))}</p></div>`).join('')}</div><div class="sumf"><p class="tone">${esc(tone)}</p><button class="morel" id="more">展开逐张解读 <span aria-hidden="true">›</span></button></div>`};
+ const sum=`<p class="tone m1">${esc(tone)}</p>`;
  if(rec.spread==='nine'){key='06-reading9';
   if(m){const X=[51,154,258],Y=[219,361,502];
    h=T_(195,157,'九宫解读',12,{cls:'c',st:'letter-spacing:.3em'})+A(88,175,`<span style="flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(rec.q)}</span>`,{cls:'t',w:214,h:30,st:'display:flex;align-items:center;padding:0 26px 0 14px;font-size:12px;border-radius:16px;box-shadow:inset 0 0 0 1px rgba(226,196,138,.45);background:rgba(0,0,0,.3);letter-spacing:.06em'})+
     [['过去','Past'],['此刻','Present'],['未来','Future']].map(([a,b],r)=>A(10,Y[r]+22,`<b style="font-weight:500;font-size:12px;letter-spacing:.1em">${a}</b><i class="en" style="font-size:10px;font-style:italic">${b}</i>`,{cls:'ink',w:36,h:88,st:'display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:#d9c7a1 url(assets/paper.webp) center/cover;background-blend-mode:multiply;box-shadow:0 4px 8px rgba(0,0,0,.6)'})).join('')+
-    [['缘起',354],['连结',496],['方向',638]].map(([t,y])=>T_(195,y-8,t,12,{cls:'c',st:'letter-spacing:.3em'})+A(195,y,`<svg width="230" height="4"><path d="M0 2H85M145 2H230" stroke="rgba(226,196,138,.45)" stroke-width=".8"/></svg>`,{cls:'c',st:'line-height:0'})).join('')+
+    [['缘起',354],['连结',496],['方向',638]].map(([t,y])=>A(195,y,`<svg width="230" height="4"><path d="M0 2H85M145 2H230" stroke="rgba(226,196,138,.45)" stroke-width=".8"/></svg>`,{cls:'c',st:'line-height:0'})).join('')+
     cs.map((c,i)=>fc(c,'m',X[i%3],Y[i/3|0],90,128,i)).join('')+
     T_(190,650,chalkText(`在连结中，看见${noun(R.core)}的路`,1600),18,{cls:'c chalk'})+chalkSVG('M0 8 Q110 -2 220 6',240,85,680,220,12,2200)+
-    `<p class="A t" style="left:195px;top:704px;transform:translateX(-50%);font-size:12px;display:flex;gap:18px"><button class="more" style="position:static" id="more">展开九宫解读</button><button id="tts" aria-pressed="false" style="border-bottom:1px dashed"><span>朗读</span></button></p>`+bar3(195,762,72,13.5,saved,true)}
+    `<p class="A t" style="left:195px;top:704px;transform:translateX(-50%);font-size:12px;display:flex;gap:18px"><button class="more" style="position:static" id="more">展开解读</button><button id="tts" aria-pressed="false" style="border-bottom:1px dashed"><span>朗读</span></button></p>`+bar3(195,762,72,13.5,saved,true)}
   else{const X=[433,647,860],Y=[179,393,611],w=140,hh=192;const ctr=i=>[X[i%3]+w/2,Y[i/3|0]+hh/2];
    const L=[[0,1],[1,2],[3,4],[4,5],[6,7],[7,8],[4,0],[4,2],[4,6],[4,8]];
    const lab=(a,b)=>{const A1=clean((cs[a].actions||[])[0]||'').slice(0,2),B1=noun(cs[b]).slice(0,2);return`${A1}<br>${B1}`};
@@ -314,69 +318,72 @@ function vReading(id){
      return`<path class="chalkline" style="--len:200;transition-delay:${1800+k*80}ms" d="M${sx} ${sy} L${ex} ${ey} M${ex-ux*7-uy*4} ${ey-uy*7+ux*4} L${ex} ${ey} L${ex-ux*7+uy*4} ${ey-uy*7-ux*4}"/>`}).join('')}</svg>`+
     L.map(([a,b])=>{const[x1,y1]=ctr(a),[x2,y2]=ctr(b);const mx=(x1+x2)/2,my=(y1+y2)/2;return T_(mx+(y1===y2?0:(x2>x1?-34:34)),my-(y1===y2?32:22),lab(a,b),12,{cls:'c',st:'line-height:1.7;text-align:center;letter-spacing:.2em'})}).join('')+
     well(X[1],Y[1],w,hh,9)+cs.map((c,i)=>fc(c,'d',X[i%3],Y[i/3|0],w,hh,i)).join('')+
-    A(1062,320,`<p style="font-size:13px;letter-spacing:.14em;border-bottom:1px solid rgba(70,50,25,.3);padding-bottom:8px;color:#3a2c1e">三行 · 九宫的指引</p>${[['过去',0],['此刻',3],['未来',6]].map(([t,s])=>`<h4 style="font-size:17px;font-weight:500;margin:16px 0 4px;letter-spacing:.2em">${t}</h4><p style="font-size:12px;line-height:1.7;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${cs.slice(s,s+3).map(zh).join(' · ')}：${esc(clean(cs[s+1].summary))}</p>`).join('')}
-     <p style="margin-top:12px;display:flex;gap:14px;font-size:12.5px;letter-spacing:.12em" class="lk"><button id="more" style="border-bottom:1px dashed">展开</button><button id="keep" ${saved?'disabled':''}><span>${saved?'已保存':'保存'}</span></button><button id="tts" aria-pressed="false"><span>朗读</span></button><button id="again">再问</button></p>`,{cls:'ink',w:228,st:'transform:rotate(2.5deg);transform-origin:0 0'})}}
+    A(1084,322,`<p style="font-size:13px;letter-spacing:.14em;border-bottom:1px solid rgba(70,50,25,.3);padding-bottom:8px;color:#3a2c1e">三行 · 九宫的指引</p>${[['过去',0],['此刻',3],['未来',6]].map(([t,s])=>`<h4 style="font-size:17px;font-weight:500;margin:16px 0 4px;letter-spacing:.2em">${t}</h4><p style="font-size:12px;line-height:1.7;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${cs.slice(s,s+3).map(zh).join(' · ')}：${esc(clean(cs[s+1].summary))}</p>`).join('')}
+     <p style="margin-top:12px;display:flex;gap:14px;font-size:12.5px;letter-spacing:.12em" class="lk"><button id="more" style="border-bottom:1px dashed">展开</button><button id="keep" ${saved?'disabled':''}><span>${saved?'已收藏':'收藏'}</span></button><button id="tts" aria-pressed="false"><span>朗读</span></button><button id="again">再问</button></p>`,{cls:'ink',w:214,st:'transform:rotate(-1.6deg);transform-origin:0 0'})}}
  else if(rec.spread==='five'){
   if(m){const Y=[188,284,380,476,572];h=T_(195,123,'五牌解读',16,{cls:'c',st:'letter-spacing:.3em'})+cs.map((c,i)=>fc(c,'m',70,Y[i],58,88,i)+T_(146,Y[i]+8,R.sp.pos[i],15,{st:'letter-spacing:.2em'})+A(146,Y[i]+34,esc(clean(c.summary))+'。',{cls:'t',w:200,h:48,st:'white-space:normal;font-size:11.5px;line-height:1.6;letter-spacing:.06em;overflow:hidden;color:var(--muted)'})).join('')+
-    A(103,150,`<span style="flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(rec.q)}</span>`,{cls:'t',w:185,h:28,st:'display:flex;align-items:center;padding:0 22px 0 10px;font-size:11.5px;letter-spacing:.04em'})+A(40,676,sum,{cls:'ink',w:310,h:44,st:'font-size:11.5px;line-height:1.85;text-align:center;letter-spacing:.04em'})+`<button class="A" style="left:34px;top:672px;width:322px;height:68px" id="more" aria-label="展开逐张解读"></button>`+bar3(195,762,100,13.5,saved)}
+    A(103,150,`<span style="flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(rec.q)}</span>`,{cls:'t',w:185,h:28,st:'display:flex;align-items:center;padding:0 22px 0 10px;font-size:11.5px;letter-spacing:.04em'})+A(48,672,sum+`<button class="morel" id="more">展开逐张解读 <span aria-hidden="true">›</span></button>`,{cls:'ink paperT msum',w:294,h:56})+bar3(195,762,100,13.5,saved)}
   else{const X=[0,1,2,3,4].map(i=>418+i*170),y=318,w=118,hh=180;
    h=T_(528,56,'此刻 · 你的问题',11,{cls:'ink2',st:'text-shadow:none;transform:rotate(-3deg);color:#6b5a44'})+A(505,92,`<div class="q" style="text-align:center">${esc(rec.q)}</div>`,{w:330,h:70,st:'transform:rotate(-3deg);overflow:hidden'})+
     cs.map((c,i)=>T_(X[i]+w/2,y-46,R.sp.pos[i],15,{cls:'c',st:'letter-spacing:.24em'})+well(X[i],y,w,hh,9)+fc(c,'d',X[i],y,w,hh,i)).join('')+
     T_(799,526,chalkText(pairLine(cs[1],cs[3]),1600),20,{cls:'chalk c'})+
-    A(445,580,sum,{cls:'ink',w:700,h:60,st:'font-size:15px;line-height:1.9;text-align:center;letter-spacing:.08em'})+`<button class="more A" style="left:1116px;top:660px;color:#3a2c1e" id="more">展开逐张解读</button>`+bar3(799,736,188,15,saved)}}
+    A(424,594,sumD(5),{cls:'ink paperT',w:760,h:96})+bar3(799,736,188,15,saved)}}
  else{
   if(m){const Y=[189,351,510];
    h=T_(195,123,'三牌解读',17,{cls:'c',st:'letter-spacing:.3em'})+A(103,150,`<span style="flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(rec.q)}</span>`,{cls:'t',w:185,h:28,st:'display:flex;align-items:center;padding:0 22px 0 10px;font-size:11.5px;border-radius:14px;box-shadow:inset 0 0 0 1px rgba(226,196,138,.45);background:rgba(0,0,0,.3);letter-spacing:.04em'})+
-    cs.map((c,i)=>fc(c,'m',88,Y[i],88,143,i)+T_(195,Y[i]+20,R.sp.pos[i],18,{st:'letter-spacing:.3em'})+A(192,Y[i]+50,esc(clean(c.summary))+'。'+esc(domText(c,rec.topic)),{cls:'t',w:160,h:64,st:'white-space:normal;font-size:11.5px;line-height:1.45;letter-spacing:.04em;overflow:hidden;color:rgba(236,228,210,.82)'})).join('')+
+    cs.map((c,i)=>fc(c,'m',88,Y[i],88,143,i)+T_(195,Y[i]+20,R.sp.pos[i],18,{st:'letter-spacing:.3em'})+A(192,Y[i]+50,esc(clean(c.summary))+'。'+esc(domText(c,rec.topic)),{cls:'t',w:160,h:64,st:'display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;white-space:normal;font-size:11.5px;line-height:1.45;letter-spacing:.04em;overflow:hidden;color:rgba(236,228,210,.82)'})).join('')+
     cs.slice(1).map((c,i)=>{const t=pairLine(cs[i],c);const y=Y[i]+150;return`<div class="A chalk" style="left:186px;top:${y}px;font-size:${Math.min(17,190/Math.max(8,t.length))}px;transform:rotate(-6deg);white-space:nowrap">${chalkText(t,1400+i*900)}</div>`+chalkSVG(`M0 14 Q4 -6 22 -8`,40,180,y+8,30,20,1300+i*900)}).join('')+
-    A(40,676,sum,{cls:'ink',w:310,h:44,st:'font-size:11.5px;line-height:1.85;text-align:center;letter-spacing:.04em'})+`<button class="A" style="left:34px;top:672px;width:322px;height:68px" id="more" aria-label="展开逐张解读"></button>`+bar3(195,762,100,13.5,saved)}
+    A(48,672,sum+`<button class="morel" id="more">展开逐张解读 <span aria-hidden="true">›</span></button>`,{cls:'ink paperT msum',w:294,h:56})+bar3(195,762,100,13.5,saved)}
   else{const X=[439,739,1056],y=296,w=159,hh=246;
    h=T_(528,56,'此刻 · 你的问题',11,{cls:'ink2',st:'text-shadow:none;transform:rotate(-3deg);color:#6b5a44'})+A(500,90,`<div class="q" style="text-align:center">${esc(rec.q)}</div>`,{w:340,h:70,st:'transform:rotate(-3deg);display:flex;align-items:center;justify-content:center;overflow:hidden'})+
     A(910,96,'卡牌不是预言，<br>而是让你听见内在声音的另一种语言。',{cls:'t',st:'font-size:12.5px;line-height:1.95'})+A(1167,150,'—— &nbsp;Stillrealm',{cls:'t',st:'transform:translateX(-100%);font-size:12px'})+
     cs.map((c,i)=>T_(X[i]+w/2,y-58,R.sp.pos[i],16,{cls:'c',st:'letter-spacing:.24em'})+well(X[i],y,w,hh,11)+fc(c,'d',X[i],y,w,hh,i)).join('')+
     cs.slice(1).map((c,i)=>{const[a,b]=split2(pairLine(cs[i],c));const cx=(X[i]+w+X[i+1])/2;return T_(cx,y+66,chalkText(a,1400+i*900)+'<br>'+chalkText(b,1400+i*900+a.length*70),Math.min(21,128/Math.max(a.length,b.length)),{cls:'c chalk',st:'line-height:1.55;text-align:center'})+chalkSVG('M0 6 Q40 3 84 5 M76 1 L84 5 L76 9',100,cx-42,y+136,90,12,1300+i*900)}).join('')+
-    A(470,606,sum,{cls:'ink',w:650,h:58,st:'font-size:15px;line-height:1.95;text-align:center;letter-spacing:.08em'})+`<button class="more A" style="left:1120px;top:664px;color:#3a2c1e;transform:translateX(-100%)" id="more">展开逐张解读</button>`+bar3(799,736,188,15,saved)}}
- const v=stage(key,h,{ch:m?{by:rec.spread==='nine'?88:60,bfs:28,foot:true,brand:true}:{bl:rec.spread==='nine'?null:['在每一张牌里','无预设的未来','只有更清晰的你']}});
+    A(436,594,sumD(3),{cls:'ink paperT',w:734,h:98})+bar3(799,736,188,15,saved)}}
+ if(rec.spread==='five')key='05-five';const v=stage(key,h,{ch:m?{by:rec.spread==='nine'?88:60,bfs:28,foot:true,brand:true}:{bl:rec.spread==='nine'?null:['在每一张牌里','无预设的未来','只有更清晰的你']}});
  const total=flipIn(v,cs,rec.spread==='nine'?180:520);setTimeout(()=>v.classList.add('drawn'),RM()?0:Math.max(0,total-1400));
- $('#more').onclick=()=>openSheet(R,rec);
- $('#keep').onclick=e=>{if(saved)return;LS.set('history',[rec,...LS.get('history',[]).filter(r=>r.id!==rec.id)].slice(0,100));e.currentTarget.querySelector('span').textContent='已保存';e.currentTarget.disabled=true;toast('已收进「我的记录」')};
+ $('#more').onclick=()=>readingSheet(rec,{tab:'glance'});if(saved&&!vReading.noAuto)readingSheet(rec,{ro:true,tab:rec.answers?'story':'glance'});
+ $('#keep').onclick=e=>{if(saved)return;const b=e.currentTarget;keepDialog(rec,()=>{b.querySelector('span').textContent='已收藏';b.disabled=true})};
  $('#tts').onclick=e=>prefs.tts?Voice.speak(narration,e.currentTarget):toast('朗读已在设置中关闭');
- $('#again').onclick=()=>{S={topic:S.topic,q:'',facts:'',spread:null,picked:[]};save();go2('#/')};
+ $('#again').onclick=()=>newQuestion();
 }
 /* ---- atlas ---- */
-let lq='',lf='all';
+let lq='',lf='all',ld='all';
+const DOMS=[['all','全部领域'],['relationship','感情'],['career','事业'],['wealth','财富'],['health','健康'],['lost-item','寻物'],['personality','性格']];
+const domSel=st=>`<label class="sr" for="dom">领域</label><select class="sel A" id="dom" style="${st}">${DOMS.map(([k,l])=>`<option value="${k}" ${ld===k?'selected':''}>${l}</option>`).join('')}</select>`;
+const hay=(c,d)=>[c.name,zh(c),...(c.aliases||[]),...(c.nouns||[]),...(c.actions||[]),...(c.tags||[]),c.summary,...(d==='all'?Object.values(c.domains||{}).flat():(c.domains?.[d]||[])),...(c.advice||[]),String(c.id)].map(clean).join(' ').toLowerCase();
 function vAtlas(){const m=M();
- const head=m?T_(195,90,'牌库图鉴',22,{cls:'c',st:'letter-spacing:.3em'})+T_(195,119,'36 张卡片，述说生活的每一种可能',10.5,{cls:'c mu',st:'letter-spacing:.14em'})+
-   `<label class="sr" for="s">搜索牌名或关键词</label><input class="search" id="s" type="search" placeholder="搜索牌名或关键词" value="${esc(lq)}" style="left:80px;top:142px;width:230px;height:29px;font-size:12.5px">`+
-   `<div class="fil" role="group" aria-label="倾向">${[['all','全部',131],['positive','吉',181],['neutral','中',223],['negative','凶',265]].map(([k,l,x])=>`<button data-f="${k}" aria-pressed="${lf===k}" style="left:${x}px;top:182px;font-size:12px">${l}</button>`).join('')}</div>`+
-   T_(296,170,chalkText('每一张牌')+'<br>'+chalkText('都是一种指引',300),12,{cls:'chalk',st:'transform:rotate(-12deg);line-height:1.3'})
+ const head=m?T_(195,90,'牌库图鉴',22,{cls:'c',st:'letter-spacing:.3em'})+T_(195,124,'36 张卡片，述说生活的每一种可能',10.5,{cls:'c mu',st:'letter-spacing:.14em'})+
+   `<label class="sr" for="s">搜索牌名或关键词</label><input class="search" id="s" type="search" placeholder="搜索牌名或关键词" value="${esc(lq)}" style="left:60px;top:142px;width:186px;height:29px;font-size:12.5px">`+domSel('left:252px;top:142px;width:78px;height:29px;font-size:11.5px;padding:0 20px 0 8px')+
+   `<div class="fil" role="group" aria-label="倾向">${[['all','全部',112],['positive','吉',160],['neutral','中',200],['negative','凶',240]].map(([k,l,x])=>`<button data-f="${k}" aria-pressed="${lf===k}" style="left:${x}px;top:182px;font-size:12px">${l}</button>`).join('')}</div>`+
+   A(300,183,'◎ 图谱',{tag:'button',cls:'t',st:'font-size:12px;color:var(--brass-hi)',at:'id="graph"'})
   :A(445,30,'牌库图鉴',{cls:'ink',st:'font-size:27px;letter-spacing:.2em;transform:rotate(-4deg);font-weight:500'})+
-   `<label class="sr" for="s">搜索牌名或关键词</label><input class="search" id="s" type="search" placeholder="搜索牌名或关键词" value="${esc(lq)}" style="left:660px;top:66px;width:270px;height:36px;font-size:13px">`+
-   `<div class="fil" role="group" aria-label="倾向">${[['all','全部',992],['positive','吉',1056],['neutral','中',1106],['negative','凶',1160]].map(([k,l,x])=>`<button data-f="${k}" aria-pressed="${lf===k}" style="left:${x}px;top:73px;font-size:13px">${l}</button>`).join('')}</div>`+
+   `<label class="sr" for="s">搜索牌名或关键词</label><input class="search" id="s" type="search" placeholder="搜索牌名或关键词" value="${esc(lq)}" style="left:660px;top:66px;width:218px;height:36px;font-size:13px">`+domSel('left:886px;top:66px;width:92px;height:36px;font-size:13px')+A(1206,72,'◎ 图谱',{tag:'button',cls:'t',st:'font-size:13px;letter-spacing:.12em;color:var(--brass-hi)',at:'id="graph"'})+
+   `<div class="fil" role="group" aria-label="倾向">${[['all','全部',1016],['positive','吉',1068],['neutral','中',1112],['negative','凶',1156]].map(([k,l,x])=>`<button data-f="${k}" aria-pressed="${lf===k}" style="left:${x}px;top:73px;font-size:13px">${l}</button>`).join('')}</div>`+
    A(1263,40,'36 张卡牌，<br>汇聚成更完整的你。',{cls:'t',st:'font-size:12px;line-height:1.75'})+A(1400,86,'—— &nbsp;寂境 &nbsp;Stillrealm',{cls:'t',st:'transform:translateX(-100%);font-size:11.5px'})+
    A(25,412,'每一张牌，<br>都是生活的低语。',{cls:'t',st:'font-size:12.5px;line-height:1.95'})+A(25,470,'—— &nbsp;寂境 &nbsp;Stillrealm',{cls:'t',st:'font-size:11.5px'});
  const v=stage('07-atlas',head+'<div id="grid"></div>',{ch:m?{by:30,bfs:22,orn:false,tabs:true}:{tr:null,br:false,bl:null},h:m?1760:900});
  if(!m)chrome.insertAdjacentHTML('beforeend',A(25,808,'CARDS<br>PEOPLE<br>A QUIETER YOU',{cls:'t en',st:'font-size:10.5px;line-height:1.75;letter-spacing:.26em'}));
  markDrawn(v);
- const draw=()=>{const q=lq.trim().toLowerCase();const L=C.filter(c=>(lf==='all'||c.polarity===lf)&&(!q||[c.name,zh(c),...(c.aliases||[]),...(c.nouns||[]).map(clean),...(c.tags||[]),String(c.id)].join(' ').toLowerCase().includes(q)));
+ const draw=()=>{const q=lq.trim().toLowerCase();const L=C.filter(c=>(lf==='all'||c.polarity===lf)&&(ld==='all'||(c.domains?.[ld]||[]).length)&&(!q||hay(c,ld).includes(q)));
   $('#grid').innerHTML=L.length?L.map((c,i)=>m?`<a class="A" href="#/card/${c.id}" style="left:${56+(i%3)*95}px;top:${218+(i/3|0)*126}px">${cardHTML(c,'m',89,121)}</a>`:`<a class="A" href="#/card/${c.id}" style="left:${384+(i%6)*139.5}px;top:${130+(i/6|0)*122.5}px">${cardHTML(c,'sq',106,108)}</a>`).join('')
    :T_(m?195:780,m?260:300,`没有找到「${esc(lq)}」，换个名词试试`,m?15:20,{cls:'c chalk'});
   if(m){ABH=Math.max(844,218+Math.ceil(L.length/3)*126+90);fit()}};
- $('#s').oninput=e=>{lq=e.target.value;draw()};$('.fil').onclick=e=>{const b=e.target.closest('button');if(!b)return;lf=b.dataset.f;$$('.fil button').forEach(x=>x.setAttribute('aria-pressed',x===b));draw()};draw();
+ $('#s').oninput=e=>{lq=e.target.value;draw()};$('#dom').onchange=e=>{ld=e.target.value;draw()};$('#graph').onclick=()=>graphSheet();$('.fil').onclick=e=>{const b=e.target.closest('button');if(!b)return;lf=b.dataset.f;$$('.fil button').forEach(x=>x.setAttribute('aria-pressed',x===b));draw()};draw();
 }
 const DL={general:'总体',relationship:'感情',career:'事业',wealth:'财富',health:'健康',personality:'性格',appearance:'外形',spirituality:'心灵',environment:'环境','lost-item':'寻物'};
 const RIC={感情:'heart',事业:'case',财富:'coin',时间:'moon',建议:'nature'};
-function vCard(id,today){const c=C[id-1];if(!c)return go2('#/atlas');const p=C[(id+34)%36],n=C[id%36],m=M();
+function vCard(id,today){const c=Number.isInteger(id)&&id>=1&&id<=36?C[id-1]:null;if(!c)return v404();const p=C[(id+34)%36],n=C[id%36],m=M();
  const d=k=>clean((c.domains?.[k]||c.domains?.general||[]).join('')),rows=[['感情',d('relationship')],['事业',d('career')],['财富',d('wealth')],['时间',clean(c.timing?.duration||'')||'因牌而定'],['建议',clean((c.advice||[]).join(''))]];
  const kws=(c.nouns||[]).map(clean).filter((x,i,a)=>a.indexOf(x)===i).slice(0,4);
  const h=m?T_(195,192,today?'今日一牌':'牌库图鉴',13,{cls:'c',st:'letter-spacing:.3em'})+A(14,245,cardHTML(c,'m',176,300),{st:'transform:rotate(-3deg)'})+
-   A(205,272,`<p style="font-size:17px;font-weight:500;letter-spacing:.06em">${esc(zh(c))} · <span class="en">${esc(c.name)}</span></p><p style="font-size:11px;margin-top:14px;font-weight:600">核心含义：</p><p style="font-size:11.5px;line-height:1.5">${esc(clean(c.summary))}。</p><p style="font-size:10px;margin-top:4px;white-space:nowrap;overflow:hidden">关键词：${esc(kws.join(' · '))}</p>${rows.map(([k,t])=>`<p style="font-size:11px;font-weight:600;margin-top:9px;border-top:1px solid rgba(70,50,25,.25);padding-top:5px">${k}：</p><p style="font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(t)}</p>`).join('')}`,{cls:'ink',w:165,h:320,st:'overflow:hidden'})+
+   A(205,272,`<p style="font-size:17px;font-weight:500;letter-spacing:.06em">${esc(zh(c))} · <span class="en">${esc(c.name)}</span></p><p style="font-size:11px;margin-top:14px;font-weight:600">核心含义：</p><p style="font-size:11.5px;line-height:1.5">${esc(clean(c.summary))}。</p><p style="font-size:10px;margin-top:4px;white-space:nowrap;overflow:hidden">关键词：${esc(kws.join(' · '))}</p>${rows.map(([k,t])=>`<p style="font-size:11px;line-height:1.5;margin-top:7px;border-top:1px solid rgba(70,50,25,.25);padding-top:5px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden"><b style="font-weight:600">${k}：</b>${esc(t)}</p>`).join('')}`,{cls:'ink',w:165,h:320,st:'overflow:hidden'})+
    `<nav class="A chalk" aria-label="翻页" style="left:195px;top:620px;transform:translateX(-50%);font-size:17px;white-space:nowrap;display:flex;gap:4px"><a href="#/card/${p.id}">←&nbsp;&nbsp; ${esc(zh(p))}</a><span>·</span><a href="#/card/${n.id}">${esc(zh(n))} &nbsp;&nbsp;→</a></nav>`+chalkSVG('M0 10 Q80 0 150 4',160,120,650,150,12,300)
   :A(386,184,cardHTML(c,'d',300,450).replace('class="card d ','class="card d big '),{st:'transform:rotate(-1.5deg)'})+
    A(790,180,`<p style="font-size:27px;font-weight:500;letter-spacing:.06em">${esc(zh(c))} · <span class="en">${esc(c.name)}</span></p>`,{cls:'ink'})+A(1180,192,`No.${pad(c.id)}`,{cls:'en ink',st:'font-size:14px;transform:translateX(-100%);letter-spacing:.1em'})+
    A(790,250,`<p style="font-size:13px;color:#4a3b28">核心含义</p><p style="font-size:20px;letter-spacing:.06em;margin-top:2px">${esc(clean(c.summary))}</p>`,{cls:'ink',w:390,st:'border-top:1px solid rgba(70,50,25,.3);padding-top:10px;top:240px'})+
    A(790,322,`关键词：${esc(kws.join(' · '))}`,{cls:'ink',w:390,st:'font-size:14px;border-top:1px solid rgba(70,50,25,.3);border-bottom:1px solid rgba(70,50,25,.3);padding:10px 0;white-space:nowrap;overflow:hidden'})+
-   `<div class="idx">${rows.map(([k,t],i)=>`<div class="row" style="left:790px;top:${390+i*61.5}px;width:390px;height:44px;${i<4?'border-bottom:1px solid rgba(70,50,25,.25)':''}"><span style="width:28px;height:28px;border-radius:50%;box-shadow:inset 0 0 0 1.3px #3a2c1e;display:inline-flex;align-items:center;justify-content:center;flex:none"><img src="assets/ic/${RIC[k]}.webp" alt="" style="width:16px;height:16px;filter:brightness(.25) sepia(1)"></span><b style="margin:0 0 0 14px;width:60px;font-size:15px">${k}</b><span style="font-size:13.5px" title="${esc(t)}">${esc(t)}</span></div>`).join('')}</div>`+
+   `<div class="idx">${rows.map(([k,t],i)=>`<div class="row" style="left:790px;top:${390+i*61.5}px;width:390px;height:44px;${i<4?'border-bottom:1px solid rgba(70,50,25,.25)':''}"><span style="width:28px;height:28px;border-radius:50%;box-shadow:inset 0 0 0 1.3px #3a2c1e;display:inline-flex;align-items:center;justify-content:center;flex:none"><img src="assets/ic/${RIC[k]}.webp" alt="" style="width:16px;height:16px;filter:brightness(.25) sepia(1)"></span><b style="margin:0 0 0 14px;width:60px;font-size:15px">${k}</b><span style="font-size:13px;line-height:1.55;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1;text-align:left" title="${esc(t)}">${esc(t)}</span></div>`).join('')}</div>`+
    `<nav class="A t" aria-label="翻页" style="left:388px;top:704px;width:310px;display:flex;justify-content:space-between;font-size:15px;letter-spacing:.2em"><a href="#/card/${p.id}">←&nbsp;&nbsp; ${esc(zh(p))}</a><a href="#/card/${n.id}">${esc(zh(n))} &nbsp;&nbsp;→</a></nav>`+
    (today?T_(803,110,'今日一牌 · 把它放在心上走过这一天',16,{cls:'chalk c'}):'');
  const v=stage('08-card',h,{ch:m?{by:110,foot:false}:{}});markDrawn(v);
@@ -403,13 +410,13 @@ function vHistory(){const hs=LS.get('history',[]),m=M();const fmt=t=>{const d=ne
     T_(g.cap[0],g.cap[1]+oy,capt(r).join('，<br>'),13,{cls:'',st:'line-height:1.9;letter-spacing:.14em'})+`<button class="del t" data-del="${r.id}" style="left:${g.t[0]+g.t[2]-30}px;top:${g.t[1]+g.t[3]+10+oy}px" aria-label="删除这条记录">删去</button>`}});
  let path='';if(hs.length>1){const pts=hs.slice(0,m?3:4).map((r,i)=>m?[MD[i].t[0]+MD[i].t[2]/2,MD[i].t[1]+MD[i].t[3]+8]:[D[i].c[0]+D[i].c[2]+40,D[i].c[1]+D[i].c[3]/2]);
   path=`<svg class="A" style="left:0;top:0;width:${m?390:1440}px;height:${H}px;pointer-events:none" aria-hidden="true"><path d="M${pts.map(p=>p.join(' ')).join(' L')}" fill="none" stroke="rgba(240,236,224,.5)" stroke-width="1.4" stroke-dasharray="3 7" stroke-linecap="round"/></svg>`}
- const h=m?T_(195,172,'来路余痕',22,{cls:'c',st:'letter-spacing:.24em'})+T_(195,201,'每一次提问，都是你走过的痕迹。',10.5,{cls:'c mu'})+(hs.length?A(300,180,'清空',{tag:'button',cls:'btn',w:57,h:22,st:'font-size:12px;letter-spacing:.2em;border-radius:12px;box-shadow:inset 0 0 0 1px #8a6a3a;background:rgba(60,40,15,.6)',at:'id="clear"'}):'')+path+body
+ const h=m?T_(195,172,'来路余痕',22,{cls:'c',st:'letter-spacing:.24em'})+T_(195,207,'每一次提问，都是你走过的痕迹。',10.5,{cls:'c mu'})+(hs.length?A(300,180,'清空',{tag:'button',cls:'btn',w:57,h:22,st:'font-size:12px;letter-spacing:.2em;border-radius:12px;box-shadow:inset 0 0 0 1px #8a6a3a;background:rgba(60,40,15,.6)',at:'id="clear"'}):'')+path+body
   :A(500,70,'来路余痕',{cls:'ink',st:'font-size:32px;letter-spacing:.14em;font-weight:500;transform:rotate(-3deg)'})+A(512,124,'那些提问过的问题，依然在照亮你。',{cls:'ink2',st:'font-size:13px;color:#4a3b28;transform:rotate(-3deg)'})+
    A(906,92,'我们走过的路，<br>从不会真正消失，<br>它们只是化作此刻更深的你。',{cls:'t',st:'font-size:12.5px;line-height:1.95'})+A(1167,170,'—— &nbsp;寂境 &nbsp;Stillrealm',{cls:'t',st:'transform:translateX(-100%);font-size:12px'})+
    (hs.length?A(1157,110,'<img src="assets/ic/doc.webp" alt="" style="width:16px;opacity:.8"> 清空',{tag:'button',cls:'btn',w:111,h:42,st:'font-size:14px;letter-spacing:.2em;border-radius:22px',at:'id="clear"'}):'')+path+body;
- const v=stage('09-history',h,{ch:m?{by:92,tabs:true}:{tr:null,bl:['每一次回望，','都是为了更清晰地前行。','—— &nbsp;寂境 &nbsp;Stillrealm'],blY:760},h:H});markDrawn(v);
- v.onclick=e=>{const d=e.target.closest('[data-del]');if(d){LS.set('history',LS.get('history',[]).filter(r=>r.id!==d.dataset.del));vHistory();toast('已删去')}};
- $('#clear')&&($('#clear').onclick=()=>{if(confirm('清空这台设备上的全部记录？')){LS.set('history',[]);vHistory()}});
+ const back=m?'':`<a class="A t" href="#/" style="left:1160px;top:162px;font-size:13px;letter-spacing:.16em" id="hback">‹ 回到桌面</a>`;const v=stage('09-history',h+back,{ch:m?{by:92,tabs:true,back:true}:{tr:null,bl:['每一次回望，','都是为了更清晰地前行。','—— &nbsp;寂境 &nbsp;Stillrealm'],blY:760},h:H});markDrawn(v);
+ v.onclick=e=>{const d=e.target.closest('[data-del]');if(d)ask('删去这一条记录？','删去后无法恢复。').then(ok=>{if(!ok)return;LS.set('history',LS.get('history',[]).filter(r=>r.id!==d.dataset.del));vHistory();toast('已删去')})};
+ $('#clear')&&($('#clear').onclick=()=>ask('清空全部记录？',`这台设备上的 ${hs.length} 条记录都会被删去，无法恢复。`,'全部清空').then(ok=>{if(ok){LS.set('history',[]);vHistory();toast('已清空')}}));
 }
 const AMB=[['rain','雨夜'],['fire','炉火'],['still','静室']];
 function vSettings(){const m=M(),vs=voices();
@@ -428,10 +435,10 @@ function vSettings(){const m=M(),vs=voices();
   :A(680,98,'声音与设置',{cls:'ink c',st:'font-size:29px;letter-spacing:.12em;font-weight:500;transform:translateX(-50%) rotate(-3deg)'})+A(682,166,'让合适的声音，陪伴你走向更深的自己。',{cls:'ink2 c',st:'font-size:13px;color:#4a3b28;transform:translateX(-50%) rotate(-3deg);white-space:nowrap'})+
    A(951,100,'一些细微的声音，<br>能让心慢下来，<br>也让你更靠近自己。',{cls:'t',st:'font-size:12.5px;line-height:1.95'})+A(1167,192,'—— &nbsp;寂境 &nbsp;Stillrealm',{cls:'t',st:'transform:translateX(-100%);font-size:12px'})+
    [['环境声',556],['音量',747],['朗读解读',917],['减少动效',1101]].map(([t,x])=>T_(x,341,t,17,{cls:'c',st:'letter-spacing:.14em'})).join('')+
-   sw('amb',528,495,58,31,prefs.ambient,'环境声')+`<select class="sel" id="ambsel" aria-label="环境声音色" style="left:486px;top:545px;width:136px;height:33px;font-size:14px">${aopt}</select>`+
+   sw('amb',529,492,66,38,prefs.ambient,'环境声')+`<select class="sel" id="ambsel" aria-label="环境声音色" style="left:490px;top:545px;width:142px;height:37px;font-size:14px">${aopt}</select>`+
    `<div class="knob" id="knob" role="slider" tabindex="0" aria-label="音量" aria-valuemin="0" aria-valuemax="100" style="left:701px;top:408px;width:92px;height:92px;background-image:url(assets/sp/knob-d.webp)"></div>`+T_(679,500,'静',12,{})+T_(806,500,'响',12,{})+
-   sw('tts',907,495,58,31,prefs.tts,'朗读解读')+`<select class="sel" id="voice" aria-label="声音" style="left:871px;top:545px;width:132px;height:33px;font-size:14px">${vopt}</select>`+
-   sw('rm',1073,467,58,31,prefs.reduce,'减少动效')+T_(1101,530,'让体验更专注<br>更平静。',12.5,{cls:'c',st:'text-align:center;line-height:1.7'})+
+   sw('tts',914,492,66,38,prefs.tts,'朗读解读')+`<select class="sel" id="voice" aria-label="声音" style="left:878px;top:545px;width:137px;height:37px;font-size:14px">${vopt}</select>`+
+   sw('rm',1080,468,70,40,prefs.reduce,'减少动效')+T_(1101,530,'让体验更专注<br>更平静。',12.5,{cls:'c',st:'text-align:center;line-height:1.7'})+
    T_(712,662,chalkText('合适的音量，')+'<br>'+chalkText('能让思绪走得更远。',700),17,{cls:'chalk',st:'line-height:1.5'})+chalkSVG('M8 80 Q-4 40 22 4 M14 10 L22 2 L26 12',120,698,566,40,84,200);
  const v=stage('10-sound',h,{ch:m?{by:100,foot:true,back:true}:{bl:['在细微之处，','收藏更安静的自己。']}});markDrawn(v);
  const knob=$('#knob');const setK=()=>{knob.style.transform=`rotate(${-135+prefs.vol*270}deg)`;knob.setAttribute('aria-valuenow',Math.round(prefs.vol*100));knob.setAttribute('aria-valuetext',Math.round(prefs.vol*100)+'%')};setK();
@@ -443,6 +450,76 @@ function vSettings(){const m=M(),vs=voices();
  $('#ambsel').onchange=e=>{prefs.amb=e.target.value;savePrefs();if(Sound.on){Sound.stop();setTimeout(()=>Sound.start(),1400)}};
  $('#back')&&($('#back').onclick=()=>history.length>1?history.back():go2('#/'));
 }
+/* ================= overlays & new states ================= */
+window.SPREADS_POS=Object.fromEntries(Object.entries(SPREADS).map(([k,v])=>[k,v.pos]));
+const dlg=document.createElement('div');dlg.id='dlg';dlg.hidden=true;document.body.append(dlg);
+let lastFocus=null;
+function openDlg(html,cls=''){lastFocus=document.activeElement;dlg.innerHTML=`<div class="paper dlgp ${cls}" role="dialog" aria-modal="true">${html}</div>`;dlg.hidden=false;
+ const p=dlg.firstElementChild;!RM()&&p.animate([{transform:'translateY(18px) rotate(-1deg)',opacity:0},{transform:'none',opacity:1}],{duration:380,easing:'cubic-bezier(.22,.61,.36,1)'});
+ setTimeout(()=>($('[autofocus]',p)||$('button,input,textarea,select,a',p))?.focus(),30);return p}
+function closeDlg(){dlg.hidden=true;dlg.innerHTML='';lastFocus?.focus?.()}
+dlg.addEventListener('click',e=>{if(e.target===dlg)closeDlg()});addEventListener('keydown',e=>{if(e.key==='Escape'){if(!dlg.hidden)closeDlg();else if(!$('#sheet').hidden)$('#sheet').hidden=true}});
+function ask(title,msg,ok='删去'){return new Promise(res=>{const p=openDlg(`<h3>${esc(title)}</h3><p>${esc(msg)}</p><div class="drow"><button class="lk" data-a="0" autofocus>再想想</button><button class="pill" data-a="1">${esc(ok)}</button></div>`,'small');
+ p.onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;closeDlg();res(b.dataset.a==='1')}})}
+function factsDialog(){const p=openDlg(`<h3>补充已知事实</h3><p class="mu2">已经发生了什么？写下的事实会被织进完整故事里。</p><textarea id="fx" maxlength="600" placeholder="例如：上个月我们大吵了一次，之后他很少主动联系。">${esc(S.facts)}</textarea><p class="cnt"><span id="fxc">${S.facts.length}</span>/600</p><div class="drow"><button class="pill" data-a="1">放进纸条</button></div>`);
+ const t=$('#fx',p);t.oninput=()=>{$('#fxc',p).textContent=t.value.length};p.onclick=e=>{if(e.target.closest('[data-a]')){S.facts=t.value;save();closeDlg();toast(S.facts?'事实已补充':'已清空补充事实')}}}
+function loading(next){if(RM())return next();const L=['正在辨认每张牌的显性含义…','正在把相邻的牌连成句子…','正在对照你的问题与位置…','故事的轮廓渐渐清楚了…'];
+ const o=document.createElement('div');o.id='load';o.setAttribute('role','status');o.innerHTML=`<div class="ll">${L.map((l,i)=>`<p class="chalk" style="animation-delay:${i*520}ms">${chalkText(l,i*520)}</p>`).join('')}</div><button class="skipb">跳过 ›</button>`;document.body.append(o);requestAnimationFrame(()=>o.classList.add('drawn'));
+ let done=false;const fin=()=>{if(done)return;done=true;clearTimeout(t);o.remove();next()};const t=setTimeout(fin,2500);o.onclick=fin;addEventListener('keydown',fin,{once:true})}
+function newQuestion(){S={topic:S.topic,q:'',facts:'',spread:null,picked:[]};save();$('#sheet').hidden=true;closeDlg();go2('#/')}
+/* ---- reading sheet ---- */
+function readingSheet(rec,o={}){const R=interpret(rec),cs=R.cards,ro=!!o.ro;const G=STORY.glance(rec),FQ=STORY.followups(rec);
+ const st={tab:o.tab||'glance',i:0,ch:0,ans:Object.assign({},rec.answers||{}),lv:rec.lv||5,strip:true,story:null};
+ const sh=$('#sheet'),sc=$('.sc',sh);sh.hidden=false;sh.dataset.ro=ro;
+ const thumbs=()=>`<div class="strip ${st.strip?'':'shut'}"><button class="lk tog" aria-expanded="${st.strip}">${st.strip?'收起牌阵 ▴':'展开牌阵 ▾'}</button><div class="th">${cs.map((c,i)=>`<button class="thc" data-c="${i}" aria-label="${R.sp.pos[i]} · ${esc(zh(c))}，查看牌义">${cardHTML(c,'d',cs.length>5?44:58)}<small>${R.sp.pos[i]}</small></button>`).join('')}</div></div>`;
+ const tabsH=()=>`<nav class="tabs" role="tablist">${[['glance','初见'],['cards','逐张看'],['deep','继续深入']].concat(st.story||ro?[['story','完整故事']]:[]).map(([k,l])=>`<button role="tab" aria-selected="${st.tab===k}" data-t="${k}">${l}</button>`).join('')}</nav>`;
+ const pane=()=>{if(st.tab==='glance')return`<p class="kick">此刻 · 你的问题</p><p class="qq">${esc(rec.q)}</p><h2>${esc(G.headline)}</h2><h4>先说结论</h4><p>${esc(G.conclusion)}</p><h4>线索</h4><ul class="clues">${G.clues.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><div class="drow"><button class="lk" data-t="cards">逐张看 ›</button><button class="pill" data-t="deep">继续深入 ›</button></div>`;
+  if(st.tab==='cards'){const c=cs[st.i];return`<div class="one"><div class="oc">${cardHTML(c,'d',150)}</div><div><p class="kick">${R.sp.pos[st.i]} · 第 ${st.i+1} 张</p><h2>${esc(zh(c))} <span class="en">${esc(c.name)}</span></h2><p>${esc(clean(c.summary))}。</p><p>${esc(domText(c,rec.topic))}</p><p class="chalkp">${esc(PH[c.id].s)}，${esc(PH[c.id].p)}。</p></div></div><div class="pager2"><button class="lk" data-n="-1" ${st.i?'':'disabled'} aria-label="上一张">‹ 上一张</button><span aria-live="polite">${st.i+1} / ${cs.length}</span><button class="lk" data-n="1" ${st.i<cs.length-1?'':'disabled'} aria-label="下一张">下一张 ›</button></div>`}
+  if(st.tab==='deep'){const all=FQ.every((_,i)=>st.ans[i]&&String(st.ans[i]).trim());return`<h4>此刻，你对这件事有几分把握？</h4><div class="sl"><span>1</span><input type="range" min="1" max="10" step="1" id="lv" value="${st.lv}" ${ro?'disabled':''} aria-valuetext="${st.lv} 分"><span>10</span><b id="lvv">${st.lv}</b></div>
+   ${FQ.map((f,i)=>{const own=st.ans[i]&&!f.o.includes(st.ans[i]);return`<fieldset ${ro?'disabled':''}><legend>${i+1}. ${esc(f.q)}</legend>${f.o.map(x=>`<label><input type="radio" name="q${i}" value="${esc(x)}" ${st.ans[i]===x?'checked':''}> ${esc(x)}</label>`).join('')}<label class="own"><input type="radio" name="q${i}" value="__own" ${own?'checked':''}> 自己填写 <input type="text" class="ownt" data-i="${i}" maxlength="80" placeholder="用你的话说…" value="${own?esc(st.ans[i]):''}" ${own?'':'tabindex="-1"'}></label></fieldset>`}).join('')}
+   ${ro?'':`<div class="drow"><button class="lk" id="skip2">直接阅读完整故事 ›</button><button class="pill" id="tell" ${all?'':'disabled'} title="${all?'':'回答完每一个问题后才能展开'}">让故事完整显现</button></div>`}`}
+  const S2=st.story||(st.story=STORY.story(rec,st.ans,st.lv)),c=S2[st.ch];
+  return`<p class="kick">完整故事 · 第 ${st.ch+1} 章 / 4</p><h2 class="cht">${['一','二','三','四'][st.ch]} · ${c.t}</h2>${c.p.map(x=>`<p>${esc(x)}</p>`).join('')}<div class="pager2"><button class="lk" data-chn="-1" ${st.ch?'':'disabled'}>‹ ${st.ch?S2[st.ch-1].t:'上一章'}</button><span>${st.ch+1} / 4</span><button class="lk" data-chn="1" ${st.ch<3?'':'disabled'}>${st.ch<3?S2[st.ch+1].t:'下一章'} ›</button></div>`};
+ const foot=()=>`<footer>${ro?'<span class="mu2">已收藏 · 只读</span>':`<button class="lk" id="fav">收藏</button>`}<button class="lk" id="newq">换一个问题</button></footer>`;
+ const render=()=>{sc.innerHTML=thumbs()+tabsH()+`<div class="pane" role="tabpanel">${pane()}</div>`+foot();sc.scrollTop=0};
+ const upd=()=>{const all=FQ.every((_,i)=>st.ans[i]&&String(st.ans[i]).trim());const t=$('#tell',sc);if(t){t.disabled=!all;t.title=all?'':'回答完每一个问题后才能展开'}};
+ render();$('.x',sh).focus();$('.x',sh).onclick=()=>{sh.hidden=true};sh.onclick=e=>{if(e.target===sh)sh.hidden=true};
+ sc.onclick=e=>{const t=e.target.closest('[data-t]');if(t){st.tab=t.dataset.t;render();return}
+  const n=e.target.closest('[data-n]');if(n){st.i=Math.max(0,Math.min(cs.length-1,st.i+ +n.dataset.n));render();return}
+  const ch=e.target.closest('[data-chn]');if(ch){st.ch=Math.max(0,Math.min(3,st.ch+ +ch.dataset.chn));render();return}
+  if(e.target.closest('.tog')){st.strip=!st.strip;render();return}
+  const c=e.target.closest('.thc');if(c){cardDialog(cs[+c.dataset.c],R.sp.pos[+c.dataset.c],rec.topic);return}
+  if(e.target.id==='tell'&&!e.target.disabled){st.story=null;st.tab='story';st.ch=0;render();return}
+  if(e.target.id==='skip2'){st.story=null;st.tab='story';st.ch=0;render();return}
+  if(e.target.id==='fav'){keepDialog(Object.assign(rec,{answers:st.ans,lv:st.lv}),()=>{const k=$('#keep');if(k){k.disabled=true;k.querySelector('span').textContent='已收藏'}});return}
+  if(e.target.id==='newq')newQuestion()};
+ sc.onchange=e=>{const r=e.target;if(r.type==='radio'){const i=+r.name.slice(1);const tx=$(`.ownt[data-i="${i}"]`,sc);if(r.value==='__own'){tx.tabIndex=0;tx.focus();st.ans[i]=tx.value.trim()}else{st.ans[i]=r.value;tx.tabIndex=-1}st.story=null;upd()}};
+ sc.oninput=e=>{const r=e.target;if(r.id==='lv'){st.lv=+r.value;$('#lvv',sc).textContent=st.lv;r.setAttribute('aria-valuetext',st.lv+' 分');st.story=null}
+  if(r.classList.contains('ownt')){const i=+r.dataset.i;$(`input[name="q${i}"][value="__own"]`,sc).checked=true;st.ans[i]=r.value.trim();st.story=null;upd()}};
+ sc.addEventListener('focusin',e=>{if(e.target.classList?.contains('ownt'))e.target.tabIndex=0});}
+function cardDialog(c,pos,topic){const p=openDlg(`<div class="cd"><div class="flipcard big" style="position:relative;width:170px;height:255px"><div class="in3" style="transition:transform .8s cubic-bezier(.3,1.3,.5,1)">${cardHTML(c,'d',170,255)}${backHTML2(170,255).replace('class="card back"','class="card back bk2"')}</div></div><div><p class="kick">${pos?esc(pos)+' · ':''}No.${pad(c.id)}</p><h3>${esc(zh(c))} <span class="en">${esc(c.name)}</span></h3><p>${esc(clean(c.summary))}。</p><p>${esc(domText(c,topic||'overview'))}</p><p class="mu2">关键词：${esc((c.nouns||[]).map(clean).slice(0,5).join('、'))}</p></div></div><div class="drow"><button class="lk" id="flipb" aria-pressed="false">翻到牌背</button><a class="lk" href="#/card/${c.id}">完整牌义 ›</a><button class="pill" id="cl" autofocus>收起</button></div>`,'wide');
+ let f=false;$('#flipb',p).onclick=e=>{f=!f;$('.in3',p).style.transform=f?'rotateY(180deg)':'none';e.target.textContent=f?'翻回正面':'翻到牌背';e.target.setAttribute('aria-pressed',f);Sound.tap()};$('#cl',p).onclick=closeDlg;$('a',p).onclick=()=>{closeDlg();$('#sheet').hidden=true}}
+function keepDialog(rec,done){const has=rec.answers&&Object.values(rec.answers).some(Boolean);
+ const p=openDlg(`<h3>收藏这次占卜</h3><p class="mu2">收进「我的记录」，只保存在这台设备上。</p><p class="qq">「${esc(rec.q)}」</p><label class="ck"><input type="checkbox" id="ka" ${has?'checked':'disabled'}> 一并保存我的跟进回答${has?'':'（还没有回答）'}</label><div class="drow"><button class="lk" data-a="0">取消</button><button class="pill" data-a="1" autofocus>收藏</button></div>`,'small');
+ p.onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;if(b.dataset.a==='1'){const r=Object.assign({},rec);if(!$('#ka',p).checked){delete r.answers;delete r.lv}r.saved=Date.now();LS.set('history',[r,...LS.get('history',[]).filter(x=>x.id!==r.id)].slice(0,100));toast('已收进「我的记录」');done&&done()}closeDlg()}}
+/* ---- relationship graph ---- */
+const suit=c=>(clean(c.pokerCard).match(/^(黑桃|红桃|红心|梅花|方块|方片)/)||[])[1];
+const RELW=['与','和'];
+function related(c){const sc=C.filter(x=>x!==c).map(x=>{let s=0,why=[];if(suit(x)&&suit(x)===suit(c)){s+=2;why.push('同属'+suit(c))}
+  const sh=(x.nouns||[]).map(clean).filter(n=>n&&(c.nouns||[]).map(clean).includes(n));if(sh.length){s+=sh.length*2;why.push('共同意象：'+sh.slice(0,2).join('、'))}
+  if(x.polarity===c.polarity&&c.polarity!=='neutral'){s+=.5}
+  return{x,s,why:why[0]||(x.polarity===c.polarity?'同样的'+({positive:'吉',negative:'凶',neutral:'中'}[c.polarity])+'性':'')}}).sort((a,b)=>b.s-a.s||a.x.id-b.x.id).slice(0,5);return sc}
+function graphSheet(sel=1){const sh=$('#sheet'),sc=$('.sc',sh);sh.hidden=false;sh.dataset.ro='false';const m=M();
+ const draw=()=>{const c=C[sel-1],rel=related(c),ids=rel.map(r=>r.x.id),cols=6,cw=m?44:58,gap=m?6:10,ch=cw*1.15;
+  const pos=id=>{const i=id-1;return[(i%cols)*(cw+gap)+cw/2,Math.floor(i/cols)*(ch+gap)+ch/2]};const W=cols*(cw+gap)-gap,H=6*(ch+gap)-gap;const[sx,sy]=pos(sel);
+  sc.innerHTML=`<p class="kick">牌库图鉴 · 牌间图谱</p><h2>轻点一张牌，看它和谁相连</h2><div class="graph"><div class="gw" style="width:${W}px;height:${H}px"><svg width="${W}" height="${H}" aria-hidden="true">${ids.map(id=>{const[x,y]=pos(id);return`<path d="M${sx} ${sy} Q${(sx+x)/2+(y-sy)*.15} ${(sy+y)/2-(x-sx)*.15} ${x} ${y}" class="gl"/>`}).join('')}</svg>${C.map(x=>{const[px,py]=pos(x.id);return`<button class="gn ${x.id===sel?'on':ids.includes(x.id)?'rel':''}" data-g="${x.id}" style="left:${px-cw/2}px;top:${py-ch/2}px;width:${cw}px;height:${ch}px" aria-label="${x.id} ${esc(zh(x))}" aria-pressed="${x.id===sel}"><b>${x.id}</b>${esc(zh(x))}</button>`}).join('')}</div>
+   <div class="gi"><h3>${c.id} · ${esc(zh(c))} <span class="en">${esc(c.name)}</span></h3><p>${esc(clean(c.summary))}</p><h4>相连的牌</h4><ul>${rel.map(r=>`<li><button class="lk" data-g="${r.x.id}">${r.x.id} ${esc(zh(r.x))}</button><small>${esc(r.why)}；${esc(PH[c.id].s)}，${esc(PH[r.x.id].p)}</small></li>`).join('')}</ul><a class="pill" href="#/card/${c.id}">查看「${esc(zh(c))}」牌义 ›</a></div></div>`};
+ draw();$('.x',sh).onclick=()=>{sh.hidden=true};sh.onclick=e=>{if(e.target===sh)sh.hidden=true};
+ sc.onclick=e=>{const g=e.target.closest('[data-g]');if(g){sel=+g.dataset.g;draw();$(`[data-g="${sel}"].gn`,sc)?.focus();return}if(e.target.closest('a'))sh.hidden=true};sc.onchange=null;sc.oninput=null}
+function v404(){const m=M();const h=m?A(48,250,`<p class="kick">404</p><h2 style="font-size:20px;margin:8px 0 12px">这张牌不在桌上</h2><p>牌库只有 36 张牌，编号从 1 到 36。</p><p style="margin-top:18px"><a href="#/atlas" style="border-bottom:1px dashed">‹ 回到牌库图鉴</a></p>`,{cls:'paper ink nf',w:294,h:260})
+ :A(560,250,`<p class="kick">404</p><h2 style="font-size:28px;margin:10px 0 16px">这张牌不在桌上</h2><p>牌库只有 36 张牌，编号从 1 到 36。也许它被风吹到了桌子底下。</p><p style="margin-top:24px"><a href="#/atlas" style="border-bottom:1px dashed">‹ 回到牌库图鉴</a></p>`,{cls:'paper ink nf',w:420,h:300});
+ document.title='找不到这张牌 · 寂境 · 雷诺曼';stage('08-card',h,{ch:m?{by:110}:{}})}
+
 /* ================= router ================= */
 let cleanup=[];
 function go2(h){if(location.hash===h)route();else location.hash=h}
