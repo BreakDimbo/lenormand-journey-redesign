@@ -36,7 +36,7 @@ function keep(p,rec){const dlg=$('#dlg');const a=ab();a.appendChild(dlg);dlg.cla
  p.style.setProperty('--pl',`url(${P('17-keep')})`);
  const h=$('h3',p);if(h){h.textContent='收进来路余痕';h.insertAdjacentHTML('afterend','<hr class="orn">')}
  $('.mu2',p)?.remove();const q=$('.qq',p);if(q)q.textContent=`“${rec.q}”`;
- const lb=$('.ck',p);if(lb){const t=[...lb.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());if(t)t.textContent=' 一并保存我的追问回答'+(rec.answers&&Object.values(rec.answers).some(Boolean)?'':'（暂无）')}
+ const lb=$('.ck',p);if(lb){const t=[...lb.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());if(t)t.textContent=' 一并保存我的追问回答';if(!(rec.answers&&Object.values(rec.answers).some(Boolean)))lb.style.display='none'}
  const mo=new MutationObserver(()=>{if(dlg.hidden){dlg.classList.remove('ovk');document.body.appendChild(dlg);mo.disconnect()}});mo.observe(dlg,{attributes:true,attributeFilter:['hidden']})}
 /* ---------- loading ---------- */
 function loading(o){const{esc,cardHTML}=L();const S=L().S,a=ab();a.appendChild(o);o.classList.add('ovl');platefor(o,'12-loading');

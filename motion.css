@@ -1,0 +1,45 @@
+/* Motion v2 (batch 1) — see MOTION.md §V2. Only transform/opacity animate; no glow, no particles-as-effect. */
+html{--mo-e:cubic-bezier(.16,.84,.3,1)}
+/* A1 lamp breathing — a dimmer, never a glow: a dark edge-weighted veil whose opacity drifts. */
+.mo-amb{position:absolute;inset:0;z-index:40;pointer-events:none;opacity:.035;transition:opacity .25s linear;
+ background:radial-gradient(ellipse 70% 85% at 52% -8%,rgba(0,0,0,.25) 0%,rgba(0,0,0,.75) 60%,#000 100%)}
+/* A2 dust in the cone */
+.mo-dust{position:absolute;z-index:39;pointer-events:none}
+/* T1 lamp dims between scenes: edges first (gradient), centre last */
+.mo-veil{position:fixed;inset:0;z-index:48;pointer-events:none;opacity:0;
+ background:radial-gradient(ellipse 60% 70% at 52% 0%,rgba(4,6,5,.62) 0%,rgba(4,6,5,.9) 70%)}
+.mo-veil.dn{opacity:1;transition:opacity .28s cubic-bezier(.4,0,.8,.6)}
+.mo-veil.up{animation:mo-up .62s cubic-bezier(.2,.6,.3,1) both}
+@keyframes mo-up{0%{opacity:1}78%{opacity:.07}84%{opacity:.11}100%{opacity:0}}
+/* T3 paper slides in under a hand (individual translate/rotate so authored transforms survive) */
+#dlg:not([hidden]) .dlgp,#sheet:not([hidden]) .sheetp{animation:mo-paper .72s var(--mo-e) both}
+@keyframes mo-paper{0%{translate:0 70px;rotate:1.8deg;opacity:0}22%{opacity:1}86%{translate:0 -1px;rotate:-.08deg}100%{translate:0 0;rotate:0deg}}
+#dlg:not([hidden]),#sheet:not([hidden]){animation:mo-fade .4s ease-out both}@keyframes mo-fade{from{opacity:0}}
+/* R3 flip — a broad matte highlight rolls across the paper; overlay on the card box, so any card art works */
+.flipcard .in3>.card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:3;mix-blend-mode:soft-light;
+ background:linear-gradient(100deg,rgba(255,236,205,0) 38%,rgba(255,236,205,.55) 50%,rgba(255,236,205,0) 62%) no-repeat;background-size:260% 100%;
+ background-position:calc(100% - var(--fl,0)*100%) 0;opacity:calc(var(--bd,0)*var(--lit,1)*.55)}
+.flipcard.mo-roll .in3>.card::after{animation:mo-roll .8s cubic-bezier(.3,.6,.4,1)}
+@keyframes mo-roll{0%{background-position:100% 0;opacity:0}50%{opacity:calc(var(--lit,1)*.55)}100%{background-position:0 0;opacity:0}}
+/* R1 squaring the deck */
+.mo-knock .body .in3{animation:mo-knock .34s ease-out 2}
+@keyframes mo-knock{0%,100%{translate:0 0}40%{translate:0 2px}}
+/* R5 ink bleeding into paper */
+.mo-ink-wait .paperT,.mo-ink-wait .ink:not(.ink2){visibility:hidden}
+.mo-s{display:inline;animation:mo-ink 1.5s cubic-bezier(.25,.6,.3,1) both}
+@keyframes mo-ink{0%{opacity:0;filter:blur(1.6px);color:#120c06}18%{opacity:.9;filter:blur(.7px)}45%{filter:blur(.25px);color:#140e08}100%{opacity:1;filter:none}}
+/* R6 wax seal */
+.mo-seal{position:fixed;z-index:80;width:66px;height:66px;margin:-33px 0 0 -33px;pointer-events:none;background:url(assets/mo/seal.webp) center/contain no-repeat;
+ filter:drop-shadow(0 2px 2px rgba(0,0,0,.55));animation:mo-seal 3.4s cubic-bezier(.3,.7,.3,1) both}
+.mo-seal::after{content:"";position:absolute;inset:0;border-radius:50%}
+@keyframes mo-seal{0%{translate:-14px -70px;scale:1.28;opacity:0;filter:drop-shadow(14px 26px 12px rgba(0,0,0,.25))}
+ 10%{opacity:1}14%{translate:0 0;scale:.965;filter:drop-shadow(0 2px 2px rgba(0,0,0,.6))}17%{scale:1.008}20%{scale:1}
+ 78%{opacity:1}100%{opacity:0;scale:1}}
+/* reduced: keep cut + panel slide short, drop ambient */
+html[data-motion=reduced] .mo-amb,html[data-motion=reduced] .mo-dust,html[data-motion=still] .mo-amb,html[data-motion=still] .mo-dust{display:none}
+html[data-motion=reduced] #dlg:not([hidden]) .dlgp,html[data-motion=reduced] #sheet:not([hidden]) .sheetp{animation:mo-fade .2s ease-out both}
+html[data-motion=reduced] .mo-s{animation:mo-fade .2s ease-out both}
+html[data-motion=reduced] .mo-veil.up{animation-duration:.2s}
+html[data-motion=still] .mo-veil,html[data-motion=still] .mo-seal{display:none}
+html[data-motion=still] .dlgp,html[data-motion=still] .sheetp,html[data-motion=still] #dlg,html[data-motion=still] #sheet,html[data-motion=still] .mo-s{animation:none!important}
+html[data-motion=still] .mo-ink-wait .paperT,html[data-motion=still] .mo-ink-wait .ink{visibility:visible}

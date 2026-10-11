@@ -278,9 +278,9 @@ function vDraw(){if(!S.spread)return go2('#/spread');const sp=SPREADS[S.spread],
  function place(b,i){if(i>=N)return;if(slots()[i].dataset.full)i=slots().findIndex(x=>!x.dataset.full);if(i<0)return;slots()[i].dataset.full=1;b.placed=i;b.locked=true;S.picked[i]=b.id;save();snap(b,i);Sound.tap();
   const f=slots().filter(x=>x.dataset.full).length;setCnt(`已抽 ${f} / ${N}`);if(f>=N){phase='done';act.textContent='翻开 →'}}
  function snap(b,i){const s=slotXY(i);const sc=Math.min((s.w*.88)/cw,(s.h*.88)/ch);b.el.style.transition='width .3s,height .3s';b.el.style.width=cw*sc+'px';b.el.style.height=ch*sc+'px';$('.card',b.el).style.setProperty('--w',cw*sc+'px');
-  b.spring(s.x+(s.w-cw*sc)/2,s.y+(s.h-ch*sc)/2,0,RM()?3000:260,.55);b.tz=0;b.zi=300;World.start()}
+  b.spring(s.x+(s.w-cw*sc)/2,s.y+(s.h-ch*sc)/2,b.jr??(b.jr=window.MO?MO.jit():0),RM()?3000:260,.55);b.tz=0;b.zi=300;World.start()}
  act.onclick=()=>{if(phase==='shuffle'){if(RM())return toFan();let n=0;const it=setInterval(()=>{swirl=Math.min(2.5,swirl+.5);World.start();if(++n>14){clearInterval(it);setTimeout(toFan,450)}},60);return}
-  if(phase==='fan'){const free=shuffle(bodies.filter(b=>b.placed==null&&!bodies.slice(0,m?18:16).includes(b)));let k=0;for(let i=0;i<N;i++){if(slots()[i].dataset.full)continue;const b=free[k++];setTimeout(()=>place(b,i),RM()?0:k*240)}return}
+  if(phase==='fan'){const free=shuffle(bodies.filter(b=>b.placed==null&&!bodies.slice(0,m?18:16).includes(b)));let k=0;for(let i=0;i<N;i++){if(slots()[i].dataset.full)continue;const b=free[k++];setTimeout(()=>place(b,i),RM()?0:window.MO?MO.deal(k,N):k*240)}return}
   const ids=S.picked.slice(0,N);if(ids.length<N||ids.some(x=>!x)){if(!act._q&&$$('.slot[data-full]').length+N>N){act._q=1;act.classList.add('busy');const t0=Date.now(),w=setInterval(()=>{const r=S.picked.slice(0,N);if(r.length>=N&&!r.some(x=>!x)){clearInterval(w);act._q=0;act.classList.remove('busy');act.onclick()}else if(Date.now()-t0>3000){clearInterval(w);act._q=0;act.classList.remove('busy')}},80)}return}const rec={id:Date.now().toString(36),at:Date.now(),topic:S.topic,q:S.q,facts:S.facts,spread:S.spread,ids};
   sessionStorage.setItem('sr.current',JSON.stringify(rec));loading(()=>go2('#/reading/'+rec.id))};
  cleanup.push(()=>World.clear());
@@ -289,7 +289,7 @@ function vDraw(){if(!S.spread)return go2('#/spread');const sp=SPREADS[S.spread],
 function flipIn(container,cards,stepMs){const bs=[];$$('.flipcard',container).forEach((el,i)=>{const b=new Body(el,container);b.in3=$('.in3',el);b.shade=$('.shade',el);b.sh=null;b.el=el;
   b.render=()=>{};bs.push(b)});
  const run=t=>{let m=false;for(const b of bs){const kf=120,cf=2*Math.sqrt(kf)*.75,dt=1/60;b.vf+=(-kf*(b.flip-b.tflip)-cf*b.vf)*dt;b.flip+=b.vf*dt;if(Math.abs(b.flip-b.tflip)>.001||Math.abs(b.vf)>.001)m=true;
-  const a=b.flip*180,bend=Math.sin(Math.min(1,Math.max(0,b.flip))*Math.PI);b.in3.style.transform=`translateZ(${(bend*40).toFixed(1)}px) rotateY(${a.toFixed(2)}deg) skewY(${(bend*3).toFixed(2)}deg)`;b.shade.style.opacity=(bend*.6).toFixed(2);
+  const a=b.flip*180,bend=Math.sin(Math.min(1,Math.max(0,b.flip))*Math.PI);b.in3.style.transform=`translateZ(${(bend*40).toFixed(1)}px) rotateY(${a.toFixed(2)}deg) skewY(${(bend*3).toFixed(2)}deg)`;b.shade.style.opacity=(bend*.6).toFixed(2);b.el.style.setProperty('--fl',Math.min(1,Math.max(0,b.flip)).toFixed(3));b.el.style.setProperty('--bd',bend.toFixed(3));
   b.el.style.filter=`drop-shadow(${(bend*10).toFixed(1)}px ${(8+bend*16).toFixed(1)}px ${(8+bend*14).toFixed(1)}px rgba(0,0,0,${(.6-bend*.25).toFixed(2)}))`}
   if(m)requestAnimationFrame(run)};
  bs.forEach((b,i)=>{if(RM()){b.flip=b.tflip=1;b.in3.style.transform='rotateY(180deg)';b.el.style.filter='drop-shadow(0 8px 8px rgba(0,0,0,.6))';return}setTimeout(()=>{b.tflip=1;Sound.tap();requestAnimationFrame(run)},400+i*stepMs)});
@@ -335,7 +335,7 @@ function vReading(id){
    h=T_(528,56,'此刻 · 你的问题',11,{cls:'ink2',st:'text-shadow:none;transform:rotate(-3deg);color:#6b5a44'})+A(505,92,`<div class="q" style="text-align:center">${esc(rec.q)}</div>`,{w:330,h:70,st:'transform:rotate(-3deg);overflow:hidden'})+
     cs.map((c,i)=>T_(X[i]+w/2,y-46,R.sp.pos[i],15,{cls:'c',st:'letter-spacing:.24em'})+well(X[i],y,w,hh,9)+fc(c,'d',X[i],y,w,hh,i)).join('')+
     T_(799,526,chalkText(pairLine(cs[1],cs[3]),1600),20,{cls:'chalk c'})+
-    A(424,594,sumD(5),{cls:'ink paperT',w:760,h:96})+bar3(799,736,188,15,saved)}}
+    A(424,568,sumD(5),{cls:'ink paperT',w:760,h:140})+bar3(799,736,188,15,saved)}}
  else{
   if(m){const Y=[189,351,510];
    h=T_(195,123,'三牌解读',17,{cls:'c',st:'letter-spacing:.3em'})+A(62,150,`<span style="flex:1;text-align:center;text-wrap:balance;line-height:1.3">${esc(rec.q)}</span>`,{cls:'t',w:266,st:'display:flex;align-items:center;min-height:28px;padding:3px 16px;font-size:${Math.max(10,Math.min(11.5,232/rec.q.length)).toFixed(1)}px;border-radius:14px;box-shadow:inset 0 0 0 1px rgba(226,196,138,.45);background:rgba(0,0,0,.3);letter-spacing:.04em'})+
@@ -347,7 +347,7 @@ function vReading(id){
     A(910,96,'卡牌不是预言，<br>而是让你听见内在声音的另一种语言。',{cls:'t',st:'font-size:12.5px;line-height:1.95'})+A(1167,150,'—— &nbsp;Stillrealm',{cls:'t',st:'transform:translateX(-100%);font-size:12px'})+
     cs.map((c,i)=>T_(X[i]+w/2,y-58,R.sp.pos[i],16,{cls:'c',st:'letter-spacing:.24em'})+well(X[i],y,w,hh,11)+fc(c,'d',X[i],y,w,hh,i)).join('')+
     cs.slice(1).map((c,i)=>{const[a,b]=split2(pairLine(cs[i],c));const cx=(X[i]+w+X[i+1])/2;return T_(cx,y+66,chalkText(a,1400+i*900)+'<br>'+chalkText(b,1400+i*900+a.length*70),Math.min(21,128/Math.max(a.length,b.length)),{cls:'c chalk',st:'line-height:1.55;text-align:center'})+chalkSVG('M0 6 Q40 3 84 5 M76 1 L84 5 L76 9',100,cx-42,y+136,90,12,1300+i*900)}).join('')+
-    A(436,594,sumD(3),{cls:'ink paperT',w:734,h:98})+bar3(799,736,188,15,saved)}}
+    A(436,568,sumD(3),{cls:'ink paperT',w:734,h:140})+bar3(799,736,188,15,saved)}}
  if(rec.spread==='five')key='05-five';const v=stage(key,h,{ch:m?{by:rec.spread==='nine'?88:60,bfs:28,foot:true,brand:true}:{bl:rec.spread==='nine'?null:['在每一张牌里','无预设的未来','只有更清晰的你']}});
  const total=flipIn(v,cs,rec.spread==='nine'?180:520);setTimeout(()=>v.classList.add('drawn'),RM()?0:Math.max(0,total-1400));
  $('#more').onclick=()=>readingSheet(rec,{tab:'glance'});if(saved&&!vReading.noAuto)readingSheet(rec,{ro:true,tab:'restore'});
@@ -375,7 +375,7 @@ function vAtlas(){const m=M();
  markDrawn(v);
  const draw=()=>{const q=lq.trim().toLowerCase();const L=C.filter(c=>(lf==='all'||c.polarity===lf)&&(ld==='all'||(c.domains?.[ld]||[]).length)&&(!q||hay(c,ld).includes(q)));
   const act=!!q||ld!=='all'||lf!=='all';const chips=[ld!=='all'&&['d',DOMS.find(d=>d[0]===ld)[1]],q&&['q',lq.trim()],lf!=='all'&&['f',{positive:'吉',neutral:'中',negative:'凶'}[lf]]].filter(Boolean);
-  const chipH=act?`<div class="chips A" style="${m?'left:195px;top:184px;transform:translateX(-50%)':'left:660px;top:116px'}">${m?`<span class="cnt2">${chips.map(c=>esc(c[1])).join(' · ')} · ${L.length} 张牌</span><button class="chx" data-x="all" aria-label="清除筛选">×</button>`:chips.map(([k,l])=>`<button class="chip" data-x="${k}" aria-label="移除筛选 ${esc(l)}">${esc(l)} <i aria-hidden="true">×</i></button>`).join('')+`<span class="cnt2">找到 ${L.length} 张卡牌</span>`}</div>`:'';
+  const chipH=act?`<div class="chips A" style="${m?'left:195px;top:184px;transform:translateX(-50%)':'left:560px;top:66px;z-index:5'}">${m?`<span class="cnt2">${chips.map(c=>esc(c[1])).join(' · ')} · ${L.length} 张牌</span><button class="chx" data-x="all" aria-label="清除筛选">×</button>`:chips.map(([k,l])=>`<button class="chip" data-x="${k}" aria-label="移除筛选 ${esc(l)}">${esc(l)} <i aria-hidden="true">×</i></button>`).join('')+`<span class="cnt2">找到 ${L.length} 张卡牌</span>`}</div>`:'';
   if(m)$('.fil').hidden=act;
   const key=q+'|'+lf+'|'+ld;if(key!==lkey){if(lkey)lp=0;lkey=key}
   const NP=Math.max(1,Math.ceil(L.length/9));if(m){lp=Math.min(Math.max(lp,0),NP-1)}
@@ -554,8 +554,8 @@ function vGraph(sel){if(sel)gsel=sel;const m=M();
  v.onclick=e=>{const g=e.target.closest('[data-g]');if(g){gsel=+g.dataset.g;draw();$(`.gc[data-g="${gsel}"]`)?.focus()}}}
 function graphSheet(sel){go2('#/graph')}
 function v404(){const m=M();const raw=decodeURIComponent((location.hash.split('/')[2]||'').slice(0,6));const num=esc(raw||'?');
- const h=m?A(134,240,backHTML2(120,180),{st:'transform:rotate(-1deg)'})+T_(282,322,chalkText(raw||"?"),22,{cls:'chalk',st:'transform:rotate(-8deg)'})+chalkSVG('M0 6 Q20 0 38 -4',40,276,352,40,10,300)+A(60,456,`<h2>这张牌不在桌上</h2><p>编号 ${num} 不在 36 张牌之中</p>`,{cls:'nf2 m',w:270,h:102})+A(195,594,`<a class="t nfl" href="#/atlas">回到牌库图鉴 <span aria-hidden="true">→</span></a>`,{st:'transform:translateX(-50%)'})
- :A(440,248,backHTML2(232,320),{st:'transform:rotate(-6deg)'})+A(718,283,`<h2>这张牌不在桌上</h2><p>编号 ${num} 不在 36 张牌之中</p><a class="lk nfl" href="#/atlas">回到牌库图鉴 <span aria-hidden="true">→</span></a>`,{cls:'nf2',w:437,h:287});
+ const h=m?A(134,240,backHTML2(120,180),{st:'transform:rotate(-1deg)'})+T_(282,322,chalkText(raw||"?"),22,{cls:'chalk',st:'transform:rotate(-8deg)'})+chalkSVG('M0 6 Q20 0 38 -4',40,276,352,40,10,300)+A(60,456,`<h2>这张牌不在桌上</h2><p>${raw?`第 ${num} 号牌`:'这个编号'}不在 36 张牌之中，换一张看看吧。</p>`,{cls:'nf2 m',w:270,h:102})+A(195,594,`<a class="t nfl" href="#/atlas">回到牌库图鉴</a>`,{st:'transform:translateX(-50%)'})
+ :A(440,248,backHTML2(232,320),{st:'transform:rotate(-6deg)'})+A(718,283,`<h2>这张牌不在桌上</h2><p>${raw?`第 ${num} 号牌`:'这个编号'}不在 36 张牌之中，换一张看看吧。</p><a class="lk nfl" href="#/atlas">回到牌库图鉴</a>`,{cls:'nf2',w:437,h:287});
  document.title='找不到这张牌 · 寂境 · 雷诺曼';const v=stage('21-404',h,{ch:m?{by:110}:{}});markDrawn(v)}
 
 /* ================= router ================= */
@@ -567,7 +567,7 @@ function route(){cleanup.forEach(f=>f());cleanup=[];if(!dlg.hidden){dlg.hidden=t
  const nav={atlas:'atlas',graph:'atlas',card:'atlas',history:'history',settings:'settings',today:'today'}[a]||'read';
  $$('[data-nav]').forEach(x=>x.dataset.nav===nav?x.setAttribute('aria-current','page'):x.removeAttribute('aria-current'));
  const T2={graph:'卡牌关系',topic:'选择方向',spread:'选择牌阵',draw:'洗牌与抽牌',reading:'解读',atlas:'牌库图鉴',card:'牌义',history:'我的记录',settings:'声音设置',today:'今日一牌'}[a];
- document.title=(T2?T2+' · ':'')+'寂境 · 雷诺曼';scrollTo(0,0);main.focus({preventScroll:true})}
+ if(!/^找不到/.test(document.title)||!document.querySelector('.nf2'))document.title=(T2?T2+' · ':'')+'寂境 · 雷诺曼';scrollTo(0,0);main.focus({preventScroll:true})}
 window.LJ={loading,esc,zh,clean,cardHTML,chalkText,chalkSVG,M,RM,interpret,SPREADS,go2,newQuestion,toast,save,LS,domText,stage,A,T_,markDrawn,TPL,T,C,readingSheet,keepDialog,get S(){return S},set S(v){S=v},get cleanup(){return cleanup}};
 addEventListener('hashchange',route);route();
 {const kick=e=>{if(e.target.closest&&e.target.closest('#sndb'))return;removeEventListener('pointerdown',kick,true);removeEventListener('keydown',kick,true);if(prefs.bgm&&!Sound.on)Sound.start()};addEventListener('pointerdown',kick,true);addEventListener('keydown',kick,true);
