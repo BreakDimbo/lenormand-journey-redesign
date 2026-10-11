@@ -56,7 +56,7 @@ html[data-motion=still] .mo-ink-wait .paperT,html[data-motion=still] .mo-ink-wai
 .mo-nap{position:absolute;inset:0;pointer-events:none;width:100%;height:100%}
 /* A6 Hammershøi window light + rain shadows (results page, or late at night) */
 .mo-win{position:absolute;pointer-events:none;opacity:0;transition:opacity 3s ease;overflow:hidden;
- background:url(assets/mo/window.webp) center/100% 100%;-webkit-mask:url(assets/mo/window.webp) center/100% 100%;mask:url(assets/mo/window.webp) center/100% 100%}
+ background:url(assets/mo/window.webp) center/100% 100%}
 .mo-win.on{opacity:.45}
 .mo-win i{position:absolute;top:-12%;width:2px;height:18px;border-radius:1px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.9) 70%,rgba(0,0,0,.3));
  animation:mo-drop linear infinite;will-change:translate}

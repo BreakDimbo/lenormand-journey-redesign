@@ -148,7 +148,7 @@ const Nap={on:false,init(){if(coarse||!matchMedia('(pointer:fine)').matches)retu
 const win=document.createElement('div');win.className='mo-win';win.setAttribute('aria-hidden','true');
 function windowLight(){const h=new Date().getHours(),late=h>=22||h<5,show=level()!=='still'&&(/^#\/reading/.test(location.hash)||late)&&!/^#\/draw/.test(location.hash);
  if(!win.parentNode)amb.after(win);const m=isM();Object.assign(win.style,m?{left:'190px',top:'560px',width:'230px',height:'160px',rotate:'-8deg'}:{left:'1040px',top:'500px',width:'420px',height:'290px',rotate:'-9deg'});
- if(show&&!win.childElementCount&&FULL())for(let i=0;i<4;i++){const d=document.createElement('i');d.style.left=(12+Math.random()*76)+'%';d.style.animationDuration=(7+Math.random()*5)+'s';d.style.animationDelay=(-Math.random()*10)+'s';win.append(d)}
+ if(show&&!win.childElementCount&&FULL())for(let i=0;i<3;i++){const d=document.createElement('i');d.style.left=(12+Math.random()*76)+'%';d.style.animationDuration=(7+Math.random()*5)+'s';d.style.animationDelay=(-Math.random()*10)+'s';win.append(d)}
  if(show){win.style.display='';requestAnimationFrame(()=>requestAnimationFrame(()=>win.classList.add('on')))}else{win.classList.remove('on');win.style.display='none'}}
 /* A7 the clock you only hear: soft tick, reading / landing, only with sound on, stops when idle or hidden */
 let clockT=0;function clock(){clearInterval(clockT);const h=location.hash;if(!(h===''||h==='#/'||h.startsWith('#/reading')))return;SFX.warm('tick');
