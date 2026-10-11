@@ -314,7 +314,7 @@ function vReading(id){
     [['过去','Past'],['此刻','Present'],['未来','Future']].map(([a,b],r)=>A(10,Y[r]+22,`<b style="font-weight:500;font-size:12px;letter-spacing:.1em">${a}</b><i class="en" style="font-size:10px;font-style:italic">${b}</i>`,{cls:'ink',w:36,h:88,st:'display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:#d9c7a1 url(assets/paper.webp) center/cover;background-blend-mode:multiply;box-shadow:0 4px 8px rgba(0,0,0,.6)'})).join('')+
     [['缘起',354],['连结',496],['方向',638]].map(([t,y])=>A(195,y,`<svg width="230" height="4"><path d="M0 2H85M145 2H230" stroke="rgba(226,196,138,.45)" stroke-width=".8"/></svg>`,{cls:'c',st:'line-height:0'})).join('')+
     cs.map((c,i)=>fc(c,'m',X[i%3],Y[i/3|0],90,128,i)).join('')+
-    T_(190,650,chalkText(`在连结中，看见${noun(R.core)}的路`,1600),18,{cls:'c chalk'})+chalkSVG('M0 8 Q110 -2 220 6',240,85,680,220,12,2200)+
+    T_(195,650,chalkText(`在连结中，看见${noun(R.core)}的路`,1600),Math.min(18,300/(`在连结中，看见${noun(R.core)}的路`).length),{cls:'c chalk'})+chalkSVG('M0 8 Q110 -2 220 6',240,85,680,220,12,2200)+
     `<p class="A t" style="left:195px;top:704px;transform:translateX(-50%);font-size:12px;display:flex;gap:18px"><button class="more" style="position:static" id="more">展开解读</button><button id="tts" aria-pressed="false" style="border-bottom:1px dashed"><span>朗读</span></button></p>`+bar3(195,762,72,13.5,saved,true)}
   else{const X=[433,647,860],Y=[179,393,611],w=140,hh=192;const ctr=i=>[X[i%3]+w/2,Y[i/3|0]+hh/2];
    const L=[[0,1],[1,2],[3,4],[4,5],[6,7],[7,8],[4,0],[4,2],[4,6],[4,8]];

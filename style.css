@@ -574,3 +574,7 @@ body:has(#dlg:not([hidden])) #tabs{display:none!important}
 #ab.m .del{font-size:12px!important;color:#e6d3a8!important;letter-spacing:.14em;opacity:1!important}
 #ab.m #sheet[data-k="15-deeper"] .drow:not(.pane .drow) #tell{width:230px!important;height:35px!important;line-height:35px;padding:0;letter-spacing:.3em;font-size:14px!important}
 #ab.m #sheet[data-k="15-deeper"] .drow:not(.pane .drow) #skip2{top:500px!important;color:#5a4128!important;font-size:12px!important}
+#ab.m #sheet{background:rgba(5,8,6,.82)}
+#ab.m #sheet .strip{-webkit-mask-image:linear-gradient(90deg,transparent,#000 16px,#000 calc(100% - 16px),transparent);mask-image:linear-gradient(90deg,transparent,#000 16px,#000 calc(100% - 16px),transparent)}
+#ab.m #sheet *{scrollbar-width:none}#ab.m #sheet ::-webkit-scrollbar{display:none}
+#ab.m .dsel{letter-spacing:0!important;white-space:nowrap}
