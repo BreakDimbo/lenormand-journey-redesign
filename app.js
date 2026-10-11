@@ -479,7 +479,7 @@ let lastFocus=null;
 function openDlg(html,cls=''){lastFocus=document.activeElement;dlg.innerHTML=`<div class="paper dlgp ${cls}" role="dialog" aria-modal="true">${html}</div>`;dlg.hidden=false;
  const p=dlg.firstElementChild;!RM()&&p.animate([{transform:'translateY(18px) rotate(-1deg)',opacity:0},{transform:'none',opacity:1}],{duration:380,easing:'cubic-bezier(.22,.61,.36,1)'});
  setTimeout(()=>($('[autofocus]',p)||$('button,input,textarea,select,a',p))?.focus(),30);return p}
-function closeDlg(){dlg.hidden=true;dlg.innerHTML='';const oc=dlg._oc;dlg._oc=null;oc&&oc();lastFocus?.focus?.()}
+function closeDlg(){window.MO?.out?.(dlg);dlg.hidden=true;dlg.innerHTML='';const oc=dlg._oc;dlg._oc=null;oc&&oc();lastFocus?.focus?.()}
 dlg.addEventListener('click',e=>{if(e.target===dlg)closeDlg()});addEventListener('keydown',e=>{if(e.key==='Escape'){if(!dlg.hidden)closeDlg();else if(!$('#sheet').hidden)$('#sheet').hidden=true}});
 function ask(title,msg,ok='抹去'){return new Promise(res=>{const p=openDlg(`<h3 class="cfq">${title.split('|').map(x=>`<span class="nw">${esc(x)}</span>`).join('')}</h3>${msg?`<p class="cfm">${esc(msg)}</p>`:''}<div class="cfr"><button class="lk cfk" data-a="0" autofocus>留着</button><button class="bpill" data-a="1">${esc(ok)}</button></div>`,'cfm-p');
  p.onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;closeDlg();res(b.dataset.a==='1')}})}

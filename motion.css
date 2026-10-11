@@ -62,7 +62,7 @@ html[data-motion=still] .mo-ink-wait .paperT,html[data-motion=still] .mo-ink-wai
  animation:mo-drop linear infinite;will-change:translate}
 @keyframes mo-drop{0%{translate:0 0}100%{translate:3px 520px}}
 /* T2 dolly + rack focus between table scenes */
-.mo-dolly>#main,.mo-dolly>.plate{animation:mo-dolly 1.4s cubic-bezier(.25,.6,.3,1) both;transform-origin:52% 45%;will-change:scale,translate}
+
 @keyframes mo-dolly{0%{scale:1.035;translate:0 -1%}100%{scale:1;translate:0 0}}
 .mo-focus{position:absolute;left:0;top:0;width:100%;pointer-events:none;animation:mo-focus 1.3s cubic-bezier(.4,0,.3,1) both}
 @keyframes mo-focus{0%{opacity:1}100%{opacity:0}}
@@ -90,3 +90,17 @@ html[data-motion=reduced] .mo-hand,html[data-motion=still] .mo-hand,html[data-mo
 html[data-motion=reduced] .mo-dolly>#main,html[data-motion=reduced] .mo-dolly>.plate,html[data-motion=still] .mo-dolly>#main,html[data-motion=still] .mo-dolly>.plate,
 html:not([data-motion=full]) .mo-sway *,html:not([data-motion=full]) .mo-lift,html:not([data-motion=full]) .mo-pin{animation:none!important}
 html:not([data-motion=full]) .mo-crumb{animation:none}
+
+/* ===== finishing pass ===== */
+.mo-weight{position:absolute;pointer-events:none}
+/* T3 out: the panel is drawn back toward the hand, a little faster than it came */
+.mo-out{pointer-events:none!important;animation:mo-fadeout .42s ease-in both!important}
+.mo-out .dlgp,.mo-out .sheetp,.mo-out.dlgp{animation:mo-paper-out .42s cubic-bezier(.5,0,.9,.5) both!important}
+@keyframes mo-paper-out{0%{translate:0 0;rotate:0deg}100%{translate:0 60px;rotate:-1.4deg;opacity:0}}
+@keyframes mo-fadeout{to{opacity:0}}
+html[data-motion=reduced] .mo-out,html[data-motion=reduced] .mo-out .dlgp,html[data-motion=reduced] .mo-out .sheetp{animation:mo-fadeout .2s ease-out both!important}
+/* seal prised off: a fingernail lifts one edge, it tips 3°, then slides away */
+.mo-pry{animation:mo-pry 1.6s cubic-bezier(.4,0,.3,1) both}
+@keyframes mo-pry{0%{opacity:0;rotate:0deg;translate:0 0}10%{opacity:1}35%{rotate:-3deg;translate:-1px -2px;filter:drop-shadow(2px 5px 3px rgba(0,0,0,.5))}
+ 45%{rotate:-3deg;translate:-1px -3px}100%{rotate:-8deg;translate:-70px 26px;opacity:0;filter:drop-shadow(6px 12px 8px rgba(0,0,0,.35))}}
+html[data-motion=reduced] .mo-pry{animation:mo-fadeout .3s .2s both}

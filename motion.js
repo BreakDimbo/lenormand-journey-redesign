@@ -59,7 +59,7 @@ const Amb={timer:0,raf:0,motes:[],dip:0,nextDip:0,cw:0,ch:0,ctx:null,frame:0,box
    if(p.y>b.h+6||p.x<-6||p.x>b.w+6)Object.assign(p,this.mote(false));
    const L=this.lit(p.x,p.y);if(L<=.02)continue;c.globalAlpha=p.a*L;const s=p.r*4;c.drawImage(this.sprite,p.x-s/2,p.y-s/2,s,s)}},
  loop(t){this.raf=0;if(document.hidden)return;const full=FULL()&&!lowPower();
-  if(full&&idleFor()<60000&&!/^#\/draw/.test(location.hash)){if((this.frame++&1)===0)this.draw(t);this.raf=requestAnimationFrame(x=>this.loop(x))}else cv.style.opacity='0'},
+  if(full&&idleFor()<60000&&!/^#\/draw/.test(location.hash)){const b=performance.now()<MO.busy;cv.style.visibility=b?'hidden':'';if(!b&&(this.frame++&1)===0)this.draw(t);this.raf=requestAnimationFrame(x=>this.loop(x))}else cv.style.opacity='0'},
  tickLamp(){if(document.hidden||level()!=='full'){amb.style.opacity='.035';return}
   const t=performance.now();const busy=t<MO.busy||/^#\/draw/.test(location.hash);amb.classList.toggle('off',busy);if(busy)return;let o=.035-breath(t)*.015;
   if(t>this.nextDip){this.dip=t;this.nextDip=t+40000+Math.random()*50000}
@@ -151,12 +151,21 @@ function windowLight(){const h=new Date().getHours(),late=h>=22||h<5,show=level(
  if(show&&!win.childElementCount&&FULL())for(let i=0;i<3;i++){const d=document.createElement('i');d.style.left=(12+Math.random()*76)+'%';d.style.animationDuration=(7+Math.random()*5)+'s';d.style.animationDelay=(-Math.random()*10)+'s';win.append(d)}
  if(show){win.style.display='';requestAnimationFrame(()=>requestAnimationFrame(()=>win.classList.add('on')))}else{win.classList.remove('on');win.style.display='none'}}
 /* A7 the clock you only hear: soft tick, reading / landing, only with sound on, stops when idle or hidden */
-let clockT=0;function clock(){clearInterval(clockT);const h=location.hash;if(!(h===''||h==='#/'||h.startsWith('#/reading')))return;SFX.warm('tick');
- clockT=setInterval(()=>{if(document.hidden||idleFor()>60000||!SFX.ok()||busy())return;SFX.play('tick',{vol:.16,rate:.9})},1000)}
+let clockT=0;function clock(){clearInterval(clockT);const h=location.hash;weight();if(!(h===''||h==='#/'||h.startsWith('#/reading')))return;SFX.warm('tick');
+ clockT=setInterval(()=>{if(document.hidden||idleFor()>60000||busy())return;if(SFX.ok())SFX.play('tick',{vol:.16,rate:.9});twitch()},1000)}
+/* the brass weight is baked into the plate: a cropped sprite sits exactly over it and shivers 0.5px on each tick */
+const WT={'05-reading3-desktop':[668.2,19.1,70.9],'05-five-desktop':[668.2,19.1,70.9],'06-reading9-desktop':[657.3,16.4,70.9],'01-landing-desktop':[775.5,205.5,94.5],'01-landing-mobile':[159,223,78]};
+let wEl=null,wKey='';function weight(){const pl=$('.plate',ab);const k=((pl?.dataset.want||pl?.src||'').match(/(\d\d-[\w-]+-(?:desktop|mobile))\./)||[])[1];
+ if(k===wKey)return;wKey=k;wEl?.remove();wEl=null;const g=WT[k];if(!g||level()!=='full')return;
+ wEl=document.createElement('img');wEl.className='mo-weight';wEl.alt='';wEl.setAttribute('aria-hidden','true');wEl.src=`assets/mo/weight-${k}.webp`;
+ Object.assign(wEl.style,{left:g[0]+'px',top:g[1]+'px',width:g[2]+'px',height:g[2]+'px'});(win.parentNode?win:amb).after(wEl)}
+function twitch(){weight();if(!wEl||!FULL())return;wEl.animate([{translate:'0 0'},{translate:'.5px .2px',offset:.25},{translate:'0 0'}],{duration:140,easing:'ease-out'})}
 /* T2 dolly + rack focus on the ritual path */
 let lastKey='';function dolly(){const k=(location.hash.match(/^#\/(\w+)/)||[])[1]||'';const path=['topic','spread','draw','reading','ask'];const go=path.includes(k)&&k!==lastKey;lastKey=k;
- if(!go||level()!=='full')return;const pl=$('.plate',ab);if(pl&&pl.src){const f=document.createElement('canvas');f.className='mo-focus';f.setAttribute('aria-hidden','true');f.width=160;f.height=Math.round(160*(pl.naturalHeight||900)/(pl.naturalWidth||1440));try{f.getContext('2d').drawImage(pl,0,0,f.width,f.height)}catch{}pl.after(f);setTimeout(()=>f.remove(),1400)}
- ab.classList.remove('mo-dolly');void ab.offsetWidth;ab.classList.add('mo-dolly');setTimeout(()=>ab.classList.remove('mo-dolly'),1700)}
+ if(!go||level()!=='full')return;MO.busy=Math.max(MO.busy||0,performance.now()+1500);amb.classList.add('off');const pl=$('.plate',ab);if(pl&&pl.src){const f=document.createElement('canvas');f.className='mo-focus';f.setAttribute('aria-hidden','true');f.width=160;f.height=Math.round(160*(pl.naturalHeight||900)/(pl.naturalWidth||1440));try{f.getContext('2d').drawImage(pl,0,0,f.width,f.height)}catch{}pl.after(f);setTimeout(()=>f.remove(),1400)}
+ const SCf=ab.getBoundingClientRect().width/(isM()?390:1440),ox=+ab.dataset.ox||0,cxp=(isM()?390:1440)*.52,cyp=(ab.offsetHeight||900)*.45,s0=1.035;
+ const tx=(1-s0)*(ox+SCf*cxp),ty=(1-s0)*(SCf*cyp)-.01*innerHeight;
+ ab.animate([{scale:s0,translate:`${tx.toFixed(1)}px ${ty.toFixed(1)}px`},{scale:1,translate:'0px 0px'}],{duration:1400,easing:'cubic-bezier(.25,.6,.3,1)'})}
 /* T4 a hand passes under the lamp as the reading begins (loading screen) */
 new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.id==='load'&&level()==='full'){const h=document.createElement('div');h.className='mo-hand';h.setAttribute('aria-hidden','true');document.body.append(h);setTimeout(()=>h.remove(),1400)}}).observe(document.body,{childList:true});
 /* R4 chalk crumbs at stroke ends */
@@ -174,6 +183,18 @@ document.addEventListener('pointerover',e=>{const t=e.target.closest('a,button,.
  const x=(r.left+r.width/2)/innerWidth-.52,y=(r.top+r.height/2)/innerHeight+.1;if(Math.hypot(x,y*.8)>.62)t.classList.add('mo-far')},{passive:true});
 document.addEventListener('pointermove',e=>{const t=e.target.closest?.('.btn,.pill');if(!t)return;const r=t.getBoundingClientRect();t.style.setProperty('--rx',(((e.clientX-r.left)/r.width-.5)*40).toFixed(1))},{passive:true});
 
+/* T3 out */
+MO.out=box=>{if(!box||box.hidden||level()==='still'||cutting)return;const c=box.cloneNode(true);c.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id'));c.classList.add('mo-out');c.setAttribute('aria-hidden','true');c.inert=true;
+ box.after(c);setTimeout(()=>c.remove(),level()==='full'?460:220)};
+{const sh=$('#sheet');let snap=null;if(sh){new MutationObserver(()=>{if(sh.hidden&&snap){const c=snap;snap=null;if(level()==='still'||cutting)return;c.hidden=false;sh.after(c);setTimeout(()=>c.remove(),460)}
+  else if(!sh.hidden)snap=null}).observe(sh,{attributes:true,attributeFilter:['hidden']});
+ // refresh the snapshot lazily just before a likely close
+ ['pointerdown','keydown'].forEach(ev=>addEventListener(ev,()=>{if(!sh.hidden){snap=sh.cloneNode(true);snap.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id'));snap.classList.add('mo-out','mo-sheet');snap.setAttribute('aria-hidden','true');snap.inert=true}},true))}}
+/* seal prised off when a 收藏 is removed (history 删去) */
+let lastDel=null;document.addEventListener('click',e=>{const d=e.target.closest('[data-del]');if(d)lastDel=d.getBoundingClientRect();
+ const ok=e.target.closest('#dlg [data-a="1"]');if(!ok||!lastDel||!$('#dlg .cfm-p')||level()==='still')return;const r=lastDel;lastDel=null;
+ const s=document.createElement('div');s.className='mo-seal mo-pry';s.setAttribute('aria-hidden','true');s.style.left=(r.left+r.width/2)+'px';s.style.top=(r.top-34)+'px';document.body.append(s);
+ SFX.play('slide2',{vol:.5,at:.35});setTimeout(()=>s.remove(),1700)},true);
 /* ---------- route hook ---------- */
 function onRoute(){setLevel();MO.busy=performance.now()+(/^#\/reading/.test(location.hash)?8000:0);amb.classList.toggle('off',MO.busy>performance.now()||/^#\/draw/.test(location.hash));wrapTap();requestAnimationFrame(()=>{Amb.layout();Amb.wake();watchShuffle();litCards();inkReading();sway();draft();windowLight();clock();dolly();crumbs();pin()})}
 
