@@ -597,15 +597,15 @@ body:has(#dlg:not([hidden])) #tabs{display:none!important}
 .slot5 .card,.rd5 .slotf{box-shadow:none}
 #ab.m .pnav a{display:inline-block;min-width:72px;padding:4px 4px;text-align:center}#ab.m .pnav a::after{display:none!important}
 /* P2-29 逐张看 (mobile): stacked card + full-width text, sheet fills the screen, pager inside the paper */
-#ab.m #sheet[data-k="14-onecard"] .sheetp{top:212px;height:540px}
-#ab.m #sheet[data-k="14-onecard"] .one .oc{left:50%;width:132px;margin-left:-66px}
-#ab.m #sheet[data-k="14-onecard"] .one .oc .card{--w:132px!important;width:132px!important;height:199px!important}
-#ab.m #sheet[data-k="14-onecard"] .one>div:last-child{left:4px;right:4px;top:226px;width:auto;height:248px}
-#ab.m #sheet[data-k="14-onecard"] .one h2{font-size:17px;text-align:center;margin:0 0 10px}
-#ab.m #sheet[data-k="14-onecard"] .one p{font-size:12.5px;line-height:1.85;text-wrap:pretty}
-#ab.m #sheet[data-k="14-onecard"] .pager2{top:496px;left:24px;right:24px;height:36px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(90,65,30,.25)}
-#ab.m #sheet[data-k="14-onecard"] .pager2 .lk,#ab.m #sheet[data-k="14-onecard"] .pager2 span{color:#4a3420;font-size:13.5px;letter-spacing:.14em;padding:8px 4px}
-#ab.m #sheet[data-k="14-onecard"] .ovchalk{top:782px}
+html body #ab.m #sheet[data-k="14-onecard"] .sheetp{top:244px;height:520px}
+html body #ab.m #sheet[data-k="14-onecard"] .one .oc{left:50%;width:132px;margin-left:-66px}
+html body #ab.m #sheet[data-k="14-onecard"] .one .oc .card{--w:132px!important;width:132px!important;height:199px!important}
+html body #ab.m #sheet[data-k="14-onecard"] .one>div:last-child{left:4px;right:4px;top:236px;width:auto;height:248px}
+html body #ab.m #sheet[data-k="14-onecard"] .one h2{font-size:17px;text-align:center;margin:0 0 10px}
+html body #ab.m #sheet[data-k="14-onecard"] .one p{font-size:12.5px;line-height:1.85;text-wrap:pretty}
+html body #ab.m #sheet[data-k="14-onecard"] .pager2{top:462px;left:24px;right:24px;height:44px;display:flex;align-items:center;justify-content:space-between;border-top:0}
+html body #ab.m #sheet[data-k="14-onecard"] .pager2 .lk,#ab.m #sheet[data-k="14-onecard"] .pager2 span{color:#f0dcae;font-size:13.5px;letter-spacing:.14em;padding:8px 4px}
+html body #ab.m #sheet[data-k="14-onecard"] .ovchalk{display:none}
 /* P2-28 sheet: × clear of the corner ornament */
 #ab.m #sheet .sheetp>.x,#ab.m #sheet .x{margin:6px 6px 0 0}
 /* P2 typography: no orphans/widows anywhere on paper or felt */
