@@ -171,7 +171,7 @@ function vTopic(){const m=M();
  const tpl=()=>TPL.filter(t=>t.domain===S.topic).slice(0,3);
  const TD=m?{tiles:[[40,265,150,75],[203,265,147,75],[40,348,150,74],[203,348,147,74],[40,430,150,73],[203,430,147,73]],lbY:52,lbF:12.5,slips:[[92,537,223,34],[100,574,213,32],[108,610,205,34]],sF:11}
   :{tiles:[[489,281,167,112],[684,281,167,112],[489,413,167,112],[684,413,167,112],[489,545,167,112],[684,545,167,112]],lbY:74,lbF:14,slips:[[905,298,305,96],[930,421,276,74],[910,505,252,80]],sF:15};
- const tiles=`<div role="radiogroup" aria-label="主题">${T.map((t,i)=>{const[x,y,w,h]=TD.tiles[i];return`<button class="tile A" role="radio" aria-checked="${t.id===S.topic}" data-id="${t.id}" aria-description="${esc(t.whisper)}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px"><span class="lb" style="top:${TD.lbY}px;font-size:${TD.lbF}px">${esc(t.label)}</span></button>`}).join('')}</div>`;
+ const tiles=`<div role="radiogroup" aria-label="主题">${T.map((t,i)=>{const[x,y,w,h]=TD.tiles[i];return`<button class="tile A" role="radio" aria-checked="${t.id===S.topic}" data-id="${t.id}" aria-description="${esc(t.whisper)}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px">${m?'':`<img class="sic" src="assets/tile/ic${i}.webp" alt="" aria-hidden="true">`}<span class="lb" style="top:${TD.lbY}px;font-size:${TD.lbF}px">${esc(t.label)}</span></button>`}).join('')}</div>`;
  const slips=()=>tpl().map((t,i)=>{const[x,y,w,h]=TD.slips[i];return`<button class="slip" data-t="${esc(t.template)}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;font-size:${TD.sF}px;padding:${m?'0 8px':'0 34px 0 48px'};display:flex;align-items:center;justify-content:center"><span>${esc(t.template)}</span></button>`}).join('');
  const v=m?stage('02-topic',
   A(62,182,`<div class="q" id="qq" style="font-size:12.5px;line-height:1.5;text-align:center;letter-spacing:.04em">${qtext(S.q,'（还没写下问题，可以从下面借一句）')}</div>`,{w:270,h:46,st:'display:flex;align-items:center;justify-content:center;overflow:hidden'})+
@@ -182,7 +182,7 @@ function vTopic(){const m=M();
  :stage('02-topic',
   T_(528,52,'此刻 · 你的问题',11,{cls:'ink2',st:'text-shadow:none;transform:rotate(-4deg);color:#6b5a44'})+
   A(505,82,`<div class="q" id="qq" style="text-align:center">${qtext(S.q,'（还没写下问题，可以从右边借一句）')}</div>`,{w:320,h:90,st:'display:flex;align-items:center;justify-content:center;transform:rotate(-4deg);overflow:hidden'})+
-  T_(668,224,'选择一个想探问的方向',18,{cls:'c',st:'letter-spacing:.2em'})+`<svg class="A" aria-hidden="true" viewBox="0 0 24 24" style="left:550px;top:296px;width:46px;height:46px;fill:none;stroke:#4a3820;stroke-width:1.6;pointer-events:none">${ICON.relationship}</svg>`+tiles+
+  T_(668,224,'选择一个想探问的方向',18,{cls:'c',st:'letter-spacing:.2em'})+tiles+
   T_(1034,244,'借一句问法，开始倾听',17,{cls:'c',st:'letter-spacing:.16em'})+`<div id="slips">${slips()}</div>`+
   T_(1036,603,chalkText('轻点纸条，借用这个问题'),17,{cls:'chalk'})+chalkSVG('M30 30 Q8 24 4 2 M0 9 L4 1 L10 7',80,975,578,40,34,1000)+
   A(907,100,'好的问题，<br>会带你走向更真实的自己。',{cls:'t',st:'font-size:12.5px;line-height:1.95;letter-spacing:.12em'})+A(1178,156,'—— &nbsp;寂境 &nbsp;Stillrealm',{cls:'t',st:'transform:translateX(-100%);font-size:12px'})+
