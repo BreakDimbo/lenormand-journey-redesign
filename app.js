@@ -116,7 +116,7 @@ let ABH=900,MODE='';
 const px=v=>v==null?'':(typeof v==='number'?v+'px':v);
 const A=(x,y,html='',o={})=>{const{w,h,cls='',st='',tag='div',at=''}=o;return`<${tag} class="A ${cls}" style="left:${px(x)};top:${px(y)};${w!=null?`width:${px(w)};`:''}${h!=null?`height:${px(h)};`:''}${st}" ${at}>${html}</${tag}>`};
 const T_=(x,y,txt,fs,o={})=>A(x,y,txt,{...o,cls:'t '+(o.cls||''),st:`font-size:${fs}px;${o.st||''}`});
-function fit(){const mob=M();const W=mob?390:1440,BH=mob?844:900;SC=Math.min(innerWidth/W,innerHeight/BH);if(mob&&innerWidth<=480)SC=innerWidth/W;const h=Math.max(BH,ABH);ab.style.width=W+'px';ab.style.height=h+'px';const ox=Math.max(0,(innerWidth-W*SC)/2);ab.style.transform=`translateX(${ox}px) scale(${SC})`;ab.dataset.ox=ox;wrap.style.height=Math.max(innerHeight,h*SC)+'px';$('#fill').style.backgroundImage=`url(${plate.src})`;tabs.style.left=ox+'px';{const sb=document.getElementById('sndb');if(sb){sb.style.right=(Math.max(0,innerWidth-ox-W*SC)+14)+'px'}}tabs.style.right='auto';
+function fit(){const mob=M();const W=mob?390:1440,BH=mob?844:900;SC=Math.min(innerWidth/W,innerHeight/BH);if(mob&&innerWidth<=480)SC=innerWidth/W;const h=Math.max(BH,ABH);ab.style.width=W+'px';ab.style.height=h+'px';const ox=Math.max(0,(innerWidth-W*SC)/2);ab.style.transform=`translateX(${ox}px) scale(${SC})`;ab.dataset.ox=ox;wrap.style.height=Math.max(innerHeight,h*SC)+'px';$('#fill').style.backgroundImage=`url(${plate.src})`;tabs.style.left=ox+'px';{const sb=document.getElementById('sndb');if(sb){sb.style.right=(Math.max(0,innerWidth-ox-W*SC)+14)+'px';sb.style.top=mob?'':Math.round((BH-150)*SC)+'px'}}tabs.style.right='auto';
  tabs.style.transform=`scale(${SC})`;tabs.style.width='390px'}
 addEventListener('resize',()=>{const m=M()?'m':'d';if(m!==MODE)route();else fit()});
 const pad=n=>String(n).padStart(2,'0');
@@ -366,8 +366,8 @@ function vAtlas(){const m=M();
   :A(445,30,'牌库图鉴',{cls:'ink',st:'font-size:27px;letter-spacing:.2em;transform:rotate(-4deg);font-weight:500'})+
    `<label class="sr" for="s">搜索牌名或关键词</label><input class="search" id="s" type="search" placeholder="搜索牌名或关键词" value="${esc(lq)}" style="left:671px;top:67px;width:268px;height:35px;font-size:13px;background-color:transparent;box-shadow:none">`+domSel('left:1218px;top:66px;width:118px;height:36px;font-size:12.5px')+`<div class="gtab A" role="tablist" aria-label="图鉴视图" style="left:452px;top:94px;font-size:12px"><a role="tab" aria-selected="true" aria-current="page" href="#/atlas">全部卡牌</a><a role="tab" aria-selected="false" href="#/graph" id="graph">关系图谱</a></div>`+
    `<div class="fil" role="group" aria-label="倾向">${[['all','全部',1005],['positive','吉',1069],['neutral','中',1123],['negative','凶',1178]].map(([k,l,x])=>`<button data-f="${k}" aria-pressed="${lf===k}" style="left:${x}px;top:73px;font-size:13px">${l}</button>`).join('')}</div>`+
-   A(1252,150,'36 张卡牌，<br>汇聚成更完整的你。',{cls:'t',st:'font-size:12px;line-height:1.75'})+A(1400,196,'—— &nbsp;寂境 &nbsp;Stillrealm',{cls:'t',st:'transform:translateX(-100%);font-size:11.5px'})+
-   A(25,412,'每一张牌，<br>都是生活的低语。',{cls:'t',st:'font-size:12.5px;line-height:1.95'})+A(25,470,'—— &nbsp;寂境 &nbsp;Stillrealm',{cls:'t',st:'font-size:11.5px'});
+   A(1252,330,'36 张卡牌，<br>汇聚成更完整的你。',{cls:'t',st:'font-size:12px;line-height:1.75'})+A(1400,376,'—— &nbsp;寂境 &nbsp;Stillrealm',{cls:'t',st:'transform:translateX(-100%);font-size:11.5px'})+
+   A(25,560,'每一张牌，<br>都是生活的低语。',{cls:'t',st:'font-size:12.5px;line-height:1.95'})+A(25,618,'—— &nbsp;寂境 &nbsp;Stillrealm',{cls:'t',st:'font-size:11.5px'});
  const v=stage('07-atlas',head+'<div id="grid"></div>',{ch:m?{by:30,bfs:22,orn:false,tabs:true}:{tr:null,br:false,bl:null},h:m?1760:900});
  if(!m)chrome.insertAdjacentHTML('beforeend',A(25,808,'CARDS<br>PEOPLE<br>A QUIETER YOU',{cls:'t en',st:'font-size:10.5px;line-height:1.75;letter-spacing:.26em'}));
  markDrawn(v);
@@ -531,7 +531,7 @@ function vGraph(sel){if(sel)gsel=sel;const m=M();
  const tabs=(x,y,fs)=>`<div class="gtab A" role="tablist" aria-label="图鉴视图" style="left:${x}px;top:${y}px;font-size:${fs}px"><a role="tab" aria-selected="false" href="#/atlas">全部卡牌</a><a role="tab" aria-selected="true" aria-current="page" href="#/graph">关系图谱</a></div>`;
  const G=m?{sx:6,sy:150,sw:378,sh:430,gx:24,gy:190,p:39,cw:35,ch:37,fs:6.5}:{sx:270,sy:188,sw:676,sh:667,gx:318,gy:216,p:99.6,cw:88,ch:94,fs:10.5};
  const head=m?T_(195,92,'牌库图鉴',22,{cls:'c',st:'letter-spacing:.3em'})+tabs(195,124,11.5)
-  :A(300,98,'牌库图鉴',{cls:'t',st:'font-size:30px;letter-spacing:.2em'})+T_(301,140,'卡牌关系',14,{st:'letter-spacing:.3em'})+tabs(301,168,13)+
+  :A(300,96,'牌库图鉴',{cls:'t',st:'font-size:30px;letter-spacing:.2em;line-height:1.2'})+T_(301,140,'卡牌关系',14,{st:'letter-spacing:.3em;line-height:1.4'})+tabs(301,168,13)+
    A(766,82,'让每张牌，<br>找到彼此的回声。',{cls:'ink',st:'font-size:14px;line-height:1.8;letter-spacing:.12em;transform:rotate(-4deg)'})+T_(963,66,chalkText('选择一张牌，查看它的关联。'),15,{cls:'chalk',st:'max-width:150px;white-space:normal;transform:rotate(-6deg)'})+
    T_(1182,330,'卡牌不是预言，<br>而是让你听见内在声音的<br>另一种语言。',11.5,{st:'line-height:1.8'})+T_(1170,822,chalkText('查找连接相关卡牌。'),15,{cls:'chalk'});
  const draw=()=>{const c=C[gsel-1],rel=related(c),ids=rel.map(r=>r.x.id).slice(0,m?4:4);
