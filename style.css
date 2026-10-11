@@ -469,7 +469,7 @@ main:focus,main:focus-visible,#ab>main:focus-visible{box-shadow:none!important;o
 .knob{background:none!important;border-radius:50%;transform:none!important;touch-action:none}
 .knob .kb,.knob .kh{position:absolute;inset:0;background:center/100% 100% no-repeat;border-radius:50%;pointer-events:none}
 .knob .kb{will-change:transform}
-.knob .kh{mix-blend-mode:screen}
+.knob .kh{mix-blend-mode:plus-lighter}
 .knob:active{cursor:grabbing}
 .lkb{border-bottom:1px solid rgba(233,207,152,.35);padding-bottom:2px;color:var(--muted)}.lkb:hover{color:var(--ivory)}
 /* 声 sound token: Codex brass bell push, engraved glyph; pressed-in = music on */
@@ -493,3 +493,4 @@ main:focus,main:focus-visible,#ab>main:focus-visible{box-shadow:none!important;o
 .tile:hover{background-color:transparent}
 a.A:hover>.card,.thc:hover .card,.gc:hover{transform:translateY(-1px)!important}
 .slip:active,.tile:active,.thc:active{transform:translateY(1px)!important;box-shadow:0 1px 2px rgba(0,0,0,.5)!important}
+.btn.hit>span[aria-hidden]{margin-right:.35em;letter-spacing:0}
