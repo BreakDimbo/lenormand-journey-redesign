@@ -305,3 +305,4 @@ fieldset input[type=radio]:focus-visible{outline:none;box-shadow:0 0 0 2px rgba(
 /* P2-13: larger card number and name on small faces */
 .card.d .hd{font-size:max(12.5px,calc(var(--w)*.108))}
 .card.d .enn{font-size:max(9.5px,calc(var(--w)*.072))}
+.toast:not(.on):not(.seen){background-image:none}
