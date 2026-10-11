@@ -603,8 +603,8 @@ html body #ab.m #sheet[data-k="14-onecard"] .one .oc .card{--w:132px!important;w
 html body #ab.m #sheet[data-k="14-onecard"] .one>div:last-child{left:4px;right:4px;top:236px;width:auto;height:248px}
 html body #ab.m #sheet[data-k="14-onecard"] .one h2{font-size:17px;text-align:center;margin:0 0 10px}
 html body #ab.m #sheet[data-k="14-onecard"] .one p{font-size:12.5px;line-height:1.85;text-wrap:pretty}
-html body #ab.m #sheet[data-k="14-onecard"] .pager2{top:462px;left:24px;right:24px;height:44px;display:flex;align-items:center;justify-content:space-between;border-top:0}
-html body #ab.m #sheet[data-k="14-onecard"] .pager2 .lk,#ab.m #sheet[data-k="14-onecard"] .pager2 span{color:#f0dcae;font-size:13.5px;letter-spacing:.14em;padding:8px 4px}
+html body #ab.m #sheet[data-k="14-onecard"] .pager2{top:452px;left:24px;right:24px;height:44px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(90,65,30,.22)}
+html body #ab.m #sheet[data-k="14-onecard"] .pager2 .lk,#ab.m #sheet[data-k="14-onecard"] .pager2 span{color:#4a3420;font-size:13.5px;letter-spacing:.14em;padding:8px 4px}
 html body #ab.m #sheet[data-k="14-onecard"] .ovchalk{display:none}
 /* P2-28 sheet: × clear of the corner ornament */
 #ab.m #sheet .sheetp>.x,#ab.m #sheet .x{margin:6px 6px 0 0}
@@ -626,3 +626,21 @@ html body #ab.m #sheet[data-k="14-onecard"] .ovchalk{display:none}
 /* D-20: no code-drawn black wells under reading cards; the lamp shadow on the felt carries the depth */
 .well{display:none!important}
 #ab.d #sheet.ovs .rchalk{top:466px!important;color:rgba(238,232,214,.88)!important;font-size:16px}#ab.m #sheet.ovs .rchalk{color:rgba(238,232,214,.88)!important}
+/* 28: close × clear of the baked corner ornaments (beats ov.css by specificity) */
+html body #ab.m #sheet[data-k="13-glance"] .x{left:298px;top:14px;margin:0}
+html body #ab.m #sheet[data-k="15-deeper"] .x{left:292px;top:14px;margin:0}
+html body #ab.m #sheet[data-k="16-story"] .x{left:304px;top:14px;margin:0}
+/* 30: slider end labels */
+html body #ab.m #sheet .sl>span,html body #ab.m #sheet .sl span{font-size:12.5px;color:#4a3420;font-weight:500}
+html body #ab.m #sheet .sl b{font-size:16px}
+html body #sheet .sl>span{font:600 14px/1 var(--serif)!important;font-variant-numeric:lining-nums;color:#3a2a18!important;min-width:18px;text-align:center}
+/* 39: mobile card-detail panel — legible sizes, even rhythm (beats ov.css) */
+html body #ab.m .ixm .ixl{font-size:11px;letter-spacing:.18em;margin-top:9px}
+html body #ab.m .ixm .ixc{font-size:13px;line-height:1.7}
+html body #ab.m .ixm .ixk{font-size:11.5px;margin:6px 0 4px}
+html body #ab.m .ixm .ixr,html body #ab.m .ixm .ixr2{font-size:12.5px;line-height:1.75}
+html body #ab.m .ixm .ixr2 b{font-size:12px}
+html body #ab.m .ixs .ixr{font-size:13px;line-height:1.75}
+/* 36: mobile atlas — readable number + name under each card (card art keeps its baked label) */
+#ab.m .acm .cap{position:absolute;left:0;right:0;top:100%;margin-top:2px;text-align:center;font:500 11px/1.2 var(--serif);letter-spacing:.08em;color:rgba(240,230,206,.92);text-shadow:0 1px 2px rgba(0,0,0,.9);white-space:nowrap;pointer-events:none}
+#ab.m .acm .cap i{font-style:normal;color:rgba(222,190,124,.95);margin-right:4px}
