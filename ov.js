@@ -11,6 +11,7 @@ function sheet(sh,st,rec,R,ro){const{esc,zh,clean}=L();const a=ab();if(sh.parent
  sh.classList.add('ovs');const sc=$('.sc',sh);$$(':scope>.ovchalk,:scope>.ovdeco',sh).forEach(x=>x.remove());const dm=!L().M(),cs=R.cards,deco=(c,x,y,w,r)=>sh.insertAdjacentHTML('beforeend',`<div class="ovdeco" aria-hidden="true" style="left:${x}px;top:${y}px;transform:rotate(${r}deg)">${L().cardHTML(c,'d',w)}</div>`);
  if(st.tab==='glance')$$('.clues li',sc).forEach(li=>{const t=li.textContent,i=t.indexOf('：');if(i<0)return;let h=t.slice(0,i);h=h.includes('·')?h.split('·').pop().trim():h.replace(/^核心线索/,'核心');li.innerHTML=`<b>${esc(h.replace(/[「」]/g,''))}</b><span>${esc(t.slice(i+1))}</span>`});
  if(dm&&st.tab==='deep')deco(cs[cs.length-1],1083,272,150,6);
+ if(!dm&&st.tab==='story'){cs.slice(0,3).forEach((c,i)=>deco(c,62+i*94,592,78,0));sh.insertAdjacentHTML('beforeend',`<p class="ovdeco chalk" aria-hidden="true" style="left:195px;top:728px;transform:translateX(-50%);font-size:18px;white-space:nowrap">${esc(window.PH[cs[0].id].s)}</p>`)}
  if(dm&&st.tab==='story'){deco(cs[0],290,470,150,-8);if(cs[1])deco(cs[1],1080,250,150,4);if(cs[2])deco(cs[2],1085,530,150,-3);sh.insertAdjacentHTML('beforeend','<p class="ovdeco chalk" aria-hidden="true" style="left:1120px;top:112px;font-size:19px;line-height:1.4;transform:rotate(-12deg)">让故事，<br>慢慢浮现。</p>')}const k=KEY[st.tab]||'13-glance';sh.dataset.k=k;platefor(sh,k);
  if(st.tab==='cards'){sc.insertAdjacentHTML('afterbegin','<h2 class="ovt">解读你的牌阵</h2>');
   const c=R.cards[st.i],one=$('.one',sc);if(one){const k2=$('.kick',one);if(k2)$('.oc',one).prepend(k2)}
@@ -21,6 +22,7 @@ function sheet(sh,st,rec,R,ro){const{esc,zh,clean}=L();const a=ab();if(sh.parent
    const pg=$('.pager2',sc);if(pg){pg.insertAdjacentHTML('beforebegin','<hr class="orn b">');const sp=$('span',pg);if(sp)sp.remove();
      const[b1,b2]=$$('button',pg);if(b1)b1.innerHTML='‹ 上一章';if(b2)b2.innerHTML='下一章 ›'}}}
  if(st.tab==='restore'){$('.strip',sc)?.remove();$('.tabs',sc)?.remove();$('footer',sc)?.remove()}
+ if(!dm&&st.tab==='story'){const nv=$('.chn',sc);if(nv){nv.classList.add('ovdeco','chnm');sh.appendChild(nv);nv.onclick=e=>{const b=e.target.closest('[data-chn]');if(!b)return;const t=document.createElement('button');t.dataset.chn=b.dataset.chn;t.hidden=true;sc.appendChild(t);t.click()}}}
 }
 function restore(rec,R,st){const{esc,zh,cardHTML,STORY}=L();const d=new Date(rec.saved||rec.at||Date.now());const ds=`${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
  const ans=Object.values(rec.answers||{}).filter(Boolean);let lines=ans.slice(0,3);
