@@ -348,7 +348,7 @@ function vReading(id){
     A(910,96,'卡牌不是预言，<br>而是让你听见内在声音的另一种语言。',{cls:'t',st:'font-size:12.5px;line-height:1.95'})+A(1167,150,'—— &nbsp;Stillrealm',{cls:'t',st:'transform:translateX(-100%);font-size:12px'})+
     cs.map((c,i)=>T_(X[i]+w/2,y-58,R.sp.pos[i],16,{cls:'c',st:'letter-spacing:.24em'})+well(X[i],y,w,hh,11)+fc(c,'d',X[i],y,w,hh,i)).join('')+
     cs.slice(1).map((c,i)=>{const[a,b]=split2(pairLine(cs[i],c));const cx=(X[i]+w+X[i+1])/2;return T_(cx,y+66,chalkText(a,1400+i*900)+'<br>'+chalkText(b,1400+i*900+a.length*70),Math.min(21,128/Math.max(a.length,b.length)),{cls:'c chalk',st:'line-height:1.55;text-align:center'})+chalkSVG('M0 6 Q40 3 84 5 M76 1 L84 5 L76 9',100,cx-42,y+136,90,12,1300+i*900)}).join('')+
-    A(436,563,sumD(3),{cls:"ink paperT",w:734,h:140})+bar3(799,736,188,15,saved)}}
+    A(436,573,sumD(3),{cls:"ink paperT",w:734,h:140})+bar3(799,736,188,15,saved)}}
  if(rec.spread==='five')key='05-five';const v=stage(key,h,{ch:m?{by:rec.spread==='nine'?88:60,bfs:28,foot:true,brand:true}:{bl:rec.spread==='nine'?null:['在每一张牌里','无预设的未来','只有更清晰的你']}});
  const total=flipIn(v,cs,rec.spread==='nine'?180:520);setTimeout(()=>v.classList.add('drawn'),RM()?0:Math.max(0,total-1400));
  $('#more').onclick=()=>readingSheet(rec,{tab:'glance'});if(saved&&!vReading.noAuto)readingSheet(rec,{ro:true,tab:'restore'});
