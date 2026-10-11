@@ -377,3 +377,4 @@ body[data-r=draw] .deckdeco,body[data-r=reading] .deckdeco,body[data-r=atlas] .d
  .bundle .tagp{left:150px;top:30px;width:calc(100% - 160px);max-width:190px}
  .bundle .del{right:6px;bottom:6px}
 }
+.bundle .tagp{background:#e6d6b2 url(assets/paper.webp) center/cover!important;background-blend-mode:multiply!important}
