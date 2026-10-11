@@ -356,26 +356,35 @@ function vReading(id){
 /* ---- atlas ---- */
 let lq='',lf='all',ld='all';
 const DOMS=[['all','全部领域'],['relationship','感情'],['career','事业'],['wealth','财富'],['health','健康'],['lost-item','寻物'],['personality','性格']];
-const domSel=st=>`<label class="sr" for="dom">领域</label><select class="sel A" id="dom" style="${st}">${DOMS.map(([k,l])=>`<option value="${k}" ${ld===k?'selected':''}>${l}</option>`).join('')}</select>`;
+const domSel=st=>`<div class="dd A" style="${st}"><button class="dsel" id="dom" type="button" aria-haspopup="listbox" aria-expanded="false"><span>领域：${(DOMS.find(d=>d[0]===ld)||DOMS[0])[1].replace('全部领域','全部')}</span><i aria-hidden="true">▾</i></button><ul class="ddl" role="listbox" aria-label="领域" hidden>${DOMS.map(([k,l])=>`<li><button type="button" role="option" data-d="${k}" aria-selected="${ld===k}">${l}</button></li>`).join('')}</ul></div>`;
 const hay=(c,d)=>[c.name,zh(c),...(c.aliases||[]),...(c.nouns||[]),...(c.actions||[]),...(c.tags||[]),c.summary,...(d==='all'?Object.values(c.domains||{}).flat():(c.domains?.[d]||[])),...(c.advice||[]),String(c.id)].map(clean).join(' ').toLowerCase();
 function vAtlas(){const m=M();
  const head=m?T_(195,90,'牌库图鉴',22,{cls:'c',st:'letter-spacing:.3em'})+T_(195,124,'36 张卡片，述说生活的每一种可能',10.5,{cls:'c mu',st:'letter-spacing:.14em'})+
-   `<label class="sr" for="s">搜索牌名或关键词</label><input class="search" id="s" type="search" placeholder="搜索牌名或关键词" value="${esc(lq)}" style="left:60px;top:142px;width:186px;height:29px;font-size:12.5px">`+domSel('left:252px;top:142px;width:78px;height:29px;font-size:11.5px;padding:0 20px 0 8px')+
+   `<label class="sr" for="s">搜索牌名或关键词</label><input class="search" id="s" type="search" placeholder="搜索牌名或关键词" value="${esc(lq)}" style="left:60px;top:142px;width:186px;height:29px;font-size:12.5px">`+domSel('left:252px;top:142px;width:84px;height:29px;font-size:11px')+
    `<div class="fil" role="group" aria-label="倾向">${[['all','全部',112],['positive','吉',160],['neutral','中',200],['negative','凶',240]].map(([k,l,x])=>`<button data-f="${k}" aria-pressed="${lf===k}" style="left:${x}px;top:182px;font-size:12px">${l}</button>`).join('')}</div>`+
-   A(300,183,'◎ 图谱',{tag:'button',cls:'t',st:'font-size:12px;color:var(--brass-hi)',at:'id="graph"'})
+   A(300,183,'◎ 图谱',{tag:'a',cls:'t',st:'font-size:12px;color:var(--brass-hi)',at:'id="graph" href="#/graph"'})
   :A(445,30,'牌库图鉴',{cls:'ink',st:'font-size:27px;letter-spacing:.2em;transform:rotate(-4deg);font-weight:500'})+
-   `<label class="sr" for="s">搜索牌名或关键词</label><input class="search" id="s" type="search" placeholder="搜索牌名或关键词" value="${esc(lq)}" style="left:660px;top:66px;width:218px;height:36px;font-size:13px">`+domSel('left:886px;top:66px;width:92px;height:36px;font-size:13px')+A(1206,72,'◎ 图谱',{tag:'button',cls:'t',st:'font-size:13px;letter-spacing:.12em;color:var(--brass-hi)',at:'id="graph"'})+
-   `<div class="fil" role="group" aria-label="倾向">${[['all','全部',1016],['positive','吉',1068],['neutral','中',1112],['negative','凶',1156]].map(([k,l,x])=>`<button data-f="${k}" aria-pressed="${lf===k}" style="left:${x}px;top:73px;font-size:13px">${l}</button>`).join('')}</div>`+
+   `<label class="sr" for="s">搜索牌名或关键词</label><input class="search" id="s" type="search" placeholder="搜索牌名或关键词" value="${esc(lq)}" style="left:660px;top:66px;width:218px;height:36px;font-size:13px">`+domSel('left:886px;top:66px;width:120px;height:36px;font-size:13px')+`<div class="gtab A" role="tablist" aria-label="图鉴视图" style="left:452px;top:94px;font-size:12px"><a role="tab" aria-selected="true" aria-current="page" href="#/atlas">全部卡牌</a><a role="tab" aria-selected="false" href="#/graph" id="graph">关系图谱</a></div>`+
+   `<div class="fil" role="group" aria-label="倾向">${[['all','全部',1050],['positive','吉',1100],['neutral','中',1142],['negative','凶',1184]].map(([k,l,x])=>`<button data-f="${k}" aria-pressed="${lf===k}" style="left:${x}px;top:73px;font-size:13px">${l}</button>`).join('')}</div>`+
    A(1263,40,'36 张卡牌，<br>汇聚成更完整的你。',{cls:'t',st:'font-size:12px;line-height:1.75'})+A(1400,86,'—— &nbsp;寂境 &nbsp;Stillrealm',{cls:'t',st:'transform:translateX(-100%);font-size:11.5px'})+
    A(25,412,'每一张牌，<br>都是生活的低语。',{cls:'t',st:'font-size:12.5px;line-height:1.95'})+A(25,470,'—— &nbsp;寂境 &nbsp;Stillrealm',{cls:'t',st:'font-size:11.5px'});
  const v=stage('07-atlas',head+'<div id="grid"></div>',{ch:m?{by:30,bfs:22,orn:false,tabs:true}:{tr:null,br:false,bl:null},h:m?1760:900});
  if(!m)chrome.insertAdjacentHTML('beforeend',A(25,808,'CARDS<br>PEOPLE<br>A QUIETER YOU',{cls:'t en',st:'font-size:10.5px;line-height:1.75;letter-spacing:.26em'}));
  markDrawn(v);
  const draw=()=>{const q=lq.trim().toLowerCase();const L=C.filter(c=>(lf==='all'||c.polarity===lf)&&(ld==='all'||(c.domains?.[ld]||[]).length)&&(!q||hay(c,ld).includes(q)));
-  $('#grid').innerHTML=L.length?L.map((c,i)=>m?`<a class="A" href="#/card/${c.id}" style="left:${56+(i%3)*95}px;top:${218+(i/3|0)*126}px">${cardHTML(c,'m',89,121)}</a>`:`<a class="A" href="#/card/${c.id}" style="left:${384+(i%6)*139.5}px;top:${130+(i/6|0)*122.5}px">${cardHTML(c,'sq',106,108)}</a>`).join('')
-   :T_(m?195:780,m?260:300,`没有找到「${esc(lq)}」，换个名词试试`,m?15:20,{cls:'c chalk'});
-  if(m){ABH=Math.max(844,218+Math.ceil(L.length/3)*126+90);fit()}};
- $('#s').oninput=e=>{lq=e.target.value;draw()};$('#dom').onchange=e=>{ld=e.target.value;draw()};$('#graph').onclick=()=>graphSheet();$('.fil').onclick=e=>{const b=e.target.closest('button');if(!b)return;lf=b.dataset.f;$$('.fil button').forEach(x=>x.setAttribute('aria-pressed',x===b));draw()};draw();
+  const act=!!q||ld!=='all'||lf!=='all';const chips=[ld!=='all'&&['d',DOMS.find(d=>d[0]===ld)[1]],q&&['q',lq.trim()],lf!=='all'&&['f',{positive:'吉',neutral:'中',negative:'凶'}[lf]]].filter(Boolean);
+  const chipH=act?`<div class="chips A" style="${m?'left:195px;top:184px;transform:translateX(-50%)':'left:660px;top:116px'}">${m?`<span class="cnt2">${chips.map(c=>esc(c[1])).join(' · ')} · ${L.length} 张牌</span><button class="chx" data-x="all" aria-label="清除筛选">×</button>`:chips.map(([k,l])=>`<button class="chip" data-x="${k}" aria-label="移除筛选 ${esc(l)}">${esc(l)} <i aria-hidden="true">×</i></button>`).join('')+`<span class="cnt2">找到 ${L.length} 张卡牌</span>`}</div>`:'';
+  if(m)$('.fil').hidden=act;
+  const big=act&&L.length<=12;
+  $('#grid').innerHTML=chipH+(L.length?L.map((c,i)=>m?(big?`<a class="A" href="#/card/${c.id}" style="left:${33+(i%2)*168}px;top:${218+(i/2|0)*250}px">${cardHTML(c,'m',156,232)}</a>`:`<a class="A" href="#/card/${c.id}" style="left:${56+(i%3)*95}px;top:${218+(i/3|0)*126}px">${cardHTML(c,'m',89,121)}</a>`)
+     :(big?`<a class="A" href="#/card/${c.id}" style="left:${398+(i%5)*160}px;top:${162+(i/5|0)*246}px">${cardHTML(c,'d',140,216)}</a>`:`<a class="A" href="#/card/${c.id}" style="left:${384+(i%6)*139.5}px;top:${130+(i/6|0)*122.5}px">${cardHTML(c,'sq',106,108)}</a>`)).join('')
+   :T_(m?195:780,m?260:300,`没有找到「${esc(lq)}」，换个名词试试`,m?15:20,{cls:'c chalk'}));
+  if(m){ABH=Math.max(844,218+(big?Math.ceil(L.length/2)*250:Math.ceil(L.length/3)*126)+90);fit()}else{const hh=big?162+Math.ceil(L.length/5)*246+40:900;ABH=Math.max(900,hh);fit()}};
+ $('#s').oninput=e=>{lq=e.target.value;draw()};const dd=$('.dd'),db=$('#dom'),dl=$('.ddl');const ddo=o=>{dl.hidden=!o;db.setAttribute('aria-expanded',o);if(o)($('[aria-selected=true]',dl)||$('button',dl)).focus()};
+ db.onclick=e=>{e.stopPropagation();ddo(dl.hidden)};dl.onclick=e=>{const b=e.target.closest('[data-d]');if(!b)return;ld=b.dataset.d;$$('[data-d]',dl).forEach(x=>x.setAttribute('aria-selected',x===b));$('span',db).textContent='领域：'+b.textContent.replace('全部领域','全部');ddo(false);db.focus();draw()};
+ dl.onkeydown=e=>{const bs=$$('button',dl),i=bs.indexOf(document.activeElement);if(e.key==='ArrowDown'){e.preventDefault();bs[Math.min(bs.length-1,i+1)].focus()}else if(e.key==='ArrowUp'){e.preventDefault();bs[Math.max(0,i-1)].focus()}else if(e.key==='Escape'){e.stopPropagation();ddo(false);db.focus()}};
+ const offdd=e=>{if(!dd.contains(e.target))ddo(false)};document.addEventListener('click',offdd);cleanup.push(()=>document.removeEventListener('click',offdd));
+ $('#grid').addEventListener('click',e=>{const x=e.target.closest('[data-x]');if(!x)return;const k=x.dataset.x;if(k==='q'||k==='all'){lq='';$('#s').value=''}if(k==='d'||k==='all'){ld='all';$('span',db).textContent='领域：全部';$$('[data-d]',dl).forEach(b=>b.setAttribute('aria-selected',b.dataset.d==='all'))}if(k==='f'||k==='all'){lf='all';$$('.fil button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.f==='all'))}draw()});$('.fil').onclick=e=>{const b=e.target.closest('button');if(!b)return;lf=b.dataset.f;$$('.fil button').forEach(x=>x.setAttribute('aria-pressed',x===b));draw()};draw();
 }
 const DL={general:'总体',relationship:'感情',career:'事业',wealth:'财富',health:'健康',personality:'性格',appearance:'外形',spirituality:'心灵',environment:'环境','lost-item':'寻物'};
 const RIC={感情:'heart',事业:'case',财富:'coin',时间:'moon',建议:'nature'};
@@ -421,8 +430,8 @@ function vHistory(){const hs=LS.get('history',[]),m=M();const fmt=t=>{const d=ne
    A(906,92,'我们走过的路，<br>从不会真正消失，<br>它们只是化作此刻更深的你。',{cls:'t',st:'font-size:12.5px;line-height:1.95'})+A(1167,170,'—— &nbsp;寂境 &nbsp;Stillrealm',{cls:'t',st:'transform:translateX(-100%);font-size:12px'})+
    (hs.length?A(1157,110,'<img src="assets/ic/doc.webp" alt="" style="width:16px;opacity:.8"> 清空',{tag:'button',cls:'btn',w:111,h:42,st:'font-size:14px;letter-spacing:.2em;border-radius:22px',at:'id="clear"'}):'')+path+body;
  const back=m?'':`<a class="A t" href="#/" style="left:1160px;top:162px;font-size:13px;letter-spacing:.16em" id="hback">‹ 回到桌面</a>`;const v=stage('09-history',h+back,{ch:m?{by:92,tabs:true,back:true}:{tr:null,bl:['每一次回望，','都是为了更清晰地前行。','—— &nbsp;寂境 &nbsp;Stillrealm'],blY:760},h:H});markDrawn(v);
- v.onclick=e=>{const d=e.target.closest('[data-del]');if(d)ask('删去这一条记录？','删去后无法恢复。').then(ok=>{if(!ok)return;LS.set('history',LS.get('history',[]).filter(r=>r.id!==d.dataset.del));vHistory();toast('已删去')})};
- $('#clear')&&($('#clear').onclick=()=>ask('清空全部记录？',`这台设备上的 ${hs.length} 条记录都会被删去，无法恢复。`,'全部清空').then(ok=>{if(ok){LS.set('history',[]);vHistory();toast('已清空')}}));
+ v.onclick=e=>{const d=e.target.closest('[data-del]');if(d)ask('要把这一次提问|从记录里抹去吗？','').then(ok=>{if(!ok)return;LS.set('history',LS.get('history',[]).filter(r=>r.id!==d.dataset.del));vHistory();toast('已删去')})};
+ $('#clear')&&($('#clear').onclick=()=>ask('要清空|全部记录吗？',`这台设备上的 ${hs.length} 条记录都会被抹去。`,'全部清空').then(ok=>{if(ok){LS.set('history',[]);vHistory();toast('已清空')}}));
 }
 const AMB=[['rain','雨夜'],['fire','炉火'],['still','静室']];
 function vSettings(){const m=M(),vs=voices();
@@ -465,7 +474,7 @@ function openDlg(html,cls=''){lastFocus=document.activeElement;dlg.innerHTML=`<d
  setTimeout(()=>($('[autofocus]',p)||$('button,input,textarea,select,a',p))?.focus(),30);return p}
 function closeDlg(){dlg.hidden=true;dlg.innerHTML='';lastFocus?.focus?.()}
 dlg.addEventListener('click',e=>{if(e.target===dlg)closeDlg()});addEventListener('keydown',e=>{if(e.key==='Escape'){if(!dlg.hidden)closeDlg();else if(!$('#sheet').hidden)$('#sheet').hidden=true}});
-function ask(title,msg,ok='删去'){return new Promise(res=>{const p=openDlg(`<h3>${esc(title)}</h3><p>${esc(msg)}</p><div class="drow"><button class="lk" data-a="0" autofocus>再想想</button><button class="pill" data-a="1">${esc(ok)}</button></div>`,'small');
+function ask(title,msg,ok='抹去'){return new Promise(res=>{const p=openDlg(`<h3 class="cfq">${title.split('|').map(x=>`<span class="nw">${esc(x)}</span>`).join('')}</h3>${msg?`<p class="cfm">${esc(msg)}</p>`:''}<div class="cfr"><button class="lk cfk" data-a="0" autofocus>留着</button><button class="bpill" data-a="1">${esc(ok)}</button></div>`,'cfm-p');
  p.onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;closeDlg();res(b.dataset.a==='1')}})}
 function factsDialog(){const p=openDlg(`<h3>补充已知事实</h3><p class="mu2">已经发生了什么？写下的事实会被织进完整故事里。</p><textarea id="fx" maxlength="600" placeholder="例如：上个月我们大吵了一次，之后他很少主动联系。">${esc(S.facts)}</textarea><p class="cnt"><span id="fxc">${S.facts.length}</span>/600</p><div class="drow"><button class="pill" data-a="1">放进纸条</button></div>`);
  const t=$('#fx',p);t.oninput=()=>{$('#fxc',p).textContent=t.value.length};p.onclick=e=>{if(e.target.closest('[data-a]')){S.facts=t.value;save();closeDlg();toast(S.facts?'事实已补充':'已清空补充事实')}}}
@@ -503,8 +512,10 @@ function readingSheet(rec,o={}){const R=interpret(rec),cs=R.cards,ro=!!o.ro;cons
  sc.oninput=e=>{const r=e.target;if(r.id==='lv'){st.lv=+r.value;$('#lvv',sc).textContent=st.lv;r.setAttribute('aria-valuetext',st.lv+' 分');st.story=null}
   if(r.classList.contains('ownt')){const i=+r.dataset.i;$(`input[name="q${i}"][value="__own"]`,sc).checked=true;st.ans[i]=r.value.trim();st.story=null;upd()}};
  sc.addEventListener('focusin',e=>{if(e.target.classList?.contains('ownt'))e.target.tabIndex=0});}
-function cardDialog(c,pos,topic){const p=openDlg(`<div class="cd"><div class="flipcard big" style="position:relative;width:170px;height:255px"><div class="in3" style="transition:transform .8s cubic-bezier(.3,1.3,.5,1)">${cardHTML(c,'d',170,255)}${backHTML2(170,255).replace('class="card back"','class="card back bk2"')}</div></div><div><p class="kick">${pos?esc(pos)+' · ':''}No.${pad(c.id)}</p><h3>${esc(zh(c))} <span class="en">${esc(c.name)}</span></h3><p>${esc(clean(c.summary))}。</p><p>${esc(domText(c,topic||'overview'))}</p><p class="mu2">关键词：${esc((c.nouns||[]).map(clean).slice(0,5).join('、'))}</p></div></div><div class="drow"><button class="lk" id="flipb" aria-pressed="false">翻到牌背</button><a class="lk" href="#/card/${c.id}">完整牌义 ›</a><button class="pill" id="cl" autofocus>收起</button></div>`,'wide');
- let f=false;$('#flipb',p).onclick=e=>{f=!f;$('.in3',p).style.transform=f?'rotateY(180deg)':'none';e.target.textContent=f?'翻回正面':'翻到牌背';e.target.setAttribute('aria-pressed',f);Sound.tap()};$('#cl',p).onclick=closeDlg;$('a',p).onclick=()=>{closeDlg();$('#sheet').hidden=true}}
+function cardDialog(c,pos,topic){const m=M(),cw=m?118:216,chh=Math.round(cw*1.5);const kws=(c.nouns||[]).map(clean).filter((x,i,a)=>x&&a.indexOf(x)===i).slice(0,4);const ix=pos&&window.__cdPos!=null?window.__cdPos:null;
+ const p=openDlg(`${m?'<p class="cdt">牌意解读</p>':''}<button class="x cdx" id="cl" aria-label="关闭">×</button><div class="cd2"><div class="cdl"><div class="flipcard" style="position:relative;width:${cw}px;height:${chh}px"><div class="in3" style="transition:transform .8s cubic-bezier(.3,1.3,.5,1)">${cardHTML(c,'m',cw,chh)}${backHTML2(cw,chh).replace('class="card back"','class="card back bk2"')}</div></div><button class="lk cdf" id="flipb" aria-pressed="false">翻到牌背 <span aria-hidden="true">↻</span></button></div>
+ <div class="cdr"><h3>${esc(zh(c))} <span class="en">${esc(c.name)}</span></h3><p class="cdk">第 ${c.id} 张${pos?' · '+esc(pos):''}</p><h4>牌意</h4><p>${esc(clean(c.summary))}。</p><h4>关键词</h4><p class="cdw">${kws.map(esc).join('<i> · </i>')}</p><h4>${pos?'在这个位置':'在这次提问里'}</h4><p class="cdd">${esc(PH[c.id].s)}。${esc(PH[c.id].p)}。</p><a class="lk cdm" href="#/card/${c.id}">完整牌义 <span aria-hidden="true">›</span></a></div></div>`,'cdlg');
+ let f=false;$('#flipb',p).onclick=e=>{f=!f;$('.in3',p).style.transform=f?'rotateY(180deg)':'none';e.currentTarget.firstChild.textContent=f?'翻回正面 ':'翻到牌背 ';e.currentTarget.setAttribute('aria-pressed',f);Sound.tap()};$('#cl',p).onclick=closeDlg;$('a.cdm',p).onclick=()=>{closeDlg();$('#sheet').hidden=true}}
 function keepDialog(rec,done){const has=rec.answers&&Object.values(rec.answers).some(Boolean);
  const p=openDlg(`<h3>收藏这次占卜</h3><p class="mu2">收进「我的记录」，只保存在这台设备上。</p><p class="qq">「${esc(rec.q)}」</p><label class="ck"><input type="checkbox" id="ka" ${has?'checked':'disabled'}> 一并保存我的跟进回答${has?'':'（还没有回答）'}</label><div class="drow"><button class="lk" data-a="0">取消</button><button class="pill" data-a="1" autofocus>收藏</button></div>`,'small');window.OV&&OV.keep(p,rec);
  p.onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;if(b.dataset.a==='1'){const r=Object.assign({},rec);if(!$('#ka',p).checked){delete r.answers;delete r.lv}r.saved=Date.now();LS.set('history',[r,...LS.get('history',[]).filter(x=>x.id!==r.id)].slice(0,100));toast('已收进「我的记录」');done&&done()}closeDlg()}}
@@ -515,26 +526,40 @@ function related(c){const sc=C.filter(x=>x!==c).map(x=>{let s=0,why=[];if(suit(x
   const sh=(x.nouns||[]).map(clean).filter(n=>n&&(c.nouns||[]).map(clean).includes(n));if(sh.length){s+=sh.length*2;why.push('共同意象：'+sh.slice(0,2).join('、'))}
   if(x.polarity===c.polarity&&c.polarity!=='neutral'){s+=.5}
   return{x,s,why:why[0]||(x.polarity===c.polarity?'同样的'+({positive:'吉',negative:'凶',neutral:'中'}[c.polarity])+'性':'')}}).sort((a,b)=>b.s-a.s||a.x.id-b.x.id).slice(0,5);return sc}
-function graphSheet(sel=1){const sh=$('#sheet'),sc=$('.sc',sh);sh.hidden=false;sh.dataset.ro='false';const m=M();
- const draw=()=>{const c=C[sel-1],rel=related(c),ids=rel.map(r=>r.x.id),cols=6,cw=m?44:58,gap=m?6:10,ch=cw*1.15;
-  const pos=id=>{const i=id-1;return[(i%cols)*(cw+gap)+cw/2,Math.floor(i/cols)*(ch+gap)+ch/2]};const W=cols*(cw+gap)-gap,H=6*(ch+gap)-gap;const[sx,sy]=pos(sel);
-  sc.innerHTML=`<p class="kick">牌库图鉴 · 牌间图谱</p><h2>轻点一张牌，看它和谁相连</h2><div class="graph"><div class="gw" style="width:${W}px;height:${H}px"><svg width="${W}" height="${H}" aria-hidden="true">${ids.map(id=>{const[x,y]=pos(id);return`<path d="M${sx} ${sy} Q${(sx+x)/2+(y-sy)*.15} ${(sy+y)/2-(x-sx)*.15} ${x} ${y}" class="gl"/>`}).join('')}</svg>${C.map(x=>{const[px,py]=pos(x.id);return`<button class="gn ${x.id===sel?'on':ids.includes(x.id)?'rel':''}" data-g="${x.id}" style="left:${px-cw/2}px;top:${py-ch/2}px;width:${cw}px;height:${ch}px" aria-label="${x.id} ${esc(zh(x))}" aria-pressed="${x.id===sel}"><b>${x.id}</b>${esc(zh(x))}</button>`}).join('')}</div>
-   <div class="gi"><h3>${c.id} · ${esc(zh(c))} <span class="en">${esc(c.name)}</span></h3><p>${esc(clean(c.summary))}</p><h4>相连的牌</h4><ul>${rel.map(r=>`<li><button class="lk" data-g="${r.x.id}">${r.x.id} ${esc(zh(r.x))}</button><small>${esc(r.why)}；${esc(PH[c.id].s)}，${esc(PH[r.x.id].p)}</small></li>`).join('')}</ul><a class="pill" href="#/card/${c.id}">查看「${esc(zh(c))}」牌义 ›</a></div></div>`};
- draw();$('.x',sh).onclick=()=>{sh.hidden=true};sh.onclick=e=>{if(e.target===sh)sh.hidden=true};
- sc.onclick=e=>{const g=e.target.closest('[data-g]');if(g){sel=+g.dataset.g;draw();$(`[data-g="${sel}"].gn`,sc)?.focus();return}if(e.target.closest('a'))sh.hidden=true};sc.onchange=null;sc.oninput=null}
-function v404(){const m=M();const h=m?A(48,250,`<p class="kick">404</p><h2 style="font-size:20px;margin:8px 0 12px">这张牌不在桌上</h2><p>牌库只有 36 张牌，编号从 1 到 36。</p><p style="margin-top:18px"><a href="#/atlas" style="border-bottom:1px dashed">‹ 回到牌库图鉴</a></p>`,{cls:'paper ink nf',w:294,h:260})
- :A(560,250,`<p class="kick">404</p><h2 style="font-size:28px;margin:10px 0 16px">这张牌不在桌上</h2><p>牌库只有 36 张牌，编号从 1 到 36。也许它被风吹到了桌子底下。</p><p style="margin-top:24px"><a href="#/atlas" style="border-bottom:1px dashed">‹ 回到牌库图鉴</a></p>`,{cls:'paper ink nf',w:420,h:300});
- document.title='找不到这张牌 · 寂境 · 雷诺曼';stage('08-card',h,{ch:m?{by:110}:{}})}
+let gsel=17;
+function vGraph(sel){if(sel)gsel=sel;const m=M();
+ const tabs=(x,y,fs)=>`<div class="gtab A" role="tablist" aria-label="图鉴视图" style="left:${x}px;top:${y}px;font-size:${fs}px"><a role="tab" aria-selected="false" href="#/atlas">全部卡牌</a><a role="tab" aria-selected="true" aria-current="page" href="#/graph">关系图谱</a></div>`;
+ const G=m?{sx:6,sy:150,sw:378,sh:430,gx:24,gy:190,p:39,cw:35,ch:37,fs:6.5}:{sx:270,sy:188,sw:676,sh:667,gx:318,gy:216,p:99.6,cw:88,ch:94,fs:10.5};
+ const head=m?T_(195,92,'牌库图鉴',22,{cls:'c',st:'letter-spacing:.3em'})+tabs(195,124,11.5)
+  :A(300,98,'牌库图鉴',{cls:'t',st:'font-size:30px;letter-spacing:.2em'})+T_(301,140,'卡牌关系',14,{st:'letter-spacing:.3em'})+tabs(301,168,13)+
+   A(766,82,'让每张牌，<br>找到彼此的回声。',{cls:'ink',st:'font-size:14px;line-height:1.8;letter-spacing:.12em;transform:rotate(-4deg)'})+T_(963,66,chalkText('选择一张牌，查看它的关联。'),15,{cls:'chalk',st:'max-width:150px;white-space:normal;transform:rotate(-6deg)'})+
+   T_(1182,330,'卡牌不是预言，<br>而是让你听见内在声音的<br>另一种语言。',11.5,{st:'line-height:1.8'})+T_(1170,822,chalkText('查找连接相关卡牌。'),15,{cls:'chalk'});
+ const draw=()=>{const c=C[gsel-1],rel=related(c),ids=rel.map(r=>r.x.id).slice(0,m?4:4);
+  const pos=id=>{const i=id-1;return[G.gx+(i%6)*G.p+G.cw/2,G.gy+Math.floor(i/6)*G.p*(m?1:1.008)+G.ch/2]};const[sx,sy]=pos(gsel);
+  const svg=`<svg class="A" style="left:0;top:0;overflow:visible;pointer-events:none" width="1" height="1" aria-hidden="true">${ids.map(id=>{const[x,y]=pos(id);return`<path class="gl2" d="M${sx} ${sy} L${x} ${y}"/>`}).join('')}</svg>`;
+  const cells=C.map(x=>{const[px,py]=pos(x.id);return`<button class="gc A ${x.id===gsel?'on':ids.includes(x.id)?'rel':''}" data-g="${x.id}" aria-pressed="${x.id===gsel}" aria-label="${x.id} ${esc(zh(x))}" style="left:${px-G.cw/2}px;top:${py-G.ch/2}px;width:${G.cw}px;height:${G.ch}px;font-size:${G.fs}px"><span class="gn2">${x.id} ${esc(zh(x))}</span><img src="assets/cards/${pad(x.id)}.webp" alt="" loading="lazy"></button>`}).join('');
+  const side=m?A(268,192,`<p class="gmh">关联牌</p>${rel.slice(0,4).map(r=>`<button class="gmr" data-g="${r.x.id}"><img src="assets/cards/${pad(r.x.id)}.webp" alt=""><span>${r.x.id} ${esc(zh(r.x))}<small class="en">${esc(r.x.name)}</small></span></button>`).join('')}`,{cls:'gside m',w:96})+A(24,438,`<span class="gk on"></span>当前 <span class="gk rel"></span>关联`,{cls:'glg'})+
+   A(140,600,`<a href="#/card/${c.id}" aria-label="查看 ${esc(zh(c))} 牌义">${cardHTML(c,'m',64,96)}</a>`)+A(218,612,`<p class="gm1">${c.id} ${esc(zh(c))} <span class="en">${esc(c.name)}</span></p><p class="gm4">${esc(PH[c.id].p)}</p><a class="lk gm3" href="#/card/${c.id}">查看牌义 ›</a>`,{w:150})
+   :A(981,186,`<a href="#/card/${c.id}" aria-label="查看 ${esc(zh(c))} 牌义">${cardHTML(c,'d',152,236)}</a>`)+T_(981,450,'相关卡牌',14,{st:'letter-spacing:.24em'})+
+    `<ul class="grel A" style="left:981px;top:478px;width:236px">${rel.slice(0,4).map(r=>`<li><button data-g="${r.x.id}"><img src="assets/cards/${pad(r.x.id)}.webp" alt=""><b>${r.x.id} ${esc(zh(r.x))}</b><small>${esc(PH[r.x.id].p)}</small></button></li>`).join('')}</ul>`;
+  $('#gwrap').innerHTML=A(G.sx,G.sy,'',{cls:'gsheet'+(m?' m':''),w:G.sw,h:G.sh})+svg+cells+side};
+ const v=stage(m?'07-atlas':'19-graph',head+'<div id="gwrap"></div>',{ch:m?{by:30,bfs:22,orn:false,tabs:true}:{tr:null,br:false,bl:null},h:m?844:900});markDrawn(v);draw();
+ v.onclick=e=>{const g=e.target.closest('[data-g]');if(g){gsel=+g.dataset.g;draw();$(`.gc[data-g="${gsel}"]`)?.focus()}}}
+function graphSheet(sel){go2('#/graph')}
+function v404(){const m=M();const raw=decodeURIComponent((location.hash.split('/')[2]||'').slice(0,6));const num=esc(raw||'?');
+ const h=m?A(134,240,backHTML2(120,180),{st:'transform:rotate(-1deg)'})+T_(282,322,chalkText(raw||"?"),22,{cls:'chalk',st:'transform:rotate(-8deg)'})+chalkSVG('M0 6 Q20 0 38 -4',40,276,352,40,10,300)+A(65,451,`<h2>这张牌不在桌上</h2><p>编号 ${num} 不在 36 张牌之中</p>`,{cls:'nf2 m',w:260,h:118})+A(195,594,`<a class="t nfl" href="#/atlas">回到牌库图鉴 <span aria-hidden="true">→</span></a>`,{st:'transform:translateX(-50%)'})
+ :A(440,248,backHTML2(232,320),{st:'transform:rotate(-6deg)'})+A(718,283,`<h2>这张牌不在桌上</h2><p>编号 ${num} 不在 36 张牌之中</p><a class="lk nfl" href="#/atlas">回到牌库图鉴 <span aria-hidden="true">→</span></a>`,{cls:'nf2',w:437,h:287});
+ document.title='找不到这张牌 · 寂境 · 雷诺曼';const v=stage('21-404',h,{ch:m?{by:110}:{}});markDrawn(v)}
 
 /* ================= router ================= */
 let cleanup=[];
 function go2(h){if(location.hash===h)route();else location.hash=h}
 function route(){cleanup.forEach(f=>f());cleanup=[];World.clear();window.speechSynthesis?.cancel();$('#sheet').hidden=true;
  const h=location.hash.replace(/^#/,'')||'/';const[,a,b]=h.split('/');document.body.dataset.r=a||'';
- ({'':vLanding,ask:()=>window.OV.ask(),topic:vTopic,spread:vSpread,draw:vDraw,reading:()=>vReading(b),atlas:vAtlas,card:()=>vCard(+b),history:vHistory,settings:vSettings,today:()=>{const d=new Date();vCard((d.getFullYear()*372+d.getMonth()*31+d.getDate())%36+1,true)}}[a||'']||vLanding)();
- const nav={atlas:'atlas',card:'atlas',history:'history',settings:'settings',today:'today'}[a]||'read';
+ ({'':vLanding,ask:()=>window.OV.ask(),topic:vTopic,spread:vSpread,draw:vDraw,reading:()=>vReading(b),atlas:vAtlas,graph:()=>vGraph(+b||0),card:()=>vCard(+b),history:vHistory,settings:vSettings,today:()=>{const d=new Date();vCard((d.getFullYear()*372+d.getMonth()*31+d.getDate())%36+1,true)}}[a||'']||v404)();
+ const nav={atlas:'atlas',graph:'atlas',card:'atlas',history:'history',settings:'settings',today:'today'}[a]||'read';
  $$('[data-nav]').forEach(x=>x.dataset.nav===nav?x.setAttribute('aria-current','page'):x.removeAttribute('aria-current'));
- const T2={topic:'选择方向',spread:'选择牌阵',draw:'洗牌与抽牌',reading:'解读',atlas:'牌库图鉴',card:'牌义',history:'我的记录',settings:'声音设置',today:'心灵札记'}[a];
+ const T2={graph:'卡牌关系',topic:'选择方向',spread:'选择牌阵',draw:'洗牌与抽牌',reading:'解读',atlas:'牌库图鉴',card:'牌义',history:'我的记录',settings:'声音设置',today:'心灵札记'}[a];
  document.title=(T2?T2+' · ':'')+'寂境 · 雷诺曼';scrollTo(0,0);main.focus({preventScroll:true})}
 window.LJ={loading,esc,zh,clean,cardHTML,chalkText,chalkSVG,M,RM,interpret,SPREADS,go2,newQuestion,toast,save,LS,domText,stage,A,T_,markDrawn,TPL,T,C,readingSheet,keepDialog,get S(){return S},set S(v){S=v},get cleanup(){return cleanup}};
 addEventListener('hashchange',route);route();
