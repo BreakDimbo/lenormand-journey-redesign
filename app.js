@@ -98,7 +98,7 @@ const Voice={speaking:false,speak(text,btn){const s=window.speechSynthesis;if(!s
 
 /* ================= interpretation ================= */
 function domText(c,topic){const k=DOMKEY[topic]||'general';const arr=(c.domains?.[k]?.length?c.domains[k]:c.domains?.general)||[];return clean(arr.join(''))}
-function pairLine(a,b){return `${noun(a)}，引向${noun(b)}`}
+function pairLine(a,b){const A=window.PH[a.id],B=window.PH[b.id];return `${A.s}，${B.p}`}
 function interpret(r){const cards=r.ids.map(id=>C[id-1]),sp=SPREADS[r.spread],tl=T.find(t=>t.id===r.topic)||T[0];
  const pol=cards.reduce((s,c)=>s+(c.polarity==='positive'?1:c.polarity==='negative'?-1:0),0);
  const tone=pol>1?'整体的风是顺的，事情愿意向前。':pol<-1?'整体偏向阻滞，先看清代价，再决定是否推进。':'局面仍在摇摆，身边的一张牌就能改变它的方向。';
@@ -162,26 +162,26 @@ function vDraw(){
  const W=()=>stage.clientWidth;const cw=()=>parseFloat(getComputedStyle(stage).getPropertyValue('--cw'))||120;
  // layout
  const nineMode=N>5;
- const layout=()=>{const w=W(),c=cw(),ch=c*1.56;const mob=mobile();
-  slotsEl.style.cssText=`position:absolute;left:0;right:0;top:${(mob?ch*1.45:ch*1.25)+20}px;${nineMode||N>3&&mob?'--cw:'+(mob?Math.min(c*.62,w/(N>5?5.6:5.6)):c*.72)+'px;':''}flex-wrap:${nineMode?'wrap':'nowrap'};`;
-  if(nineMode){slotsEl.style.maxWidth=(mob?w:Math.min(w,c*.72*1.1*5+c*.36*4+10))+'px';slotsEl.style.margin='0 auto';slotsEl.style.rowGap='34px';slotsEl.style.columnGap=mob?'10px':'calc(var(--cw)*.5)'}
-  else if(mob&&N>3){slotsEl.style.columnGap='8px'}
-  stage.style.height=(slotsEl.offsetTop+slotsEl.offsetHeight+40)+'px'};
+ const layout=()=>{const w=W(),c=cw(),mob=mobile();const sc=nineMode?(mob?.42:.5):N>3?(mob?.5:.62):(mob?.68:.82);
+  const sw=c*sc;slotsEl.style.cssText=`position:absolute;--cw:${sw}px;display:grid;grid-template-columns:repeat(${nineMode?3:N},auto);gap:${nineMode?sw*.42:sw*.3}px ${sw*.32}px;`;
+  if(mob){slotsEl.style.left='50%';slotsEl.style.transform='translateX(-50%)';slotsEl.style.top=(c*3.35)+'px'}
+  else{slotsEl.style.left=(w*.56)+'px';slotsEl.style.top=(nineMode?40:c*1.45)+'px'}
+  stage.style.height=Math.max(mob?0:c*4.1,slotsEl.offsetTop+slotsEl.offsetHeight+30)+'px'};
  layout();
  const deck=shuffle(C.map(c=>c.id));const bodies=[];
- const c0=cw(),cx=W()/2,cy=c0*.95;
- deck.forEach((id,i)=>{const b=makeBody(stage,backHTML(),false);b.id=id;b.el.style.setProperty('--cw',c0*(mobile()?.62:.7)+'px');
+ const c0=cw(),cx=mobile()?W()/2:W()*.24,cy=mobile()?c0*.95:c0*1.2;
+ deck.forEach((id,i)=>{const b=makeBody(stage,backHTML(),false);b.id=id;b.el.style.setProperty('--cw',c0*(mobile()?.44:.62)+'px');
   const a=Math.random()*Math.PI*2,rr=Math.random()*c0*(mobile()?.6:.9);b.x=cx+Math.cos(a)*rr-c0*.35;b.y=cy+Math.sin(a)*rr*.55-c0*.55;b.r=Math.random()*60-30;b.zi=i*.01;
   b.el.setAttribute('aria-hidden','true');bodies.push(b);World.add(b)});
  const bw=()=>bodies[0].el.offsetWidth,bh=()=>bodies[0].el.offsetHeight;
  let phase='shuffle',swirl=0,lastAng=null,gx=0,gy=0,shufAmt=0;
  // circle gesture on stage
- const center=()=>({x:W()/2,y:cy});
+ const center=()=>({x:mobile()?W()/2:W()*.24,y:cy});
  const sForces=dt=>{if(phase!=='shuffle')return;const c=center();
   for(const b of bodies){const px=b.x+bw()/2-c.x,py=b.y+bh()/2-c.y;const d=Math.hypot(px,py)+1;
    if(Math.abs(swirl)>.01){const f=swirl*900/(1+d/200);b.vx+=-py/d*f*dt;b.vy+=px/d*f*dt*.6;b.vr+=swirl*40*dt*(Math.random()-.3)}
    // keep in pile: soft pull
-   const R=c0*(mobile()?.75:1.15);if(d>R){b.vx-=px/d*(d-R)*8*dt;b.vy-=py/d*(d-R)*8*dt}}
+   const R=c0*(mobile()?.85:1.15);if(d>R){b.vx-=px/d*(d-R)*8*dt;b.vy-=py/d*(d-R)*8*dt}}
   // collisions (cheap: random pairs)
   for(let k=0;k<60;k++){const a=bodies[Math.random()*36|0],b=bodies[Math.random()*36|0];if(a===b)continue;const dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy)+.1,m=bw()*.45;if(d<m){const p=(m-d)*3;a.vx+=dx/d*p;a.vy+=dy/d*p;b.vx-=dx/d*p;b.vy-=dy/d*p}}
   swirl*=Math.exp(-2.5*dt);if(Math.abs(swirl)<.01)swirl=0};
@@ -197,9 +197,9 @@ function vDraw(){
  const slots=()=>$$('.slot',slotsEl);
  const slotPos=i=>{const s=slots()[i],r=s.getBoundingClientRect(),sr=stage.getBoundingClientRect();return{x:r.left-sr.left+(r.width-bw())/2,y:r.top-sr.top+(r.height-bh())/2,r,s}};
  function toFan(){if(phase!=='shuffle')return;phase='fan';World.forces=null;$('#auto').textContent='替我抽';$('#instr').textContent='拖一张牌放进凹槽，或轻点一张';$('#cnt').textContent=`已抽 0 / ${N}`;
-  const w=W(),n=36,fanW=Math.min(w*.94,mobile()?w:880),R=fanW*1.6,baseY=cy+c0*(mobile()?.1:.05);
+  const w=W(),n=36,fanW=mobile()?w*.98:w*.62,R=fanW*1.5,baseY=mobile()?c0*2.05:c0*3.15,fx=mobile()?w/2:w*.36;
   bodies.forEach((b,i)=>{const t=(i-(n-1)/2)/(n-1);const ang=t*2*Math.asin(fanW/2/R);
-   setTimeout(()=>{b.spring(w/2-bw()/2+Math.sin(ang)*R,baseY-bh()/2+R*(1-Math.cos(ang))*1.0+bh()*.2,ang*180/Math.PI,RM()?2000:180,.7);b.zi=i;World.start()},RM()?0:i*18)});
+   setTimeout(()=>{b.spring(fx-bw()/2+Math.sin(ang)*R,baseY-bh()/2+R*(1-Math.cos(ang))*1.0+bh()*.2,ang*180/Math.PI,RM()?2000:180,.7);b.zi=i;World.start()},RM()?0:i*18)});
   bodies.forEach(b=>bindDrag(b,{onPick:()=>{Sound.tap()},onDrop:drop}));
   bodies.forEach(b=>b.el.addEventListener('click',()=>{if(phase==='fan'&&!b.placed&&!b.moved)place(b,S.picked.length)}));
  }
@@ -264,7 +264,7 @@ function vAtlas(){
  <div class="atlashead"><label class="sr" for="s">搜索牌名或关键词</label><input class="search" id="s" type="search" placeholder="搜索牌名或关键词" value="${esc(lq)}">
  <div class="filters" role="group" aria-label="倾向">${[['all','全部'],['positive','吉'],['neutral','中'],['negative','凶']].map(([k,l])=>`<button data-f="${k}" aria-pressed="${lf===k}">${l}</button>`).join('')}</div></div><div class="atlas" id="grid"></div>`);
  const draw=()=>{const q=lq.trim().toLowerCase();const L=C.filter(c=>(lf==='all'||c.polarity===lf)&&(!q||[c.name,zh(c),...(c.aliases||[]),...(c.nouns||[]),...(c.tags||[]),String(c.id)].join(' ').toLowerCase().includes(q)));
-  $('#grid').innerHTML=L.length?L.map(c=>`<a href="#/card/${c.id}">${cardHTML(c)}</a>`).join(''):`<p class="empty chalk" style="grid-column:1/-1">没有找到「${esc(lq)}」，换个名词试试</p>`};
+  $('#grid').innerHTML=L.length?L.map(c=>`<a href="#/card/${c.id}">${mobile()?cardHTML(c).replace('class="card "','class="card " data-n="'+c.id+'"').replace(/<div class="kw">[^<]*<\/div>/,'<div class="kw">'+esc(zh(c))+'</div>'):cardHTML(c)}</a>`).join(''):`<p class="empty chalk" style="grid-column:1/-1">没有找到「${esc(lq)}」，换个名词试试</p>`};
  $('#s').oninput=e=>{lq=e.target.value;draw()};$('.filters').onclick=e=>{const b=e.target.closest('button');if(!b)return;lf=b.dataset.f;$$('.filters button').forEach(x=>x.setAttribute('aria-pressed',x===b));draw()};draw();
 }
 const DL={general:'总体',relationship:'感情',career:'事业',wealth:'财富',health:'健康',personality:'性格',appearance:'外形',spirituality:'心灵',environment:'环境','lost-item':'寻物'};
@@ -278,7 +278,7 @@ function vCard(id){const c=C[id-1];if(!c)return go2('#/atlas');const p=C[(id+34)
 }
 function vHistory(){const h=LS.get('history',[]);const fmt=t=>{const d=new Date(t);return `${d.getMonth()+1}月${d.getDate()}日`};
  view(`${mbrand()}<div class="paper qnote" style="padding:22px 46px"><div class="weight" aria-hidden="true"></div><div class="q" style="font-size:22px">来路余痕</div><div class="tag">每一次提问，都是一段旅程的足迹</div></div>
- ${h.length?`<div class="hist" id="hist"><svg class="path" aria-hidden="true"></svg>${h.map(r=>`<div class="bundle">${r.ids.slice(0,3).map(i=>cardHTML(C[i-1])).join('')}<span class="string"></span><a class="tagp" href="#/reading/${r.id}"><time>${fmt(r.at)}</time>${esc(r.q.slice(0,30))}${r.q.length>30?'…':''}</a><button class="del chalk" data-del="${r.id}" aria-label="删除这条记录">删去</button></div>`).join('')}</div>
+ ${h.length?`<div class="hist" id="hist"><svg class="path" aria-hidden="true"></svg>${h.map(r=>`<div class="bundle">${r.ids.slice(0,3).map(i=>cardHTML(C[i-1])).join('')}<span class="twine" aria-hidden="true"></span><a class="tagp" href="#/reading/${r.id}"><time>${fmt(r.at)}</time>${esc(r.q.slice(0,30))}${r.q.length>30?'…':''}</a><button class="del chalk" data-del="${r.id}" aria-label="删除这条记录">删去</button></div>`).join('')}</div>
  <div class="actions"><button class="brass dark" id="clear">清空</button></div>`:`<p class="empty chalk">桌上还没有留下记录</p><div class="actions"><a class="brass" href="#/">问第一件事 →</a></div>`}`);
  const el=$('#hist');if(el){const path=()=>{const er=el.getBoundingClientRect();const p=$$('.bundle',el).map(b=>{const r=b.getBoundingClientRect();return[r.left-er.left+60,r.top-er.top+170]});$('.path',el).innerHTML=p.length>1?`<path d="M${p.map(x=>x.join(' ')).join(' L')}" fill="none" stroke="rgba(240,236,224,.5)" stroke-width="1.5" stroke-dasharray="2 8" stroke-linecap="round"/>`:''};path();
   el.onclick=e=>{const d=e.target.closest('[data-del]');if(d){LS.set('history',LS.get('history',[]).filter(r=>r.id!==d.dataset.del));vHistory();toast('已删去')}}}
@@ -302,13 +302,16 @@ function vSettings(){
 /* ================= router ================= */
 let cleanup=[];
 function go2(h){if(location.hash===h)route();else location.hash=h}
+function setBg(){const a=location.hash.split('/')[1]||'';let k={'':'01-landing',topic:'02-topic',spread:'03-spread',draw:'04-shuffle',reading:'05-reading3',atlas:'07-atlas',card:'08-card',history:'09-history',settings:'10-sound'}[a]||'01-landing';
+ if(a==='reading'&&document.querySelector('.grid9'))k='06-reading9';$('.tablebg').style.backgroundImage=`url(assets/bg/${k}-${mobile()?'mobile':'desktop'}.webp)`}
+addEventListener('resize',()=>setBg());
 function route(){document.body.dataset.r=(location.hash.split('/')[1]||'');cleanup.forEach(f=>f());cleanup=[];World.clear();window.speechSynthesis?.cancel();
  const h=location.hash.replace(/^#/,'')||'/';const[,a,b]=h.split('/');
  const nav={atlas:'atlas',card:'atlas',history:'history',settings:'settings'}[a]||'read';
  $$('.nav a').forEach(x=>x.dataset.nav===nav?x.setAttribute('aria-current','page'):x.removeAttribute('aria-current'));
  ({'':vLanding,topic:vTopic,spread:vSpread,draw:vDraw,reading:()=>vReading(b),atlas:vAtlas,card:()=>vCard(+b),history:vHistory,settings:vSettings}[a||'']||vLanding)();
  const T2={topic:'选择方向',spread:'选择牌阵',draw:'洗牌与抽牌',reading:'解读',atlas:'牌库图鉴',card:'牌义',history:'我的记录',settings:'声音设置'}[a];
- document.title=(T2?T2+' · ':'')+'寂境 · 雷诺曼';scrollTo(0,0);main.focus({preventScroll:true})}
+ setBg();document.title=(T2?T2+' · ':'')+'寂境 · 雷诺曼';scrollTo(0,0);main.focus({preventScroll:true})}
 addEventListener('hashchange',route);route();
 if(prefs.ambient)addEventListener('pointerdown',()=>{if(prefs.ambient&&!Sound.on)Sound.start()},{once:true});
 speechSynthesis?.addEventListener?.('voiceschanged',()=>{if(location.hash==='#/settings')vSettings()});
