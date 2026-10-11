@@ -513,3 +513,30 @@ a.A:hover>.card,.thc:hover .card,.gc:hover{transform:translateY(-1px)!important}
 /* filter bar: rounded brass frame only; sprite's square dark corners clipped away */
 .fbar{border:0!important;border-image:none!important}
 .fbar::before{content:"";position:absolute;inset:0;border:12px solid transparent;border-image:url(assets/v2/sel.webp) 14 fill/12px stretch;clip-path:inset(1px round 13px)}
+/* mobile atlas pagination: 3x3 per page, brass ‹ I / IV › */
+.m .acm{filter:drop-shadow(0 5px 6px rgba(0,0,0,.55)) drop-shadow(0 1px 1px rgba(0,0,0,.4))}
+.pgr{display:flex;align-items:center;gap:14px;white-space:nowrap}
+.pgb{width:44px;height:44px;border-radius:50%;background:url(assets/v2/snd-off.webp) center/100% 100%;color:transparent;font-size:0;position:relative;filter:drop-shadow(0 2px 2px rgba(0,0,0,.55));transition:transform 200ms ease-out,filter 200ms ease-out}
+.pgb::after{content:"";position:absolute;inset:13px;background:#3a2a16;-webkit-mask:var(--chev) center/contain no-repeat;mask:var(--chev) center/contain no-repeat;opacity:.85}
+.pgb[data-p="-1"]{--chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M6.5 1.5L3 5l3.5 3.5' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E")}
+.pgb[data-p="1"]{--chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M3.5 1.5L7 5 3.5 8.5' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E")}
+.pgb:disabled{opacity:.35;filter:grayscale(.5)}
+.pgb:active:not(:disabled){transform:translateY(1px);filter:drop-shadow(0 1px 1px rgba(0,0,0,.6)) brightness(.98)}
+.pgb:focus-visible{outline:none;box-shadow:0 0 0 2px rgba(20,14,8,.85),0 0 0 3.5px rgba(222,186,116,.7)}
+.pgn{font-family:var(--serif);font-size:13px;letter-spacing:.24em;color:#e9dcbd;min-width:58px;text-align:center}
+#grid.sl-l .acm{animation:pgL 340ms cubic-bezier(.2,.7,.2,1) both}#grid.sl-r .acm{animation:pgR 340ms cubic-bezier(.2,.7,.2,1) both}
+@keyframes pgL{from{opacity:0;transform:translateX(28px)}}@keyframes pgR{from{opacity:0;transform:translateX(-28px)}}
+.m .fil button{height:23px;display:flex;align-items:center;padding:0 10px}
+#tabs{padding-bottom:env(safe-area-inset-bottom)}
+#wrap{padding-bottom:env(safe-area-inset-bottom)}
+/* today / card detail, mobile: domain rows on their own torn paper sheet, full width, readable */
+.ixs{border:28px solid transparent;border-image:url(assets/v2/cd-d.webp) 70 fill/28px stretch;padding:2px 6px 0;filter:drop-shadow(0 10px 16px rgba(0,0,0,.55));color:#2b1f13;font-family:var(--serif)}
+.ixs .ixr{display:grid;grid-template-columns:18px 34px 1fr;column-gap:8px;align-items:baseline;padding:7px 0;border-bottom:1px solid rgba(80,58,30,.22);font-size:13px;line-height:1.7}
+.ixs .ixr:last-child{border-bottom:0}
+.ixs .ixr img{width:16px;height:16px;align-self:center;opacity:.8}
+.ixs .ixr b{font-weight:600;letter-spacing:.08em;color:#4a2e16;font-size:12.5px}
+.ixs .ixr p{margin:0;color:#3a2a1a;font-weight:400;text-wrap:pretty}
+.ixm{font-size:12px}
+.ixm .ixc{font-size:14px;line-height:1.6}
+.ixm .ixr2{display:block;margin-top:8px;padding-top:8px;border-top:1px solid rgba(80,58,30,.22);font-size:12px;line-height:1.7;color:#3a2a1a}
+.ixm .ixr2 b{display:block;font-size:11.5px;letter-spacing:.1em;color:#4a2e16}
