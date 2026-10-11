@@ -595,3 +595,4 @@ body:has(#dlg:not([hidden])) #tabs{display:none!important}
 .paperT .sumf .morel{color:#5a3a16;border-bottom:1px solid rgba(90,58,22,.5);font-size:13px}
 /* 5-card slots: no black boxes around the cards */
 .slot5 .card,.rd5 .slotf{box-shadow:none}
+#ab.m .pnav a{display:inline-block;min-width:72px;padding:4px 4px;text-align:center}#ab.m .pnav a::after{display:none!important}
